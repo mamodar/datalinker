@@ -2,12 +2,12 @@
 <p class="mat-small">id: {{project.id}}</p>
 <p class="mat-small">Beschreibung: !!AUS RDMO!!</p>
 
-<div *ngFor="let relationship of relationships$ | async">
+<div *ngFor="let relationship of relationships ">
   <span class="mat-body-strong">Speichertyp:</span> <span
   class="mat-body"> {{relationship.resource.location}}</span>
   <span class="mat-body-strong"> Pfad:</span> <span
   class="mat-body"> {{relationship.resource.path}}</span>
-  <span style="display: inline-block" *ngIf="!minimal"><button mat-flat-button
-                                                               (click)="deletePath(relationship)">Pfad löschen</button></span>
+  <span style="display: inline-block" *ngIf="!minimal">
+    <button mat-flat-button (click)="deletePath(relationship)">Pfad löschen</button></span>
 </div>
 

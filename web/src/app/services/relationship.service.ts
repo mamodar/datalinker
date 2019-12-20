@@ -26,11 +26,11 @@ export class RelationshipService {
     return this.http.get<Relationship[]>(environment.appUrl + '/relationships/resources/' + resource.id);
   }
 
-  addRelationship(project: Project, resource: Resource): Observable<Relationship[]> {
+  addRelationship(project: Project, resource: Resource): Observable<Relationship> {
 
     const relationship: Relationship = {id: null, date: null, project, resource};
     console.log('PUT' + JSON.stringify(relationship));
-    return this.http.put<Relationship[]>(environment.appUrl + '/relationships/', relationship);
+    return this.http.put<Relationship>(environment.appUrl + '/relationships/', relationship);
   }
 
   deleteRelationship(relationship: Relationship): Observable<void> {

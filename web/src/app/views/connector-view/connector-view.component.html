@@ -18,7 +18,7 @@
   </mat-grid-tile>
 
   <mat-grid-tile *ngIf="selectedProject">
-    <app-project-visualization [project]="selectedProject" [relationships$]="projectRelationships$"
+    <app-project-visualization [project]="selectedProject" [(relationships)]="projectRelationships"
                                [minimal]=false></app-project-visualization>
   </mat-grid-tile>
 

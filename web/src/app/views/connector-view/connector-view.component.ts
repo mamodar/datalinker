@@ -1,4 +1,4 @@
-import {AfterViewInit, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import {AfterViewInit, Component, Input, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Project} from '../../objects/project';
 import {ProjectService} from '../../services/project.service';
@@ -17,7 +17,7 @@ import {Observable} from 'rxjs';
 export class ConnectorViewComponent implements OnInit, AfterViewInit {
   @Input() selectedProject: Project;
   @Input() selectedResource: Resource;
-  projectRelationships$: Observable<Relationship[]>;
+  projectRelationships: Relationship[];
   resourceRelationships$: Observable<Relationship[]>;
 
   constructor(private projectService: ProjectService,
@@ -52,15 +52,14 @@ export class ConnectorViewComponent implements OnInit, AfterViewInit {
       path: this.projectPathConnectionEditor.get('resource').value,
       datatype: this.projectPathConnectionEditor.get('datatype').value,
     };
-
+    const newRelationship: Relationship = {date: undefined, id: null, project: this.selectedProject, resource: newResource};
     if (!this.selectedResource) {
       this.resourceService.addResource(newResource).subscribe(p =>
-        this.relationshipService.addRelationship(this.selectedProject, p).subscribe());
+        this.relationshipService.addRelationship(this.selectedProject, p).subscribe(q => this.projectRelationships.push(q)));
     } else {
-      this.relationshipService.addRelationship(this.selectedProject, this.selectedResource).subscribe();
+      this.relationshipService.addRelationship(this.selectedProject, this.selectedResource).subscribe(q => this.projectRelationships.push(q));
     }
 
-    this.changeDetectorRef.detectChanges();
   }
 
 
@@ -68,7 +67,7 @@ export class ConnectorViewComponent implements OnInit, AfterViewInit {
     console.log('event recieved:' + $event.projectName);
     if ($event.projectName) {
       this.selectedProject = $event;
-      this.projectRelationships$ = this.relationshipService.getRelationshipsOfProject(this.selectedProject);
+      this.relationshipService.getRelationshipsOfProject(this.selectedProject).subscribe(p => this.projectRelationships = (p));
     } else {
       this.selectedProject = undefined;
     }
