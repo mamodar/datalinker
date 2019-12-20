@@ -1,0 +1,11 @@
+<mat-form-field [formGroup]="formGroup">
+  <input formControlName="resource" #resourceSearch matInput [matAutocomplete]="auto" required
+         placeholder="Pfad" (ngModelChange)="search(resourceSearch.value)"/>
+</mat-form-field>
+<br>
+
+<mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+  <mat-option *ngFor="let resource of resourceFilter$ | async"
+              [value]="resource.path"> {{resource.path}}
+  </mat-option>
+</mat-autocomplete>

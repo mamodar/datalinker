@@ -1,0 +1,11 @@
+<mat-form-field [formGroup]="formGroup">
+  <input #projectSearch matInput [matAutocomplete]="auto" required formControlName="project"
+         placeholder="Projekt" (ngModelChange)="search(projectSearch.value)"/>
+</mat-form-field>
+<br>
+
+<mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+  <mat-option *ngFor="let project of projectFilter$ | async"
+              [value]="project.projectName"> {{project.projectName}}
+  </mat-option>
+</mat-autocomplete>

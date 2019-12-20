@@ -1,0 +1,4 @@
+allprojects {
+    group = 'de.rki'
+    version = '0.0.2-SNAPSHOT'
+}

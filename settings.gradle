@@ -1,0 +1,3 @@
+rootProject.name = 'mamodar'
+
+include 'server'
