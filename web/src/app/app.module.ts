@@ -1,71 +1,49 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
-import {ReactiveFormsModule} from '@angular/forms';
 
 import {AppComponent} from './app.component';
-import {ConnectorViewComponent} from './views/connector-view/connector-view.component';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {
-  MatAutocompleteModule,
-  MatButtonModule,
-  MatCardModule,
-  MatCheckboxModule,
-  MatChipsModule,
-  MatDividerModule,
-  MatFormFieldModule,
-  MatGridListModule,
-  MatInputModule,
-  MatListModule,
-  MatSelectModule,
-  MatTabsModule,
-  MatToolbarModule
-} from '@angular/material';
-
-import {ProjectSearcherComponent} from './interactors/project-searcher/project-searcher.component';
-import {UserFieldComponent} from './interactors/user-field/user-field.component';
-import {ResourceSearcherComponent} from './interactors/resource-searcher/resource-searcher.component';
-import {ProjectViewComponent} from './views/project-view/project-view.component';
-import {ProjectVisualizationComponent} from './visualizations/project-visualization/project-visualization.component';
 import {HttpClientModule} from '@angular/common/http';
 import {AppRoutingModule} from './app-routing.module';
-import {ResourceViewComponent} from './views/resource-view/resource-view.component';
-import {ResourceVisualizationComponent} from './visualizations/resource-visualization/resource-visualization.component';
-import {RelationshipEditorComponent} from './interactors/relationship-editor/relationship-editor.component';
+import {MatGridListModule, MatListModule, MatToolbarModule} from '@angular/material';
+import { HomeComponent } from './home/home.component';
+import { ProjectItemComponent } from './project/project-item/project-item.component';
+import { ProjectSearchComponent } from './project/project-search/project-search.component';
+import { ProjectListComponent } from './project/project-list/project-list.component';
+import { ResourceItemComponent } from './resource/resource-item/resource-item.component';
+import { ResourceListComponent } from './resource/resource-list/resource-list.component';
+import { ResourceSearchComponent } from './resource/resource-search/resource-search.component';
+import { ProjectComponent } from './project/project.component';
+import { ResourceComponent } from './resource/resource.component';
+import { RelationshipComponent } from './relationship/relationship.component';
+import { RelationshipButtonComponent } from './relationship/relationship-button/relationship-button.component';
+import { ButtonFilterComponent } from './shared/button-filter/button-filter.component';
+import { ButtonInformationComponent } from './shared/button-information/button-information.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    ConnectorViewComponent,
-    ProjectSearcherComponent,
-    UserFieldComponent,
-    ResourceSearcherComponent,
-    ProjectViewComponent,
-    ProjectVisualizationComponent,
-    ResourceViewComponent,
-    ResourceVisualizationComponent,
-    ResourceSearcherComponent,
-    RelationshipEditorComponent
+    HomeComponent,
+    ProjectItemComponent,
+    ProjectSearchComponent,
+    ProjectListComponent,
+    ResourceItemComponent,
+    ResourceListComponent,
+    ResourceSearchComponent,
+    ProjectComponent,
+    ResourceComponent,
+    RelationshipComponent,
+    RelationshipButtonComponent,
+    ButtonFilterComponent,
+    ButtonInformationComponent
   ],
   imports: [
     BrowserModule,
-    ReactiveFormsModule,
-    NoopAnimationsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatCardModule,
-    MatGridListModule,
-    MatSelectModule,
-    MatAutocompleteModule,
-    MatTabsModule,
-    MatToolbarModule,
-    MatDividerModule,
-    MatListModule,
-    MatChipsModule,
     HttpClientModule,
-    MatCheckboxModule,
-    AppRoutingModule
+    AppRoutingModule,
+    MatToolbarModule,
+    MatGridListModule,
+    MatListModule
   ],
   providers: [],
   bootstrap: [AppComponent]

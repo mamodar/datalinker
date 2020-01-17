@@ -1,39 +1,50 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Project} from '../objects/project';
-import {Resource} from '../objects/resource';
-import {Observable} from 'rxjs';
+import {Project} from '../models/project';
+import {Resource} from '../models/resource';
+import {merge, Observable} from 'rxjs';
 import {environment} from '../../environments/environment';
-import {Relationship} from '../objects/relationship';
+import {Relationship} from '../models/relationship';
+import {ApiService} from './api.service';
+import {filter, flatMap, map, mergeMap, pluck, tap} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RelationshipService {
 
-  constructor(private http: HttpClient) {
+  constructor(private apiService: ApiService) {
   }
 
   getRelationships(): Observable<Relationship[]> {
-    return this.http.get<Relationship[]>(environment.appUrl + '/relationships/');
+    return this.apiService.get( '/relationships/');
   }
 
-  getRelationshipsOfProject(project: Project): Observable<Relationship[]> {
-    return this.http.get<Relationship[]>(environment.appUrl + '/relationships/projects/' + project.id);
+  getRelationship(id: number): Observable<Relationship[]> {
+    return this.apiService.get('/relationships/' + id);
   }
 
-  getRelationshipsOfResource(resource: Resource): Observable<Relationship[]> {
-    return this.http.get<Relationship[]>(environment.appUrl + '/relationships/resources/' + resource.id);
+  getRelationshipsOfProject(project: Project): Observable<Resource[]> {
+    return this.apiService.get( '/relationships/projects/' + project.id).pipe(map(rs => rs.map(rse => rse.resource)));
   }
 
-  addRelationship(project: Project, resource: Resource): Observable<Relationship> {
+  getRelationshipsOfResource(resource: Resource): Observable<Project[]> {
+    return this.apiService.get( '/relationships/resources/' + resource.id).pipe(map(rs => rs.map(rse => rse.project)));
+  }
 
-    const relationship: Relationship = {id: null, date: null, project, resource};
-    console.log('PUT' + JSON.stringify(relationship));
-    return this.http.put<Relationship>(environment.appUrl + '/relationships/', relationship);
+  createEmptyRelationship(): Observable<Relationship> {
+    return this.apiService.post('/relationships/');
+  }
+
+  updateRelationship(id: number, relationship: Relationship): Observable<Relationship> {
+    return this.apiService.put('/relationships/' + id, relationship );
+  }
+
+  createRelationship(project: Project, resource: Resource): Observable<Relationship> {
+    return this.createEmptyRelationship().pipe(mergeMap(r => this.updateRelationship(r.id, {id: null, date: null, project, resource})));
   }
 
   deleteRelationship(relationship: Relationship): Observable<void> {
-    return this.http.delete<void>(environment.appUrl + '/relationships/' + relationship.id);
+    return this.apiService.delete('/relationships/' + relationship.id);
   }
 }

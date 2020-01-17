@@ -1,0 +1,7 @@
+<p>
+  {{resource.path}}
+  <span *ngIf=selected>
+  <app-button-filter *ngIf="selected.id === resource.id" (checked) = "onChecked($event)"></app-button-filter>
+  <app-button-information *ngIf="selected.id === resource.id"></app-button-information>
+  </span>
+</p>

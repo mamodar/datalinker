@@ -1,9 +1,10 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {ObjectUnsubscribedError, Observable} from 'rxjs';
 import {environment} from '../../environments/environment';
-import {Resource} from '../objects/resource';
-import {tap} from 'rxjs/operators';
+import {Resource} from '../models/resource';
+import {mergeMap, tap} from 'rxjs/operators';
+import {ApiService} from './api.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,25 +12,29 @@ import {tap} from 'rxjs/operators';
 
 export class ResourceService {
 
-  constructor(private http: HttpClient) {
+  constructor(private apiService: ApiService) {
   }
 
   getResources(): Observable<Resource[]> {
-    return this.http.get<Resource[]>(environment.appUrl + '/resources/');
+    return this.apiService.get('/resources/');
   }
 
   getResource(id: number): Observable<Resource[]> {
-    return this.http.get<Resource[]>(environment.appUrl + '/resources/' + id);
+    return this.apiService.get('/resources/' + id);
   }
 
-  addResource(resource: Resource): Observable<Resource> {
-    return this.http.post<Resource>(environment.appUrl + '/resources/', resource).pipe(tap((newResource: Resource) =>
-      console.log(`added resource id = ${newResource.id}`)));
+  createEmptyResource(): Observable<Resource> {
+    return this.apiService.post( '/resources/');
   }
 
-  updateResource(resource: Resource): Observable<Resource> {
-    return this.http.put<Resource>(environment.appUrl + '/resources/', resource).pipe(tap((newResource: Resource) =>
-      console.log(`updated resource id = ${newResource.id}`)));
+  updateResource(id: number, resource: Resource): Observable<Resource> {
+    return this.apiService.put( '/resources/' + id, resource);
+  }
+  createResource(resource: Resource): Observable<Resource> {
+    return this.createEmptyResource().pipe(mergeMap(r => this.updateResource(r.id, resource)));
+  }
+  deleteResource(id: number): Observable<void> {
+    return this.apiService.delete('resources' + id);
   }
 
 }

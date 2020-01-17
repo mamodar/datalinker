@@ -2,14 +2,5 @@
   <img alt="MaMoDaR Logo" src="assets/logo.png">
   <mat-grid-tile-header><h1 class="mat-h1">{{title}}</h1></mat-grid-tile-header>
 </mat-toolbar>
-
-
-<nav mat-tab-nav-bar>
-  <a routerLinkActive #rla1="routerLinkActive" [active]="rla1.isActive" routerLink="/connector"
-     mat-tab-link> Daten zu einem Projekt hinzufügen</a>
-  <a routerLinkActive #rla2="routerLinkActive" [active]="rla2.isActive" routerLink="/project"
-     mat-tab-link> Projekt bearbeiten</a>
-  <a routerLinkActive #rla3="routerLinkActive" [active]="rla3.isActive" routerLink="/resource"
-     mat-tab-link> Pfad bearbeiten</a>
-</nav>
 <router-outlet></router-outlet>
+
