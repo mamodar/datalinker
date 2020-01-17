@@ -11,9 +11,4 @@ public interface ProjectResourceRepository extends JpaRepository<ProjectResource
   Collection<ProjectResource> findProjectResourcesByResource_Id(
       @Param("resource_id") long resourceId);
 
-  boolean existsProjectResourcesByProject_IdAndResource_Id(@Param("project_id") long projectId,
-      @Param("resource_id") long resourceId);
-
-  ProjectResource findProjectResourcesByProject_IdAndResource_Id(
-      @Param("project_id") long projectId, @Param("resource_id") long resourceId);
 }
