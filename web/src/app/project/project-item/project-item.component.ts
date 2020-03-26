@@ -1,5 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Project} from '../../models/project';
+import {BehaviorSubject} from 'rxjs';
+import {StateService} from '../../services/state.service';
 
 @Component({
   selector: 'app-project-item',
@@ -8,20 +10,20 @@ import {Project} from '../../models/project';
 })
 export class ProjectItemComponent implements OnInit {
 
-  constructor() { }
+  constructor(private stateService: StateService) { }
 
    @Input() project: Project;
-   @Input() selected: Project;
-   @Output() filterResourcesBy = new EventEmitter<Project>();
+   selected$: BehaviorSubject<Project>;
 
   ngOnInit() {
+    this.selected$ = this.stateService.getSelectedProject() ;
   }
 
   onChecked($event: boolean) {
     if ($event) {
-      this.filterResourcesBy.emit(this.project);
+      this.stateService.setFilterByProject(this.project);
     } else {
-      this.filterResourcesBy.emit(undefined);
+      this.stateService.setFilterByProject(undefined);
     }
   }
 }

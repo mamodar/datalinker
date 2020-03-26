@@ -1,6 +1,6 @@
 import {ApplicationRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Project} from '../../models/project';
-import {Observable, of, Subscription} from 'rxjs';
+import {BehaviorSubject, Observable, of, Subscription} from 'rxjs';
 import {StateService} from '../../services/state.service';
 import {Resource} from '../../models/resource';
 
@@ -11,28 +11,23 @@ import {Resource} from '../../models/resource';
 })
 export class ProjectListComponent implements OnInit {
 
-  constructor(private stateService: StateService, private applicationRef: ApplicationRef) { }
+  constructor(private stateService: StateService) { }
   projects$: Observable<Project[]>;
-  filterByResource: Subscription;
-  selectedProject: Project | undefined;
+
+  selectedProject$: BehaviorSubject<Project>
 
   ngOnInit() {
-
-    this.filterByResource = this.stateService.getFilterByResource().subscribe(_ => this.refreshProjectsFilterByResources())
     this.projects$ = this.stateService.getProjects();
+    this.selectedProject$ = this.stateService.getSelectedProject();
   }
 
-  refreshProjectsFilterByResources(): void {
-    this.projects$ = this.stateService.getProjects();
-  }
 
   onSelect(project: Project) {
-    if (this.selectedProject === project) {
-      this.selectedProject = undefined;
+    if (this.selectedProject$.getValue() === project) {
       this.stateService.setSelectedProject(undefined);
       this.stateService.setFilterByProject(undefined);
     } else {
-      this.selectedProject = project;
+
       this.stateService.setSelectedProject(project);
     }
 

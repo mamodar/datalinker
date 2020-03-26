@@ -15,26 +15,20 @@ export class ResourceListComponent implements OnInit {
 
   constructor(private stateService: StateService) { }
   resources$: Observable<Resource[]>;
-  filterByProject: Subscription;
-  selectedResource: Resource | undefined;
+  selectedResource$: BehaviorSubject<Resource>;
 
   ngOnInit() {
-    // refresh every time a new project is is chosen for filtering
-    this.filterByProject = this.stateService.getFilterByProject().subscribe(_ => this.refreshResourcesFilterByProject());
     this.resources$ = this.stateService.getResources();
+    this.selectedResource$ = this.stateService.getSelectedResource();
   }
 
-  refreshResourcesFilterByProject(): void {
-    this.resources$ = this.stateService.getResources();
-  }
 
   onSelect(resource: Resource): void {
-    if (this.selectedResource === resource) {
-      this.selectedResource = undefined;
+
+    if (this.selectedResource$.getValue() === resource) {
       this.stateService.setFilterByResource(undefined);
       this.stateService.setSelectedResource(undefined);
     } else {
-      this.selectedResource = resource;
       this.stateService.setSelectedResource(resource);
     }
   }

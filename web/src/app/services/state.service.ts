@@ -1,10 +1,10 @@
 import {ApplicationRef, Injectable} from '@angular/core';
-import {BehaviorSubject, merge, Observable} from 'rxjs';
+import {BehaviorSubject, iif, merge, Observable, of} from 'rxjs';
 import {Relationship} from '../models/relationship';
 import {Resource} from '../models/resource';
 import {Project} from '../models/project';
 import {ProjectService} from './project.service';
-import {count, filter, map, shareReplay, tap} from 'rxjs/operators';
+import {count, filter, flatMap, map, shareReplay, take, tap} from 'rxjs/operators';
 import {RelationshipService} from './relationship.service';
 import {ResourceService} from './resource.service';
 
@@ -12,77 +12,124 @@ import {ResourceService} from './resource.service';
   providedIn: 'root'
 })
 export class StateService {
-  private connected: number;
-
 
   constructor(private projectService: ProjectService,
               private resourceService: ResourceService,
               private relationshipService: RelationshipService) {
   }
 
-  filterByResource = new BehaviorSubject<Resource>(undefined);
-  selectedResource = new BehaviorSubject<Resource>(undefined);
-  filterByProject = new BehaviorSubject<Project>(undefined);
-  selectedProject = new BehaviorSubject<Project>(undefined);
 
-  getResources(): Observable<Resource[]> {
+  shownResources = new BehaviorSubject<Resource[]>(undefined);
+  selectedResource = new BehaviorSubject<Resource>(undefined);
+  filterProjectsByResource = new BehaviorSubject<Resource>(undefined);
+
+  shownProjects = new BehaviorSubject<Project[]>(undefined);
+  selectedProject = new BehaviorSubject<Project>(undefined);
+  filterResourcesByProject = new BehaviorSubject<Project>(undefined);
+
+  isConnected = new BehaviorSubject<boolean>(undefined);
+
+  getResources(): BehaviorSubject<Resource[]> {
     console.log('getResources');
-    if (this.filterByProject.getValue()) {
-      return this.relationshipService.getRelationshipsOfProject(this.filterByProject.getValue());
+    if (this.filterResourcesByProject.getValue()) {
+      this.relationshipService.getRelationships(this.filterResourcesByProject.getValue()).
+      pipe(map(relationshipArray => relationshipArray.map(relationshipElement => relationshipElement.resource))).
+      subscribe(_ => this.shownResources.next(_));
+    } else {
+      this.resourceService.getResources().subscribe(_ => this.shownResources.next(_));
     }
-    return this.resourceService.getResources();
+
+    return this.shownResources;
   }
 
-  getProjects(): Observable<Project[]> {
+  getProjects(): BehaviorSubject<Project[]> {
     console.log('getProjects');
-    if (this.filterByResource.getValue()) {
-        return this.relationshipService.getRelationshipsOfResource(this.filterByResource.getValue());
+    if (this.filterProjectsByResource.getValue()) {
+      this.relationshipService.getRelationships(undefined, this.filterProjectsByResource.getValue()).
+      pipe(map(relationshipArray => relationshipArray.map(relationshipElement => relationshipElement.project))).
+      subscribe(_ => this.shownProjects.next(_));
+    } else {
+      this.projectService.getProjects().subscribe(_ => this.shownProjects.next(_));
     }
-    return this.projectService.getProjects();
+    return this.shownProjects;
   }
 
   getFilterByResource(): BehaviorSubject<Resource> {
-    return this.filterByResource;
+    return this.filterProjectsByResource;
   }
 
   setFilterByResource(selectedResource: Resource): void {
-    if (selectedResource !== this.filterByResource.getValue()) {
-    this.filterByResource.next(selectedResource);
+    if (selectedResource !== this.filterProjectsByResource.getValue()) {
+      this.filterProjectsByResource.next(selectedResource);
+      this.setSelectedProject(undefined);
+      this.getProjects();
     }
   }
 
   getFilterByProject(): BehaviorSubject<Project> {
-    console.log(this.filterByProject.getValue());
-    return this.filterByProject;
+    console.log(this.filterResourcesByProject.getValue());
+    return this.filterResourcesByProject;
   }
 
-  setFilterByProject(selectedProject: Project| undefined): void {
-    if (selectedProject !== this.filterByProject.getValue()) {
-      this.filterByProject.next(selectedProject);
+  setFilterByProject(selectedProject: Project | undefined): void {
+    if (selectedProject !== this.filterResourcesByProject.getValue()) {
+      this.filterResourcesByProject.next(selectedProject);
+      this.setSelectedResource(undefined);
+      this.getResources();
     }
   }
 
-  setSelectedResource(resource: Resource) {
-    this.selectedResource.next(resource);
-  }
-  setSelectedProject(project: Project) {
-    this.selectedProject.next(project);
-  }
   getSelectedResource(): BehaviorSubject<Resource> {
     return this.selectedResource;
   }
+
+  setSelectedResource(resource: Resource): void {
+    this.selectedResource.next(resource);
+    this.areSelectedConnected();
+  }
+
   getSelectedProject(): BehaviorSubject<Project> {
     return this.selectedProject;
   }
 
-  checkIfConnected(project: Project, resource: Resource): number {
-    console.log('checkIfConnected: ' + project.projectName);
-    console.log('checkIfConnected: ' + resource.path);
-    // TODO(ky): better check for equality
-    // TODO(ky): check why always one to late
-    // this.relationshipService.getRelationshipsOfProject(project).pipe(map(rsa => rsa.filter(rsi  => rsi.path === resource.path), ), map(rs => this.connected = rs.length)).subscribe();
-    // console.log('checkIfConnected ' + this.connected);
-    // return this.connected;
-    return undefined;
+  setSelectedProject(project: Project): void {
+    this.selectedProject.next(project);
+    this.areSelectedConnected();
+  }
+
+  areSelectedConnected(): BehaviorSubject<boolean> {
+    console.log('areSelectedConnected');
+    if (this.selectedResource && this.selectedProject) {
+      this.getRelationshipsForSelected().pipe(tap(_ => console.log(_))).subscribe(_ => this.isConnected.next(_.length > 0));
+    } else {
+      this.isConnected.next(false);
+    }
+    return this.isConnected;
+  }
+
+getRelationshipsForSelected(): Observable<Relationship[]> {
+    return this.relationshipService.getRelationships(this.getSelectedProject().getValue(), this.getSelectedResource().getValue())
+    .pipe(map(relationshipArray => relationshipArray));
+  }
+
+
+
+/*
+  changeRelationshipForSelected(): Observable<Relationship> {
+    return this.relationshipService.getRelationships(this.getSelectedProject().getValue(), this.getSelectedResource().getValue())
+    .pipe(flatMap(relationshipArray => iif(() => relationshipArray.length > 0,
+      this.getRelationshipsForSelected().pipe(flatMap(relationship => this.relationshipService.deleteRelationship(relationship))),
+      this.relationshipService.createRelationship(this.getSelectedProject().getValue(), this.getSelectedResource().getValue()))));
+  }*/
+  changeRelationshipSelected(type: string): void {
+    if (type === 'connect') {
+      this.relationshipService.createRelationship(this.getSelectedProject().getValue(), this.getSelectedResource().getValue()).
+      subscribe(() => this.areSelectedConnected());
+    }
+    if (type === 'disconnect') {
+      this.getRelationshipsForSelected().
+      pipe(flatMap(relationship => this.relationshipService.deleteRelationship(relationship[0]))).
+      subscribe(() => this.areSelectedConnected());
+    }
   }
 }

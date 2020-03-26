@@ -23,7 +23,7 @@ export class ApiService {
   }
 
   put(path: string, body: any = {}): Observable<any> {
-    console.warn(Date() + ' PUT:' + path + JSON.stringify(body) );
+    console.warn(Date() + ' PUT:' + path + 'body:' +  JSON.stringify(body) );
     return this.http.put(
       environment.appUrl + path,
       body
@@ -31,7 +31,7 @@ export class ApiService {
   }
 
   post(path: string, body: any = {}): Observable<any> {
-    console.warn(Date() + ' POST:' + path + JSON.stringify(body) );
+    console.warn(Date() + ' POST:' + path + 'body:' + JSON.stringify(body) );
     return this.http.post(
       environment.appUrl + path,
       body

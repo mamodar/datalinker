@@ -1,8 +1,8 @@
 <h3 class="mat-h3">Projects</h3>
 
 <ul class="projects">
-  <li *ngFor="let project of projects$ |async" (click) = onSelect(project) [class.selected]="project === selectedProject" >
-    <app-project-item [project]="project" [selected]="selectedProject" (filterResourcesBy)="filterResourcesBy($event)"> </app-project-item>
+  <li *ngFor="let project of projects$ |async" (click) = onSelect(project)  >
+    <app-project-item [project]="project" > </app-project-item>
 
   </li>
 

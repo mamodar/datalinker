@@ -1,7 +1,7 @@
 <h3 class="mat-h3">Resources</h3>
 
 <ul class="projects">
-  <li *ngFor="let resource of resources$ |async" (click) = "onSelect(resource)" [class.selected]="resource === selectedResource">
-    <app-resource-item [resource]="resource"  [selected]="selectedResource" (filterByResource)="filterByResource($event)" > </app-resource-item>
+  <li *ngFor="let resource of resources$ |async"  (click)="onSelect(resource)" >
+    <app-resource-item [resource]="resource"> </app-resource-item>
   </li>
 </ul>

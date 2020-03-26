@@ -1,6 +1,9 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Resource} from '../../models/resource';
 import {Project} from '../../models/project';
+import {BehaviorSubject, iif} from 'rxjs';
+import {StateService} from '../../services/state.service';
+import {map, tap} from 'rxjs/operators';
 
 @Component({
   selector: 'app-resource-item',
@@ -9,17 +12,18 @@ import {Project} from '../../models/project';
 })
 export class ResourceItemComponent implements OnInit {
 
-  constructor() { }
+  constructor(private stateService: StateService) { }
   @Input() resource: Resource;
-  @Input() selected: Resource;
-  @Output() filterByResource = new EventEmitter<Resource>();
+  selected$: BehaviorSubject<Resource>;
+
   ngOnInit() {
+    this.selected$ = this.stateService.getSelectedResource();
   }
-  onChecked($event: boolean) {
+  onChecked($event: boolean): void {
     if ($event) {
-      this.filterByResource.emit(this.resource);
+      this.stateService.setFilterByResource(this.resource);
     } else {
-      this.filterByResource.emit(undefined);
+      this.stateService.setFilterByResource(undefined);
     }
   }
 }
