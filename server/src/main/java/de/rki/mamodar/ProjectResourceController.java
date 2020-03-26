@@ -2,6 +2,7 @@ package de.rki.mamodar;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.Optional;
 import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -31,23 +33,20 @@ public class ProjectResourceController {
   }
 
   @GetMapping("/relationships/")
-  Collection<ProjectResource> all() {
-    log.info("GET: /relationships/");
+  Collection<ProjectResource> allFilter(@RequestParam(name = "project", required = false) Optional<Long> projectId,
+      @RequestParam(name = "resource",required = false) Optional<Long> resourceId) {
+    log.info("GET: /relationships/" );
+    if(resourceId.isEmpty() && projectId.isPresent()){
+    return repository.findProjectResourcesByProject_Id(projectId.get());
+    }
+    if(projectId.isEmpty() && resourceId.isPresent()){
+      return repository.findProjectResourcesByResource_Id(resourceId.get());
+    }
+    if(projectId.isPresent() && resourceId.isPresent()){
+      return repository.findProjectResourcesByResource_IdAndProject_Id(resourceId.get(),projectId.get());
+    }
     return repository.findAll();
   }
-
-  @GetMapping("/relationships/projects/{id}")
-  Collection<ProjectResource> allInProject(@PathVariable Long id) {
-    log.info("GET: /relationships/projects/id");
-    return repository.findProjectResourcesByProject_Id(id);
-  }
-
-  @GetMapping("/relationships/resources/{id}")
-  Collection<ProjectResource> allInResource(@PathVariable Long id) {
-    log.info("GET: /relationships/resources/id");
-    return repository.findProjectResourcesByResource_Id(id);
-  }
-
 
 
   @PostMapping("/relationships/")
