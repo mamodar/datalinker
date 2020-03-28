@@ -1,10 +1,13 @@
-<h3 class="mat-h3">Projects</h3>
+<table mat-table [dataSource]="projects$ | async" class="mat-elevation-z8">
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef> Name</th>
+    <td mat-cell *matCellDef="let project"> {{project.projectName}}   <span
+      *ngIf="selectedProject$ | async as selected">
+  <app-button-filter *ngIf="selected === project"  [parent]=project> </app-button-filter>
+  <app-button-information *ngIf="selected === project"></app-button-information>
+  </span></td>
+  </ng-container>
 
-<ul class="projects">
-  <li *ngFor="let project of projects$ |async" (click) = onSelect(project)  >
-    <app-project-item [project]="project" > </app-project-item>
-
-  </li>
-
-</ul>
-
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let project; columns: displayedColumns;" (click)="onSelect(project)"></tr>
+</table>

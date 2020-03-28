@@ -5,7 +5,6 @@ import {Resource} from '../../models/resource';
 import {StateService} from '../../services/state.service';
 import {tap} from 'rxjs/operators';
 
-
 @Component({
   selector: 'app-resource-list',
   templateUrl: './resource-list.component.html',
@@ -16,6 +15,7 @@ export class ResourceListComponent implements OnInit {
   constructor(private stateService: StateService) { }
   resources$: Observable<Resource[]>;
   selectedResource$: BehaviorSubject<Resource>;
+  displayedColumns: string[] = ['path'];
 
   ngOnInit() {
     this.resources$ = this.stateService.getResources();

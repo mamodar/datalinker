@@ -1,8 +1,0 @@
-<p>
-  {{project.projectName}}
-  <span *ngIf="selected$ | async as selected">
-  <app-button-filter *ngIf="selected === project" (checked) = "onChecked($event)"></app-button-filter>
-  <app-button-information *ngIf="selected === project"></app-button-information>
-  </span>
-</p>
-

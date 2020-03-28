@@ -1,7 +1,9 @@
-<h3 class="mat-h3">Resources</h3>
+<table mat-table [dataSource]="resources$ | async" class="mat-elevation-z8">
+  <ng-container matColumnDef="path">
+    <th mat-header-cell *matHeaderCellDef> Pfad</th>
+    <td mat-cell *matCellDef="let resource"> {{resource.path}}</td>
+  </ng-container>
 
-<ul class="projects">
-  <li *ngFor="let resource of resources$ |async"  (click)="onSelect(resource)" >
-    <app-resource-item [resource]="resource"> </app-resource-item>
-  </li>
-</ul>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let project; columns: displayedColumns;" ></tr>
+</table>

@@ -12,7 +12,8 @@ import {tap} from 'rxjs/operators';
   styleUrls: ['./resource.component.css']
 })
 export class ResourceComponent implements OnInit {
-  constructor() { }
+
+  constructor(private stateService: StateService) { }
 
   ngOnInit() {
   }

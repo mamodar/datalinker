@@ -1,7 +1,0 @@
-<p>
-  {{resource.path}}
-  <span *ngIf="selected$ | async as selected" >
-  <app-button-filter *ngIf="selected === resource" (checked) = "onChecked($event)"></app-button-filter>
-  <app-button-information *ngIf="selected === resource"></app-button-information>
-  </span>
-</p>

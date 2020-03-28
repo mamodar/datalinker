@@ -36,7 +36,7 @@ export class StateService {
       pipe(map(relationshipArray => relationshipArray.map(relationshipElement => relationshipElement.resource))).
       subscribe(_ => this.shownResources.next(_));
     } else {
-      this.resourceService.getResources().subscribe(_ => this.shownResources.next(_));
+      this.shownResources.next([]);
     }
 
     return this.shownResources;
