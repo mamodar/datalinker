@@ -20,9 +20,11 @@ public class ResourceController {
 
   private static final Logger log = LoggerFactory.getLogger(MamodarApplication.class);
   private final ResourceRepository repository;
+  private final ProjectResourceRepository relationshipRepository;
 
-  public ResourceController(ResourceRepository repository) {
+  public ResourceController(ResourceRepository repository, ProjectResourceRepository relationshipRepository ) {
     this.repository = repository;
+    this.relationshipRepository = relationshipRepository;
   }
 
   @GetMapping("/resources/")
@@ -70,6 +72,7 @@ public class ResourceController {
     log.info("DELETE: /resources/id");
     Resource resource = repository.findById(id)
         .orElseThrow(() -> new ObjectNotFoundException("resource", id));
+    relationshipRepository.findProjectResourcesByResource_Id(id).forEach( relationship -> relationshipRepository.delete(relationship));
     repository.delete(resource);
   }
 }
