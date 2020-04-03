@@ -1,9 +1,17 @@
-<div class="row">
-  <div class="column"><app-project></app-project></div>
-  <div class="column"><app-relationship></app-relationship></div>
-  <div class="column"><app-resource></app-resource></div>
-</div>
-
-
-
-
+<mat-tab-group>
+  <mat-tab label="Projekte" >
+    <ng-template matTabContent >
+      <app-project-tab></app-project-tab>
+    </ng-template>
+  </mat-tab>
+  <mat-tab label="Suche">
+    <ng-template matTabContent>
+    </ng-template>
+  </mat-tab>
+  <mat-tab label="Veröffentlichung">
+    <ng-template matTabContent></ng-template>
+  </mat-tab>
+  <mat-tab label="Import/Export">
+    <ng-template matTabContent></ng-template>
+  </mat-tab>
+</mat-tab-group>

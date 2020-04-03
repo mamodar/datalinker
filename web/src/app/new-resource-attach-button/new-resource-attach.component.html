@@ -1,0 +1,2 @@
+<button mat-button (click) = connect()
+        [disabled]="!this.stateService.getSelectedProject().getValue() || !this.stateService.getNewShownResources().getValue()?.length > 0">Verknüpfen </button>

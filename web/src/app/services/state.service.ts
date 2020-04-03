@@ -7,6 +7,7 @@ import {ProjectService} from './project.service';
 import {count, filter, flatMap, map, shareReplay, take, tap} from 'rxjs/operators';
 import {RelationshipService} from './relationship.service';
 import {ResourceService} from './resource.service';
+import {ResourceType} from '../models/resourceType';
 
 @Injectable({
   providedIn: 'root'
@@ -19,21 +20,26 @@ export class StateService {
   }
 
 
-  shownResources = new BehaviorSubject<Resource[]>(undefined);
-  selectedResource = new BehaviorSubject<Resource>(undefined);
-  filterProjectsByResource = new BehaviorSubject<Resource>(undefined);
+  private shownResources = new BehaviorSubject<Resource[]>(undefined);
 
-  shownProjects = new BehaviorSubject<Project[]>(undefined);
-  selectedProject = new BehaviorSubject<Project>(undefined);
-  filterResourcesByProject = new BehaviorSubject<Project>(undefined);
+  private shownProjects = new BehaviorSubject<Project[]>(undefined);
+  private selectedProject = new BehaviorSubject<Project>(undefined);
+  private filterResourcesByProject = new BehaviorSubject<Project>(undefined);
 
-  isConnected = new BehaviorSubject<boolean>(undefined);
+  private newResources = new Array<Resource>();
+  private shownNewResources = new BehaviorSubject<Resource[]>(null);
+
+  private isConnected = new BehaviorSubject<boolean>(false);
+
 
   getResources(): BehaviorSubject<Resource[]> {
     console.log('getResources');
     if (this.filterResourcesByProject.getValue()) {
       this.relationshipService.getRelationships(this.filterResourcesByProject.getValue()).
-      pipe(map(relationshipArray => relationshipArray.map(relationshipElement => relationshipElement.resource))).
+      pipe(map(relationshipArray => relationshipArray.map((relationshipElement) =>
+        // @ts-ignore
+      {relationshipElement.resource.location = new ResourceType(relationshipElement.resource.location);
+       return relationshipElement.resource; }))).
       subscribe(_ => this.shownResources.next(_));
     } else {
       this.shownResources.next([]);
@@ -44,26 +50,8 @@ export class StateService {
 
   getProjects(): BehaviorSubject<Project[]> {
     console.log('getProjects');
-    if (this.filterProjectsByResource.getValue()) {
-      this.relationshipService.getRelationships(undefined, this.filterProjectsByResource.getValue()).
-      pipe(map(relationshipArray => relationshipArray.map(relationshipElement => relationshipElement.project))).
-      subscribe(_ => this.shownProjects.next(_));
-    } else {
-      this.projectService.getProjects().subscribe(_ => this.shownProjects.next(_));
-    }
+    this.projectService.getProjects().subscribe(_ => this.shownProjects.next(_));
     return this.shownProjects;
-  }
-
-  getFilterByResource(): BehaviorSubject<Resource> {
-    return this.filterProjectsByResource;
-  }
-
-  setFilterByResource(selectedResource: Resource): void {
-    if (selectedResource !== this.filterProjectsByResource.getValue()) {
-      this.filterProjectsByResource.next(selectedResource);
-      this.setSelectedProject(undefined);
-      this.getProjects();
-    }
   }
 
   getFilterByProject(): BehaviorSubject<Project> {
@@ -74,19 +62,10 @@ export class StateService {
   setFilterByProject(selectedProject: Project | undefined): void {
     if (selectedProject !== this.filterResourcesByProject.getValue()) {
       this.filterResourcesByProject.next(selectedProject);
-      this.setSelectedResource(undefined);
       this.getResources();
     }
   }
 
-  getSelectedResource(): BehaviorSubject<Resource> {
-    return this.selectedResource;
-  }
-
-  setSelectedResource(resource: Resource): void {
-    this.selectedResource.next(resource);
-    this.areSelectedConnected();
-  }
 
   getSelectedProject(): BehaviorSubject<Project> {
     return this.selectedProject;
@@ -94,42 +73,56 @@ export class StateService {
 
   setSelectedProject(project: Project): void {
     this.selectedProject.next(project);
-    this.areSelectedConnected();
   }
 
-  areSelectedConnected(): BehaviorSubject<boolean> {
-    console.log('areSelectedConnected');
-    if (this.selectedResource && this.selectedProject) {
-      this.getRelationshipsForSelected().pipe(tap(_ => console.log(_))).subscribe(_ => this.isConnected.next(_.length > 0));
+  createResource(resource: Resource): Observable<Resource> {
+    return this.resourceService.createResource(resource);
+  }
+
+  createRelationship(project: Project, resource: Resource): Observable<Relationship> {
+
+    return this.relationshipService.createRelationship(project, resource);
+  }
+
+  addNewResource(resource: Resource): void {
+    this.newResources.push(resource);
+    this.shownNewResources.next(this.newResources);
+  }
+
+  getNewShownResources(): BehaviorSubject<Resource[]> {
+    return this.shownNewResources;
+  }
+
+
+  resetNewResources(): void {
+    this.newResources.length = 0;
+    this.shownNewResources.next(this.newResources);
+    this.getResources();
+  }
+
+  deleteResource(resource: Resource): void {
+    console.log(resource);
+    if (!resource.id) {
+      this.newResources = this.newResources.filter(_ => _ !== resource);
+      this.shownNewResources.next(this.newResources);
     } else {
-      this.isConnected.next(false);
+      this.resourceService.deleteResource(resource.id).subscribe(_ => this.getResources());
+
     }
-    return this.isConnected;
   }
-
-getRelationshipsForSelected(): Observable<Relationship[]> {
-    return this.relationshipService.getRelationships(this.getSelectedProject().getValue(), this.getSelectedResource().getValue())
-    .pipe(map(relationshipArray => relationshipArray));
-  }
-
-
-
-/*
-  changeRelationshipForSelected(): Observable<Relationship> {
-    return this.relationshipService.getRelationships(this.getSelectedProject().getValue(), this.getSelectedResource().getValue())
-    .pipe(flatMap(relationshipArray => iif(() => relationshipArray.length > 0,
-      this.getRelationshipsForSelected().pipe(flatMap(relationship => this.relationshipService.deleteRelationship(relationship))),
-      this.relationshipService.createRelationship(this.getSelectedProject().getValue(), this.getSelectedResource().getValue()))));
-  }*/
-  changeRelationshipSelected(type: string): void {
-    if (type === 'connect') {
-      this.relationshipService.createRelationship(this.getSelectedProject().getValue(), this.getSelectedResource().getValue()).
-      subscribe(() => this.areSelectedConnected());
-    }
-    if (type === 'disconnect') {
-      this.getRelationshipsForSelected().
-      pipe(flatMap(relationship => this.relationshipService.deleteRelationship(relationship[0]))).
-      subscribe(() => this.areSelectedConnected());
-    }
+  /*SAN("WissData"),
+  LOCAL("Lokal"),
+  OPENBIS("OpenBIS"),
+  GIT("git"),
+  DOI("doi");*/
+  getResourceTypes(): BehaviorSubject<ResourceType[]> {
+    const resource: ResourceType[] = [
+      {transferNumber: 0, value: 'san-0', viewValue: 'lokal', pathDescriptor: 'Pfad:'},
+      {transferNumber: 1, value: 'local-1', viewValue: 'WissData S:', pathDescriptor: 'Pfad:'},
+      {transferNumber: 2, value: 'openbis-2', viewValue: 'OpenBIS', pathDescriptor: 'ID:'},
+      {transferNumber: 3, value: 'git-3', viewValue: 'git Repositorium', pathDescriptor: 'URL:'},
+      {transferNumber: 4, value: 'doi-4', viewValue: 'DOI Referenz', pathDescriptor: 'DOI:'}];
+    const resources: BehaviorSubject<ResourceType[]> = new BehaviorSubject<ResourceType[]>(resource);
+    return(resources);
   }
 }

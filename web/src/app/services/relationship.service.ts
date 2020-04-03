@@ -17,10 +17,6 @@ export class RelationshipService {
   constructor(private apiService: ApiService) {
   }
 
-
-
-
-
   getRelationships(project?: Project, resource?: Resource): Observable<Relationship[]> {
     if ((typeof project === 'undefined') && (typeof resource !== 'undefined')) {
       return this.apiService.get('/relationships/?resource=' + resource.id);
@@ -34,7 +30,7 @@ export class RelationshipService {
     return this.apiService.get('/relationships/');
   }
 
-  createEmptyRelationship(): Observable<Relationship> {
+  private createEmptyRelationship(): Observable<Relationship> {
     return this.apiService.post('/relationships/');
   }
 

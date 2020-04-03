@@ -6,17 +6,20 @@ import {HttpClientModule} from '@angular/common/http';
 import {AppRoutingModule} from './app-routing.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
-import { HomeComponent } from './home/home.component';
-import { ProjectListComponent } from './project/project-list/project-list.component';
-import { ResourceListComponent } from './resource/resource-list/resource-list.component';
-import { ProjectComponent } from './project/project.component';
-import { ResourceComponent } from './resource/resource.component';
-import { RelationshipComponent } from './relationship/relationship.component';
-import { RelationshipButtonComponent } from './relationship/relationship-button/relationship-button.component';
-import { ButtonFilterComponent } from './shared/button-filter/button-filter.component';
-import { ButtonInformationComponent } from './shared/button-information/button-information.component';
-import { ResourceNewComponent } from './resource/resource-new/resource-new.component';
-import { ResourceNewDialogComponent } from './resource/resource-new/resource-new-dialog.component';
+import {HomeComponent} from './home/home.component';
+
+import {ProjectListComponent} from './project-list/project-list.component';
+
+import {ResourceListComponent} from './resource-list/resource-list.component';
+
+
+import {NewResourceAddButtonComponent} from './new-resource-add/new-resource-add-button.component';
+import {NewResourceAddDialogComponent} from './new-resource-add/new-resource-add-dialog.component';
+import {NewResourceListComponent} from './new-resource-list/new-resource-list.component';
+import {NewResourceAttachButtonComponent} from './new-resource-attach-button/new-resource-attach-button.component';
+
+import {ResourceDeleteButtonComponent} from './shared/resource-delete-button/resource-delete-button.component';
+
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatListModule} from '@angular/material/list';
@@ -25,6 +28,17 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatSelectModule} from '@angular/material/select';
 import {MatDialogModule} from '@angular/material/dialog';
+import {MatButtonModule} from '@angular/material/button';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {FormsModule} from '@angular/forms';
+
+
+import {MatInputModule} from '@angular/material/input';
+import {MatTabsModule} from '@angular/material/tabs';
+import {MatExpansionModule} from '@angular/material/expansion';
+import {MatIconModule} from '@angular/material/icon';
+import {MatPaginatorModule} from '@angular/material/paginator';
+import { ProjectTabComponent } from './home/project-tab/project-tab.component';
 
 @NgModule({
   declarations: [
@@ -32,14 +46,12 @@ import {MatDialogModule} from '@angular/material/dialog';
     HomeComponent,
     ProjectListComponent,
     ResourceListComponent,
-    ProjectComponent,
-    ResourceComponent,
-    RelationshipComponent,
-    RelationshipButtonComponent,
-    ButtonFilterComponent,
-    ButtonInformationComponent,
-    ResourceNewComponent,
-    ResourceNewDialogComponent
+    NewResourceAddButtonComponent,
+    NewResourceAddDialogComponent,
+    NewResourceListComponent,
+    NewResourceAttachButtonComponent,
+    ResourceDeleteButtonComponent,
+    ProjectTabComponent
   ],
   imports: [
     BrowserModule,
@@ -53,7 +65,15 @@ import {MatDialogModule} from '@angular/material/dialog';
     MatRadioModule,
     MatSelectModule,
     BrowserAnimationsModule,
-    MatDialogModule
+    MatDialogModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule,
+    MatTabsModule,
+    MatExpansionModule,
+    MatIconModule,
+    MatPaginatorModule
   ],
   providers: [],
   bootstrap: [AppComponent]

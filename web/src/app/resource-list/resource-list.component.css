@@ -1,0 +1,17 @@
+.table{
+  width: 100% !important;
+}
+.mat-form-field {
+  font-size: 11px;
+  width: 25%;
+  float: left;
+  padding-left: 24px;
+  padding-top: 12px;
+
+}
+
+.mat-paginator {
+  width: 70%;
+  float: right;
+
+}

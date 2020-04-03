@@ -1,0 +1,14 @@
+<mat-accordion>
+  <mat-expansion-panel *ngFor="let resource of newResources$ | async" hideToggle >
+    <mat-expansion-panel-header>
+      <mat-panel-title> Neuer Pfad</mat-panel-title>
+      <mat-panel-description > Typ: {{resource.location?.viewValue}} {{resource.location?.pathDescriptor}} {{resource.path}}</mat-panel-description>
+      <app-resource-delete-button  [parent]="resource" ></app-resource-delete-button>
+    </mat-expansion-panel-header>
+    <ng-template matExpansionPanelContent>
+      <mat-list dense>
+        <h4 class="subheading-1">Zusätzliche Information</h4>
+      </mat-list>
+    </ng-template>
+  </mat-expansion-panel>
+</mat-accordion>
