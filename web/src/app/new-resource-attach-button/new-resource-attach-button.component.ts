@@ -10,7 +10,7 @@ import {Resource} from '../models/resource';
 })
 export class NewResourceAttachButtonComponent implements OnInit {
 
-  constructor(private stateService: StateService) { }
+  constructor(public stateService: StateService) { }
 
   ngOnInit(): void {
   }

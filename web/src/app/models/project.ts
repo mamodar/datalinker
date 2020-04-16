@@ -1,6 +1,8 @@
 export class Project {
   id: number;
-  date: Date;
-
+  creationTimestamp: Date;
+  rdmoId: number;
+  owner: string;
   projectName: string;
+  description: string;
 }

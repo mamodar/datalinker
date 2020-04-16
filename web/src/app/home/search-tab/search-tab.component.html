@@ -1,0 +1,10 @@
+<div class="grid">
+
+<mat-form-field appearance="outline" class = "searchField">
+  <mat-label>Suche</mat-label>
+  <input matInput #search (input)="onKey($event)" placeholder="Projekte durchsuchen">
+  <mat-icon matSuffix> 	&#8981; </mat-icon>
+</mat-form-field>
+<mat-divider class="divider"></mat-divider>
+<app-project-list *ngIf="search.value.length > 0" [projects$]="this.projects$" class = "projectList"></app-project-list>
+</div>

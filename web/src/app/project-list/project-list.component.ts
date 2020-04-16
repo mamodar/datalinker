@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {Project} from '../models/project';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {StateService} from '../services/state.service';
@@ -11,13 +11,11 @@ import {StateService} from '../services/state.service';
 export class ProjectListComponent implements OnInit {
 
   constructor(private stateService: StateService) { }
-  projects$: Observable<Project[]>;
-
-  selectedProject$: BehaviorSubject<Project>
+  @Input() projects$: Observable<Project[]>;
+  selectedProject$: BehaviorSubject<Project>;
 
 
   ngOnInit() {
-    this.projects$ = this.stateService.getProjects();
     this.selectedProject$ = this.stateService.getSelectedProject();
 
   }

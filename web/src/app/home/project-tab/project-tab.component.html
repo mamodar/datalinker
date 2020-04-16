@@ -1,6 +1,6 @@
 <div class="grid">
   <div class="flex-grid">
-    <app-project-list class="colleft"></app-project-list>
+    <app-project-list [projects$]="this.projects$" class="colleft"></app-project-list>
     <app-new-resource-list class="colright"></app-new-resource-list>
   </div>
   <mat-divider class="divider"></mat-divider>

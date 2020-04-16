@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {StateService} from '../services/state.service';
+import {ActivatedRoute, Router} from '@angular/router';
 
 
 @Component({
@@ -9,9 +10,9 @@ import {StateService} from '../services/state.service';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(private stateService: StateService) { }
+  constructor() {
+  }
 
   ngOnInit() {
   }
-
 }

@@ -4,7 +4,7 @@ import {Relationship} from '../models/relationship';
 import {Resource} from '../models/resource';
 import {Project} from '../models/project';
 import {ProjectService} from './project.service';
-import {count, filter, flatMap, map, shareReplay, take, tap} from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, flatMap, map} from 'rxjs/operators';
 import {RelationshipService} from './relationship.service';
 import {ResourceService} from './resource.service';
 import {ResourceType} from '../models/resourceType';
@@ -21,7 +21,6 @@ export class StateService {
 
 
   private shownResources = new BehaviorSubject<Resource[]>(undefined);
-
   private shownProjects = new BehaviorSubject<Project[]>(undefined);
   private selectedProject = new BehaviorSubject<Project>(undefined);
   private filterResourcesByProject = new BehaviorSubject<Project>(undefined);
@@ -29,18 +28,16 @@ export class StateService {
   private newResources = new Array<Resource>();
   private shownNewResources = new BehaviorSubject<Resource[]>(null);
 
-  private isConnected = new BehaviorSubject<boolean>(false);
 
 
   getResources(): BehaviorSubject<Resource[]> {
-    console.log('getResources');
     if (this.filterResourcesByProject.getValue()) {
       this.relationshipService.getRelationships(this.filterResourcesByProject.getValue()).
-      pipe(map(relationshipArray => relationshipArray.map((relationshipElement) =>
-        // @ts-ignore
-      {relationshipElement.resource.location = new ResourceType(relationshipElement.resource.location);
-       return relationshipElement.resource; }))).
-      subscribe(_ => this.shownResources.next(_));
+      pipe(map(relationshipArray => relationshipArray.map((relationshipElement) => {
+        // @ts-ignore resource.location is a string when reading from REST API
+        relationshipElement.resource.location = new ResourceType(relationshipElement.resource.location);
+        return relationshipElement.resource;
+      }))).subscribe(_ => this.shownResources.next(_));
     } else {
       this.shownResources.next([]);
     }
@@ -49,13 +46,16 @@ export class StateService {
   }
 
   getProjects(): BehaviorSubject<Project[]> {
-    console.log('getProjects');
     this.projectService.getProjects().subscribe(_ => this.shownProjects.next(_));
     return this.shownProjects;
   }
 
+  searchProjects(terms: Observable<string>): Observable<Project[]> {
+    return terms.pipe(debounceTime(400), distinctUntilChanged(),
+      flatMap(term => this.projectService.searchProjects(term)));
+  }
+
   getFilterByProject(): BehaviorSubject<Project> {
-    console.log(this.filterResourcesByProject.getValue());
     return this.filterResourcesByProject;
   }
 
@@ -101,7 +101,6 @@ export class StateService {
   }
 
   deleteResource(resource: Resource): void {
-    console.log(resource);
     if (!resource.id) {
       this.newResources = this.newResources.filter(_ => _ !== resource);
       this.shownNewResources.next(this.newResources);
@@ -123,6 +122,6 @@ export class StateService {
       {transferNumber: 3, value: 'git-3', viewValue: 'git Repositorium', pathDescriptor: 'URL:'},
       {transferNumber: 4, value: 'doi-4', viewValue: 'DOI Referenz', pathDescriptor: 'DOI:'}];
     const resources: BehaviorSubject<ResourceType[]> = new BehaviorSubject<ResourceType[]>(resource);
-    return(resources);
+    return (resources);
   }
 }

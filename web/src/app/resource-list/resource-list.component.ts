@@ -7,32 +7,51 @@ import {tap} from 'rxjs/operators';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
 
+
 @Component({
   selector: 'app-resource-list',
   templateUrl: './resource-list.component.html',
   styleUrls: ['./resource-list.component.css']
 })
-export class ResourceListComponent implements AfterViewInit, OnDestroy {
+export class ResourceListComponent implements OnDestroy, OnInit {
+  private dataSource: MatTableDataSource<Resource>;
+  displayedColumns: string[] = ['path', 'location', 'action'];
 
-  constructor(private stateService: StateService) { }
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  displayedColumns: string[] = [ 'path', 'location', 'action'];
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
-  dataSource = new MatTableDataSource<Resource>();
   sub: Subscription;
 
-  ngAfterViewInit() {
-    this.sub = this.stateService.getResources().subscribe(resourceArray => {
-      this.dataSource.data = resourceArray;
-      this.dataSource.paginator = this.paginator;
-    });
+  constructor(private stateService: StateService) {
+    this.dataSource = new MatTableDataSource<Resource>([]);
+
   }
+
+  ngOnInit() {
+
+    this.setDataSourceAttributes();
+
+  }
+
   ngOnDestroy() {
-    this.sub.unsubscribe();
+    if (this.sub) {
+      this.sub.unsubscribe();
+    }
   }
 
   search($event): void {
-    console.log($event)
     this.dataSource.filter = ($event.target as HTMLInputElement).value.trim().toLowerCase();
   }
+
+  private setDataSourceAttributes() {
+    // pagination can only be set after the data has been loaded
+    // https://github.com/angular/components/issues/10205
+    this.sub = this.stateService.getResources().subscribe(
+      resourceArray => {
+        this.dataSource.data = resourceArray;
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.filter = '';
+      });
+  }
 }
+
+

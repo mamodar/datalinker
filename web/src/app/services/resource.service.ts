@@ -17,7 +17,7 @@ export class ResourceService {
 
   getResources(): Observable<Resource[]> {
 
-    return this.apiService.get('/resources/').pipe(tap(_ => console.log(_)));
+    return this.apiService.get('/resources/');
   }
 
   getResource(id: number): Observable<Resource[]> {

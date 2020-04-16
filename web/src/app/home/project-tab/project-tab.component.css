@@ -4,9 +4,10 @@
   grid-template-columns: 100%;
   grid-template-rows: 1fr 4px 10%;
   grid-template-areas:
-  "mainView"
-  "dividerView"
-  "buttonView";
+    "buttonView"
+    "dividerView"
+    "mainView";
+
 }
 
 .flex-grid {

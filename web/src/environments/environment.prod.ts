@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  appUrl: 'localhost:8081'
+  appUrl: 'http://h2879007.stratoserver.net:8081'
 };

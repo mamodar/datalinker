@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import {Observable} from 'rxjs';
+import {Project} from '../../models/project';
+import {StateService} from '../../services/state.service';
 
 @Component({
   selector: 'app-project-tab',
@@ -6,10 +9,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./project-tab.component.css']
 })
 export class ProjectTabComponent implements OnInit {
+  projects$: Observable<Project[]>;
 
-  constructor() { }
+  constructor(private stateService: StateService) { }
 
   ngOnInit(): void {
+    this.projects$ = this.stateService.getProjects();
+
   }
 
 }

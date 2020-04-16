@@ -1,6 +1,6 @@
-
-<mat-accordion >
-<mat-expansion-panel *ngFor="let project of projects$| async" hideToggle>
+<div *ngIf = "projects$ | async as projects; else loading">
+<mat-accordion>
+<mat-expansion-panel *ngFor="let project of projects" hideToggle>
   <mat-expansion-panel-header (click)="onSelect(project);$event.stopPropagation();">
     <mat-panel-title>
       {{project.projectName}}
@@ -13,25 +13,17 @@
 
   <ng-template matExpansionPanelContent>
   <mat-list dense>
-    <mat-list-item> Projektname: {{project.projectName}}</mat-list-item>
-    <mat-list-item> OE:  </mat-list-item>
-    <mat-list-item> Datum: </mat-list-item>
+    <mat-list-item> RDMO ID: {{project.rdmoId?project.rdmoId:'kein RDMO Projekt'}}  </mat-list-item>
+    <mat-list-item> Beschreibung: {{project.description?project.description:'keine Beschreibung angegeben'}}</mat-list-item>
+    <mat-list-item> Ansprechpartner: {{project.rdmoId?project.owner:'kein Ansprechpartner angegeben'}}</mat-list-item>
+    <mat-list-item> Datum: {{project.creationTimestamp}} </mat-list-item>
   </mat-list>
   <app-resource-list></app-resource-list>
   </ng-template>
 </mat-expansion-panel>
 </mat-accordion>
+  <div *ngIf='projects?.length === 0' class = "mat-body-strong">Leider keine Projekte gefunden!</div>
+</div>
 
+<ng-template #loading class = "loader"><mat-spinner ></mat-spinner></ng-template>
 
-<!-- mat-table [dataSource]="projects$ | async" class="mat-elevation-z8">
-  <ng-container matColumnDef="name">
-    <th mat-header-cell *matHeaderCellDef> Name</th>
-    <td mat-cell *matCellDef="let project"> {{project.projectName}}
-      <span *ngIf="selectedProject$ | async as selected">
-        <app-button-information *ngIf="selected === project"></app-button-information>
-      </span>
-    </td>
-  </ng-container>
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let project; columns: displayedColumns;" (click)="onSelect(project)"></tr>
-</table-->

@@ -39,6 +39,10 @@ import {MatExpansionModule} from '@angular/material/expansion';
 import {MatIconModule} from '@angular/material/icon';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import { ProjectTabComponent } from './home/project-tab/project-tab.component';
+import { SearchTabComponent } from './home/search-tab/search-tab.component';
+import {MatChipsModule} from '@angular/material/chips';
+import { RouterHeaderComponent } from './router-header/router-header.component';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -51,7 +55,9 @@ import { ProjectTabComponent } from './home/project-tab/project-tab.component';
     NewResourceListComponent,
     NewResourceAttachButtonComponent,
     ResourceDeleteButtonComponent,
-    ProjectTabComponent
+    ProjectTabComponent,
+    SearchTabComponent,
+    RouterHeaderComponent
   ],
   imports: [
     BrowserModule,
@@ -73,7 +79,9 @@ import { ProjectTabComponent } from './home/project-tab/project-tab.component';
     MatTabsModule,
     MatExpansionModule,
     MatIconModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatChipsModule,
+    MatProgressSpinnerModule
   ],
   providers: [],
   bootstrap: [AppComponent]

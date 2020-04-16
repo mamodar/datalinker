@@ -1,0 +1,25 @@
+.grid {
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: 10% 4px 1fr;
+  grid-template-areas:
+    "searchView"
+    "dividerView"
+    "tableView";
+}
+
+.searchField{
+  grid-area: searchView;
+  margin:  8px 8px 0px 8px;
+  justify-self: center;
+  width: 25%;
+}
+
+.divider{
+  grid-area: dividerView;
+}
+
+.projectList{
+  grid-area: tableView;
+  margin:  16px;
+}

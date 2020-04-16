@@ -1,17 +1,19 @@
-
-<mat-radio-group aria-label="Select an option" [(ngModel)]="data.location" >
-  <span><mat-radio-button class = "radio" *ngFor="let option of (this.resourceTypes$ |async)"
-                    [value] = option><span>{{option.viewValue}}</span></mat-radio-button></span>
+<span><mat-radio-group aria-label="Select an option" [(ngModel)]="this.data.location.value" (change) = "setSelectedLocation()" >
+<mat-radio-button class="radio" *ngFor="let option of (this.resourceTypes$ |async)"
+                          [value]=option.value><span>{{option.viewValue}}</span></mat-radio-button>
 </mat-radio-group>
-<br> <br>
-<mat-form-field *ngIf="data.location" >
-  <mat-label >{{data.location.pathDescriptor}}</mat-label>
-  <input matInput  [(ngModel)]="data.path" type = "text" required><br>
+</span>
+<br> <br> <br>
+<mat-form-field *ngIf="data.location && data.location.value">
+  <mat-label>{{data.location.pathDescriptor}}</mat-label>
+  <input matInput [(ngModel)]="data.path" type="text" required><br>
 </mat-form-field>
 
-<input webkitdirectory *ngIf="data.location && (data.location.value === 'local-1'  ||data.location.value === 'san-0')" type="file">
+<input webkitdirectory
+       *ngIf="data.location && (data.location.value === 'local-1'  ||data.location.value === 'san-0')"
+       type="file">
 
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">Abbrechen</button>
-  <button mat-button [mat-dialog-close]="data"  [disabled]="isFormValid()" >Hinzufügen</button>
+  <button mat-button [mat-dialog-close]="data" [disabled]="isFormValid()">Hinzufügen</button>
 </div>

@@ -2,3 +2,8 @@
   background-color: #CFD8DC;
   color: black;
 }
+
+.loader{
+  text-align: center;
+  margin: auto
+}

@@ -3,12 +3,13 @@ import {NewResourceAddDialogComponent} from './new-resource-add-dialog.component
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import {filter} from 'rxjs/operators';
+import {filter, map, take} from 'rxjs/operators';
 import {StateService} from '../services/state.service';
 
 
 
 import {Resource} from '../models/resource';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-new-resource-add-button',
@@ -17,12 +18,14 @@ import {Resource} from '../models/resource';
 })
 export class NewResourceAddButtonComponent implements OnInit {
 
-  constructor(public matDialog: MatDialog, private stateService: StateService) {
+  constructor(public matDialog: MatDialog, private stateService: StateService,
+              private activatedRoute: ActivatedRoute) {
   }
 
   newResource: Resource;
 
   ngOnInit() {
+    this.activatedRoute.queryParamMap.pipe( take(1), map(_ => _.has('path') ? this.openAddNew() : null)).subscribe();
   }
 
   openAddNew(): void {
@@ -35,6 +38,6 @@ export class NewResourceAddButtonComponent implements OnInit {
     // https://material.angular.io/components/dialog/overview
     const modalDialog = this.matDialog.open(NewResourceAddDialogComponent, dialogConfig);
     modalDialog.afterClosed().pipe(filter(_ => !!_)).subscribe(
-      resource => this.stateService.addNewResource(resource));
+      resource =>  this.stateService.addNewResource(resource));
   }
 }
