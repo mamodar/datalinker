@@ -9,11 +9,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-public class ProjectResource {
+@Table(name = "relationship")
+public class Relationship {
 
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -32,7 +34,7 @@ public class ProjectResource {
   @JoinColumn(name = "resource_id")
   Resource resource;
 
-  ProjectResource() {
+  Relationship() {
 
   }
 

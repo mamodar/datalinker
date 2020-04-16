@@ -18,66 +18,61 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @CrossOrigin(origins = "*")
-public class ProjectResourceController {
+public class RelationshipController {
 
   private static final Logger log = LoggerFactory.getLogger(MamodarApplication.class);
-  private final ProjectResourceRepository repository;
-  private final ResourceRepository resourceRepository;
-  private final ProjectRepository projectRepository;
+  private final RelationshipRepository repository;
 
-  public ProjectResourceController(ProjectResourceRepository repository,
-      ProjectRepository projectRepository, ResourceRepository resourceRepository) {
+  public RelationshipController(RelationshipRepository repository) {
     this.repository = repository;
-    this.resourceRepository = resourceRepository;
-    this.projectRepository = projectRepository;
   }
 
   @GetMapping("/relationships/")
-  Collection<ProjectResource> allFilter(@RequestParam(name = "project", required = false) Optional<Long> projectId,
+  Collection<Relationship> allFilter(@RequestParam(name = "project", required = false) Optional<Long> projectId,
       @RequestParam(name = "resource",required = false) Optional<Long> resourceId) {
     log.info("GET: /relationships/" );
     if(resourceId.isEmpty() && projectId.isPresent()){
-    return repository.findProjectResourcesByProject_Id(projectId.get());
+    return repository.findRelationshipsByProject_Id(projectId.get());
     }
     if(projectId.isEmpty() && resourceId.isPresent()){
-      return repository.findProjectResourcesByResource_Id(resourceId.get());
+      return repository.findRelationshipsByResource_Id(resourceId.get());
     }
     if(projectId.isPresent() && resourceId.isPresent()){
-      return repository.findProjectResourcesByResource_IdAndProject_Id(resourceId.get(),projectId.get());
+      return repository.findRelationshipsByResource_IdAndProject_Id(resourceId.get(),projectId.get());
     }
     return repository.findAll();
   }
 
 
   @PostMapping("/relationships/")
-  ProjectResource createEmptyProjectResource(){
+  Relationship createEmptyProjectResource(){
     log.info("POST: /relationships/");
-    ProjectResource newProjectResource = new ProjectResource();
-    newProjectResource.setCreationTimestamp(new Date());
-    repository.save(newProjectResource);
-    log.info(String.valueOf(newProjectResource.creationTimestamp));
-    return(newProjectResource);
+    Relationship newRelationship = new Relationship();
+    newRelationship.setCreationTimestamp(new Date());
+    repository.save(newRelationship);
+    log.info(String.valueOf(newRelationship.creationTimestamp));
+    return(newRelationship);
   }
 
   @PutMapping("/relationships/{id}")
-  ProjectResource addLink(@PathVariable Long id, @RequestBody @NotNull ProjectResource updatedProjectResource) {
+  Relationship addLink(@PathVariable Long id, @RequestBody @NotNull Relationship updatedRelationship) {
     log.info("PUT: /relationships/");
-    ProjectResource projectResource = repository.findById(id)
+    Relationship relationship = repository.findById(id)
         .orElseThrow(() -> new ObjectNotFoundException("relationship", id));
-    projectResource.setProject(updatedProjectResource.getProject());
-    projectResource.setResource(updatedProjectResource.getResource());
-    projectResource.setCreationTimestamp(new Date());
-    repository.save(projectResource);
-    return projectResource;
+    relationship.setProject(updatedRelationship.getProject());
+    relationship.setResource(updatedRelationship.getResource());
+    relationship.setCreationTimestamp(new Date());
+    repository.save(relationship);
+    return relationship;
   }
 
 
   @DeleteMapping("/relationships/{id}")
   void removeLink(@PathVariable Long id) {
     log.info("DELETE: /relationships/id");
-    ProjectResource projectResource = repository.findById(id)
+    Relationship relationship = repository.findById(id)
         .orElseThrow(() -> new ObjectNotFoundException("relationship", id));
-    repository.delete(projectResource);
+    repository.delete(relationship);
   }
 
 }
