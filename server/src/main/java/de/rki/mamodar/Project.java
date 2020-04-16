@@ -20,6 +20,9 @@ public class Project {
   @Column(name = "id", updatable = false, nullable = false)
   private Long id;
 
+  @Column(name = "rdmo_id",nullable = true,updatable = false)
+  private Long rdmoId;
+
   @Column
   @Temporal(TemporalType.TIMESTAMP)
   Date creationTimestamp;
@@ -29,6 +32,9 @@ public class Project {
 
   @Column(name = "description")
   private String description;
+
+  @Column(name = "owner")
+  private String owner;
 
   public Project() {
   }
@@ -40,6 +46,13 @@ public class Project {
     return id;
   }
 
+  public Long getRdmoId() {
+    return rdmoId;
+  }
+
+  public void setRdmoId(Long rdmoId) {
+    this.rdmoId = rdmoId;
+  }
 
   public void setCreationTimestamp(Date date) {
     this.creationTimestamp = date;
@@ -65,5 +78,12 @@ public class Project {
     this.description = description;
   }
 
+  public String getOwner() {
+    return owner;
+  }
+
+  public void setOwner(String owner) {
+    this.owner = owner;
+  }
 }
 

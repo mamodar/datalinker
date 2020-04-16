@@ -1,3 +1,4 @@
 rootProject.name = 'mamodar'
 
-include 'server'
+include 'server', 'web'
+
