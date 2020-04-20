@@ -14,8 +14,8 @@ import {MatTableDataSource} from '@angular/material/table';
   styleUrls: ['./resource-list.component.css']
 })
 export class ResourceListComponent implements OnDestroy, OnInit {
-  private dataSource: MatTableDataSource<Resource>;
-  displayedColumns: string[] = ['path', 'location', 'action'];
+  public dataSource: MatTableDataSource<Resource>;
+  public displayedColumns: string[] = ['path', 'location', 'action'];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 

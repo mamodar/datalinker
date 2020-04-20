@@ -25,6 +25,7 @@ export class NewResourceAddDialogComponent implements OnInit {
     private activatedRoute: ActivatedRoute) {}
 
   onNoClick(): void {
+
     this.dialogRef.close();
   }
 
@@ -39,6 +40,8 @@ export class NewResourceAddDialogComponent implements OnInit {
   }
 // creates an object from manually selecting a location
   setSelectedLocation() {
+    console.log(this.data.location)
     this.data.location = new ResourceType(this.data.location.value);
+    console.log(this.data.location)
   }
 }

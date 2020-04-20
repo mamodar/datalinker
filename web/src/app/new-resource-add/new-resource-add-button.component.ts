@@ -32,8 +32,6 @@ export class NewResourceAddButtonComponent implements OnInit {
     this.newResource = new Resource();
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
-    dialogConfig.height = '350px';
-    dialogConfig.width = '600px';
     dialogConfig.data = this.newResource;
     // https://material.angular.io/components/dialog/overview
     const modalDialog = this.matDialog.open(NewResourceAddDialogComponent, dialogConfig);

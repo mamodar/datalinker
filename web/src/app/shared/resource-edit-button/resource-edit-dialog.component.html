@@ -1,0 +1,19 @@
+<label class="mat-caption">Typ:</label><br><br>
+
+<mat-radio-group [(ngModel)]="this.data.location.value" (change)="setSelectedLocation()">
+  <mat-radio-button class="radio" *ngFor="let option of (this.resourceTypes$ |async)"
+                    [value]=option.value >
+    <span>{{option.viewValue}}</span>
+  </mat-radio-button>
+</mat-radio-group>
+<br><br>
+<mat-form-field>
+  <mat-label>{{dataBackup.location.pathDescriptor}}</mat-label>
+  <input matInput [(ngModel)]="dataBackup.path" type="text">
+</mat-form-field>
+
+
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Abbrechen</button>
+  <button mat-button [mat-dialog-close]="save()">Ok</button>
+</div>

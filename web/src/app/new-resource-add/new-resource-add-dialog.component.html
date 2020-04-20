@@ -1,8 +1,10 @@
-<span><mat-radio-group aria-label="Select an option" [(ngModel)]="this.data.location.value" (change) = "setSelectedLocation()" >
+<label class = "mat-caption">Bitte Typ auswählen:</label><br><br>
+
+<mat-radio-group  [(ngModel)]="this.data.location.value" (change)="setSelectedLocation()">
 <mat-radio-button class="radio" *ngFor="let option of (this.resourceTypes$ |async)"
-                          [value]=option.value><span>{{option.viewValue}}</span></mat-radio-button>
+                  [value]=option.value><span>{{option.viewValue}}</span></mat-radio-button>
 </mat-radio-group>
-</span>
+
 <br> <br> <br>
 <mat-form-field *ngIf="data.location && data.location.value">
   <mat-label>{{data.location.pathDescriptor}}</mat-label>

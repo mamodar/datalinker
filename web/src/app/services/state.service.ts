@@ -124,4 +124,9 @@ export class StateService {
     const resources: BehaviorSubject<ResourceType[]> = new BehaviorSubject<ResourceType[]>(resource);
     return (resources);
   }
+
+  updateResource(resource: Resource): Observable<Resource> {
+    return this.resourceService.updateResource(resource.id, resource);
+
+  }
 }

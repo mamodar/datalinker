@@ -43,6 +43,8 @@ import { SearchTabComponent } from './home/search-tab/search-tab.component';
 import {MatChipsModule} from '@angular/material/chips';
 import { RouterHeaderComponent } from './router-header/router-header.component';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { ResourceEditButtonComponent } from './shared/resource-edit-button/resource-edit-button.component';
+import { ResourceEditDialogComponent } from './shared/resource-edit-button/resource-edit-dialog.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +59,9 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     ResourceDeleteButtonComponent,
     ProjectTabComponent,
     SearchTabComponent,
-    RouterHeaderComponent
+    RouterHeaderComponent,
+    ResourceEditButtonComponent,
+    ResourceEditDialogComponent
   ],
   imports: [
     BrowserModule,
