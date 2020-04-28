@@ -8,15 +8,19 @@ import {debounceTime, distinctUntilChanged, flatMap, map} from 'rxjs/operators';
 import {RelationshipService} from './relationship.service';
 import {ResourceService} from './resource.service';
 import {ResourceType} from '../models/resourceType';
+import {AuthUser} from '../models/authUser';
+import {ApiService} from './api.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StateService {
 
+
   constructor(private projectService: ProjectService,
               private resourceService: ResourceService,
-              private relationshipService: RelationshipService) {
+              private relationshipService: RelationshipService,
+              private apiService: ApiService) {
   }
 
 
@@ -24,10 +28,10 @@ export class StateService {
   private shownProjects = new BehaviorSubject<Project[]>(undefined);
   private selectedProject = new BehaviorSubject<Project>(undefined);
   private filterResourcesByProject = new BehaviorSubject<Project>(undefined);
+  private loggedIn = new BehaviorSubject<AuthUser>(undefined);
 
   private newResources = new Array<Resource>();
   private shownNewResources = new BehaviorSubject<Resource[]>(null);
-
 
 
   getResources(): BehaviorSubject<Resource[]> {
@@ -121,5 +125,22 @@ export class StateService {
   updateResource(resource: Resource): Observable<Resource> {
     return this.resourceService.updateResource(resource.id, resource);
 
+  }
+
+  getLoggedInUser(): BehaviorSubject<AuthUser> {
+    return this.loggedIn;
+  }
+
+  loginUser(user: string, password: string): Observable<any> {
+    console.log('user: ' + user + ' password: ' + password);
+    return this.apiService.get('/auth', {userName: user, password}).pipe(map(response => {
+        if (response.name) {
+          this.loggedIn.next({userName: user, password});
+        } else {
+          this.loggedIn.next(undefined);
+        }
+      }
+      )
+    );
   }
 }

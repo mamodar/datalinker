@@ -2,7 +2,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 
 import {AppComponent} from './app.component';
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {AppRoutingModule} from './app-routing.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
@@ -65,7 +65,9 @@ import {LoginInterceptor} from './login.interceptor';
     SearchTabComponent,
     RouterHeaderComponent,
     ResourceEditButtonComponent,
-    ResourceEditDialogComponent
+    ResourceEditDialogComponent,
+    ResourceDeleteDialogComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -89,9 +91,10 @@ import {LoginInterceptor} from './login.interceptor';
     MatIconModule,
     MatPaginatorModule,
     MatChipsModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatSlideToggleModule
   ],
-  providers: [],
+  providers: [{ provide: HTTP_INTERCEPTORS, useClass: LoginInterceptor, multi: true }],
   bootstrap: [AppComponent]
 })
 export class AppModule {

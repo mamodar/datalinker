@@ -1,0 +1,14 @@
+<mat-form-field>
+  <mat-label>Benutzername</mat-label>
+  <input matInput type = "text" [(ngModel)]="login" [required] >
+</mat-form-field>
+<br>
+<mat-form-field>
+  <mat-label>Passwort</mat-label>
+  <input matInput type =  "password" [(ngModel)]="password" [required] >
+</mat-form-field>
+<br>
+<p class = "mat-error" *ngIf="!passwordCorrect"> Passwort oder Benutzername nicht korrekt!</p>
+<button mat-raised-button color="primary"
+        (click)="onClick()"
+        [disabled]="!password?.length||!login?.length">Einloggen</button>
