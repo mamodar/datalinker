@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {StateService} from '../services/state.service';
-import {flatMap, tap} from 'rxjs/operators';
+import {flatMap, take, tap} from 'rxjs/operators';
 import {Resource} from '../models/resource';
 
 @Component({
@@ -17,10 +17,17 @@ export class NewResourceAttachButtonComponent implements OnInit {
 
   connect() {
     console.log('connect');
-    this.stateService.getNewShownResources().pipe(flatMap(_ => _), tap(_ => console.log('connect: ' + _.path))).
-    subscribe(resource => this.stateService.createResource(resource).
-    subscribe(newResource => this.stateService.createRelationship(this.stateService.getSelectedProject().getValue(), newResource).
-    subscribe(_ =>    { this.stateService.resetNewResources(), this.stateService.getFilterByProject().subscribe(); }))).unsubscribe();
+    this.stateService.getNewShownResources().
+    pipe(flatMap(_ => _), tap(_ => console.log('connect: ' + _.path))).
+    subscribe(
+      resource => this.stateService.createResource(resource).
+      pipe(take(1)).
+      subscribe(
+        newResource =>
+          this.stateService.createRelationship(this.stateService.getSelectedProject().getValue(), newResource).
+          pipe(take(1)).
+            subscribe(_ =>  this.stateService.resetNewResources()))).
+    unsubscribe();
 
   }
 

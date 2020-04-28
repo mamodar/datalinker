@@ -1,10 +1,10 @@
-import {ApplicationRef, Injectable} from '@angular/core';
-import {BehaviorSubject, iif, merge, Observable, of} from 'rxjs';
+import {Injectable} from '@angular/core';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {Relationship} from '../models/relationship';
 import {Resource} from '../models/resource';
 import {Project} from '../models/project';
 import {ProjectService} from './project.service';
-import { debounceTime, distinctUntilChanged, flatMap, map} from 'rxjs/operators';
+import {debounceTime, distinctUntilChanged, flatMap, map} from 'rxjs/operators';
 import {RelationshipService} from './relationship.service';
 import {ResourceService} from './resource.service';
 import {ResourceType} from '../models/resourceType';
@@ -32,12 +32,7 @@ export class StateService {
 
   getResources(): BehaviorSubject<Resource[]> {
     if (this.filterResourcesByProject.getValue()) {
-      this.relationshipService.getRelationships(this.filterResourcesByProject.getValue()).
-      pipe(map(relationshipArray => relationshipArray.map((relationshipElement) => {
-        // @ts-ignore resource.location is a string when reading from REST API
-        relationshipElement.resource.location = new ResourceType(relationshipElement.resource.location);
-        return relationshipElement.resource;
-      }))).subscribe(_ => this.shownResources.next(_));
+      this.relationshipService.getResourcesForProject(this.filterResourcesByProject.getValue()).subscribe(_ => this.shownResources.next(_));
     } else {
       this.shownResources.next([]);
     }
@@ -59,11 +54,12 @@ export class StateService {
     return this.filterResourcesByProject;
   }
 
-  setFilterByProject(selectedProject: Project | undefined): void {
+  setFilterByProject(selectedProject: Project | undefined): Observable<Resource[]> {
     if (selectedProject !== this.filterResourcesByProject.getValue()) {
       this.filterResourcesByProject.next(selectedProject);
-      this.getResources();
+
     }
+    return this.getResources();
   }
 
 
@@ -80,7 +76,6 @@ export class StateService {
   }
 
   createRelationship(project: Project, resource: Resource): Observable<Relationship> {
-
     return this.relationshipService.createRelationship(project, resource);
   }
 
@@ -109,6 +104,7 @@ export class StateService {
 
     }
   }
+
   /*SAN("WissData"),
   LOCAL("Lokal"),
   OPENBIS("OpenBIS"),
@@ -116,11 +112,8 @@ export class StateService {
   DOI("doi");*/
   getResourceTypes(): BehaviorSubject<ResourceType[]> {
     const resource: ResourceType[] = [
-      {transferNumber: 0, value: 'san-0', viewValue: 'lokal', pathDescriptor: 'Pfad:'},
-      {transferNumber: 1, value: 'local-1', viewValue: 'WissData S:', pathDescriptor: 'Pfad:'},
-      {transferNumber: 2, value: 'openbis-2', viewValue: 'OpenBIS', pathDescriptor: 'ID:'},
-      {transferNumber: 3, value: 'git-3', viewValue: 'git Repositorium', pathDescriptor: 'URL:'},
-      {transferNumber: 4, value: 'doi-4', viewValue: 'DOI Referenz', pathDescriptor: 'DOI:'}];
+      new ResourceType(0), new ResourceType(1), new ResourceType(2), new ResourceType(3), new ResourceType(4)
+    ];
     const resources: BehaviorSubject<ResourceType[]> = new BehaviorSubject<ResourceType[]>(resource);
     return (resources);
   }

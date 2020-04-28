@@ -32,3 +32,7 @@
   margin:  16px;
   justify-self: center;
 }
+app-new-resource-add-button {
+  margin: 16px !important;
+}
+

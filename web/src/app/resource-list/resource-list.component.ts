@@ -1,4 +1,15 @@
-import {AfterViewInit, ApplicationRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {
+  AfterViewInit,
+  ApplicationRef,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input, OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild
+} from '@angular/core';
 import {Project} from '../models/project';
 import {BehaviorSubject, Observable, of, Subscription} from 'rxjs';
 import {Resource} from '../models/resource';
@@ -16,20 +27,23 @@ import {MatTableDataSource} from '@angular/material/table';
 export class ResourceListComponent implements OnDestroy, OnInit {
   public dataSource: MatTableDataSource<Resource>;
   public displayedColumns: string[] = ['path', 'location', 'action'];
-
   @ViewChild(MatPaginator) paginator: MatPaginator;
-
+  @Input() data$: Observable<Resource[]>;
   sub: Subscription;
 
-  constructor(private stateService: StateService) {
+  constructor() {
     this.dataSource = new MatTableDataSource<Resource>([]);
 
   }
-
   ngOnInit() {
-
-    this.setDataSourceAttributes();
-
+    // pagination can only be set after the data has been loaded
+    // https://github.com/angular/components/issues/10205
+    this.sub = this.data$.subscribe(
+      resourceArray => {
+        this.dataSource.data = resourceArray;
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.filter = '';
+      });
   }
 
   ngOnDestroy() {
@@ -42,16 +56,6 @@ export class ResourceListComponent implements OnDestroy, OnInit {
     this.dataSource.filter = ($event.target as HTMLInputElement).value.trim().toLowerCase();
   }
 
-  private setDataSourceAttributes() {
-    // pagination can only be set after the data has been loaded
-    // https://github.com/angular/components/issues/10205
-    this.sub = this.stateService.getResources().subscribe(
-      resourceArray => {
-        this.dataSource.data = resourceArray;
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.filter = '';
-      });
-  }
 }
 
 

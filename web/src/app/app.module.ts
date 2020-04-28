@@ -45,6 +45,10 @@ import { RouterHeaderComponent } from './router-header/router-header.component';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { ResourceEditButtonComponent } from './shared/resource-edit-button/resource-edit-button.component';
 import { ResourceEditDialogComponent } from './shared/resource-edit-button/resource-edit-dialog.component';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { ResourceDeleteDialogComponent } from './shared/resource-delete-button/resource-delete-dialog.component';
+import { LoginComponent } from './login/login.component';
+import {LoginInterceptor} from './login.interceptor';
 
 @NgModule({
   declarations: [
