@@ -7,6 +7,7 @@ import {environment} from '../../environments/environment';
 import {Relationship} from '../models/relationship';
 import {ApiService} from './api.service';
 import {filter, flatMap, map, mergeMap, pluck, tap} from 'rxjs/operators';
+import {ResourceType} from '../models/resourceType';
 
 
 @Injectable({
@@ -17,17 +18,15 @@ export class RelationshipService {
   constructor(private apiService: ApiService) {
   }
 
-  getRelationships(project?: Project, resource?: Resource): Observable<Relationship[]> {
-    if ((typeof project === 'undefined') && (typeof resource !== 'undefined')) {
-      return this.apiService.get('/relationships/?resource=' + resource.id);
-    }
-    if ((typeof resource === 'undefined') && (typeof project !== 'undefined')) {
-      return this.apiService.get('/relationships/?project=' + project.id);
-    }
-    if ((typeof project !== 'undefined') && (typeof resource !== 'undefined')) {
-      return this.apiService.get('/relationships/?resource=' + resource.id + '&project=' + project.id);
-    }
-    return this.apiService.get('/relationships/');
+  getResourcesForProject(project: Project): Observable<Resource[]> {
+    return this.apiService.get('/relationships/?project=' + project.id).pipe(
+      map(relationshipArray => relationshipArray.
+      // convert location: string to location: ResourceType
+      map((relationshipElement) => {
+        // @ts-ignore resource.location is a string when reading from REST API
+        relationshipElement.resource.location = new ResourceType(relationshipElement.resource.location);
+        return relationshipElement.resource;
+      })));
   }
 
   private createEmptyRelationship(): Observable<Relationship> {
@@ -39,7 +38,8 @@ export class RelationshipService {
   }
 
   createRelationship(project: Project, resource: Resource): Observable<Relationship> {
-    return this.createEmptyRelationship().pipe(mergeMap(r => this.updateRelationship(r.id, {id: null, date: null, project, resource})));
+    return this.createEmptyRelationship().pipe(
+      mergeMap(r => this.updateRelationship(r.id, {id: null, date: null, project, resource})));
   }
 
   deleteRelationship(relationship: Relationship): Observable<Relationship> {

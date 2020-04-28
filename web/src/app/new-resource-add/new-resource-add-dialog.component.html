@@ -11,11 +11,22 @@
   <input matInput [(ngModel)]="data.path" type="text" required><br>
 </mat-form-field>
 
-<input webkitdirectory
-       *ngIf="data.location && (data.location.value === 'local-1'  ||data.location.value === 'san-0')"
-       type="file">
+<br><br>
+<div *ngIf="data.location.value === 'san-0'">
+<div class="mat-caption">
+  <mat-form-field *ngIf="data">
+    <mat-label>maximale Größe in GB</mat-label>
+    <input matInput [(ngModel)]="data.size" type="number">
+  </mat-form-field> GB</div>
 
+
+</div>
+<div *ngIf="data.location.value">
+<mat-slide-toggle color="primary" [(ngModel)]="data.personal">persönliche Daten</mat-slide-toggle>
+<mat-slide-toggle color="primary" [(ngModel)]="data.thirdParty">Drittmittel</mat-slide-toggle>
+<mat-slide-toggle color="warn" [(ngModel)]="data.archived">Archivieren</mat-slide-toggle>
+</div>
 <div mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">Abbrechen</button>
-  <button mat-button [mat-dialog-close]="data" [disabled]="isFormValid()">Hinzufügen</button>
+  <button mat-button  mat-raised-button color="primary" (click)="onNoClick()">Abbrechen</button>
+  <button mat-button mat-raised-button color="warn" [mat-dialog-close]="data" [disabled]="isFormValid()">Hinzufügen</button>
 </div>

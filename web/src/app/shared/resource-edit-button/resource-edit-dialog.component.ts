@@ -28,7 +28,7 @@ export class ResourceEditDialogComponent implements OnInit {
   }
 
   onNoClick(): void {
-
+    console.log(this.dataBackup);
     this.dialogRef.close();
   }
 

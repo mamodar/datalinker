@@ -1,9 +1,9 @@
 -- DROPS ALL TABLES
-DROP TABLE IF EXISTS "project";
-DROP TABLE IF exists "users";
-DROP TABLE if EXISTS "resource";
-DROP TABLE if exists "relationship";
-
+DROP TABLE IF EXISTS "project" CASCADE;
+DROP TABLE IF exists "users" CASCADE ;
+DROP TABLE if EXISTS "resource" CASCADE ;
+DROP TABLE if exists "relationship" CASCADE ;
+DROP SEQUENCE if exists hibernate_sequence;
 CREATE SEQUENCE hibernate_sequence START 1;
 
 -- CREATE PROJECT
@@ -28,11 +28,14 @@ CREATE INDEX tsv_idx ON project USING gin(tsv);
 CREATE TABLE "resource" (
                             "id" BIGINT NOT NULL,
                             "creation_timestamp" TIMESTAMP NULL DEFAULT NULL,
-                            "description" VARCHAR(255) NULL DEFAULT NULL,
-                            "location" VARCHAR(255) NULL DEFAULT NULL,
-                            "path" VARCHAR(255) NULL DEFAULT NULL,
-                            "personal" BOOLEAN NULL DEFAULT NULL,
+                            "description" VARCHAR(255) NULL DEFAULT 'NULL::character varying',
+                            "location" VARCHAR(255) NULL DEFAULT 'NULL::character varying',
+                            "path" VARCHAR(255) NULL DEFAULT 'NULL::character varying',
+                            "personal" BOOLEAN NULL DEFAULT TRUE,
                             "user_id" BIGINT NULL DEFAULT NULL,
+                            "archived" BOOLEAN NULL DEFAULT FALSE,
+                            "third_party" BOOLEAN NULL DEFAULT FALSE,
+                            "size" REAL NULL DEFAULT NULL,
                             PRIMARY KEY ("id")
 )
 ;
@@ -75,11 +78,13 @@ GROUP BY p.id, p.project_name;
 
 REFRESH MATERIALIZED VIEW  search_view;
 --For HeidiSQL add DELIMITER //
-CREATE OR REPLACE FUNCTION refresh_search_view() RETURNS TRIGGER AS $$
+CREATE OR REPLACE FUNCTION refresh_search_view() RETURNS TRIGGER
+    SECURITY DEFINER
+AS $$
 BEGIN
     REFRESH MATERIALIZED VIEW search_view;
     RETURN new;
-    END $$ LANGUAGE plpgsql;
+END $$ LANGUAGE plpgsql;
 --For HeidiSQL add DELIMITER //
 CREATE TRIGGER refresh_mat_view_after_po_insert
     AFTER INSERT OR DELETE OR UPDATE OR TRUNCATE
@@ -94,4 +99,11 @@ CREATE TRIGGER refresh_mat_view_after_po_insert
 EXECUTE PROCEDURE refresh_search_view();
 
 
+ -- If non root is running the database
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO mamodaruser;
+GRANT UPDATE ON ALL TABLES IN SCHEMA public TO mamodaruser;
+GRANT INSERT ON ALL TABLES IN SCHEMA public TO mamodaruser;
+
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO mamodaruser;
+GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public to mamodaruser;
 

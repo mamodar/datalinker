@@ -25,15 +25,26 @@ export class ResourceService {
   }
 
   createEmptyResource(): Observable<Resource> {
-    return this.apiService.post( '/resources/');
+    return this.apiService.post('/resources/');
   }
 
   updateResource(id: number, resource: Resource): Observable<Resource> {
-    return this.apiService.put( '/resources/' + id, {id: resource.id, location: resource.location.transferNumber, path: resource.path});
+    return this.apiService.put('/resources/' + id, {
+      id: resource.id,
+      location: resource.location.transferNumber,
+      path: resource.path,
+      archived: resource.archived,
+      thirdParty: resource.thirdParty,
+      personal: resource.personal,
+      size: resource.size,
+      description: resource.description
+    });
   }
+
   createResource(resource: Resource): Observable<Resource> {
     return this.createEmptyResource().pipe(mergeMap(r => this.updateResource(r.id, resource)));
   }
+
   deleteResource(id: number): Observable<void> {
     return this.apiService.delete('/resources/' + id);
   }

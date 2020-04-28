@@ -36,10 +36,20 @@ public class Resource {
   private Location location;
 
   @Column
-  private String description;
+  private Float size;
+
+  @Column(name = "personal")
+  private Boolean isPersonal;
+
+  @Column(name = "archived")
+  private Boolean isArchived = false;
+
+  @Column(name = "third_party")
+  private Boolean isThirdParty = false;
+
 
   @Column
-  private boolean personal;
+  private String description;
 
 
   public Resource() {
@@ -65,10 +75,6 @@ public class Resource {
     this.description = description;
   }
 
-  public void setPersonal(boolean personal) {
-    this.personal = personal;
-  }
-
   public Date getCreationTimestamp() {
     return creationTimestamp;
   }
@@ -89,11 +95,40 @@ public class Resource {
     return description;
   }
 
-  public boolean isPersonal() {
-    return personal;
-  }
 
   public void setCreationTimestamp(Date date) {
     this.creationTimestamp = date;
+  }
+
+  public void setSize(Float size) {
+    this.size = size;
+  }
+
+  public void setPersonal(Boolean personal) {
+    isPersonal = personal;
+  }
+
+  public void setArchived(Boolean archived) {
+    isArchived = archived;
+  }
+
+  public void setThirdParty(Boolean thirdParty) {
+    isThirdParty = thirdParty;
+  }
+
+  public Float getSize() {
+    return size;
+  }
+
+  public Boolean getPersonal() {
+    return isPersonal;
+  }
+
+  public Boolean getArchived() {
+    return isArchived;
+  }
+
+  public Boolean getThirdParty() {
+    return isThirdParty;
   }
 }

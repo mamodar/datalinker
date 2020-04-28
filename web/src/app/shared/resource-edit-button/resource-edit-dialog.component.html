@@ -1,8 +1,8 @@
 <label class="mat-caption">Typ:</label><br><br>
 
-<mat-radio-group [(ngModel)]="this.data.location.value" (change)="setSelectedLocation()">
+<mat-radio-group [(ngModel)]="dataBackup.location.value" (change)="setSelectedLocation()">
   <mat-radio-button class="radio" *ngFor="let option of (this.resourceTypes$ |async)"
-                    [value]=option.value >
+                    [value]=option.value>
     <span>{{option.viewValue}}</span>
   </mat-radio-button>
 </mat-radio-group>
@@ -11,9 +11,22 @@
   <mat-label>{{dataBackup.location.pathDescriptor}}</mat-label>
   <input matInput [(ngModel)]="dataBackup.path" type="text">
 </mat-form-field>
+<br><br>
+<div class="mat-caption">Angelegt von Unbekannt um Unbekannt</div>
+<br><br>
 
+<div class="mat-caption">
+  <mat-form-field *ngIf="dataBackup.location.value === 'san-0'">
+    <mat-label>maximale Größe in GB</mat-label>
+    <input matInput [(ngModel)]="data.size" disabled type="number">
+  </mat-form-field>GB
+</div>
+
+<mat-slide-toggle color="primary" [(ngModel)]="dataBackup.personal">persönliche Daten</mat-slide-toggle>
+<mat-slide-toggle color="primary" [(ngModel)]="dataBackup.thirdParty">Drittmittel</mat-slide-toggle>
+<mat-slide-toggle color="warn" [(ngModel)]="dataBackup.archived">Archivieren</mat-slide-toggle>
 
 <div mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">Abbrechen</button>
-  <button mat-button [mat-dialog-close]="save()">Ok</button>
+  <button mat-button mat-raised-button color="primary" (click)="onNoClick()">Schließen</button>
+  <button mat-button mat-raised-button color="warn"  [mat-dialog-close]="save()">Speichern</button>
 </div>

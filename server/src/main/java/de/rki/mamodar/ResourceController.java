@@ -43,7 +43,7 @@ public class ResourceController {
 
   }
 
-
+  //creates an empty resource
   @PostMapping("/resources/")
   Resource addResource() {
     log.info("POST: /resources/");
@@ -61,6 +61,10 @@ public class ResourceController {
     resource.setLocation(updatedResource.getLocation());
     resource.setPath(updatedResource.getPath());
     resource.setCreationTimestamp(new Date());
+    resource.setArchived(updatedResource.getArchived());
+    resource.setPersonal(updatedResource.getPersonal());
+    resource.setSize(updatedResource.getSize());
+    resource.setThirdParty(updatedResource.getThirdParty());
     repository.save(resource);
     return resource;
 
