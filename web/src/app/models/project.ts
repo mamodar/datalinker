@@ -1,8 +1,12 @@
+import {Resource} from './resource';
+
 export class Project {
   id: number;
-  creationTimestamp: Date;
-  rdmoId: number;
-  owner: string;
+  creationTimestamp: string;
   projectName: string;
   description: string;
+  rdmoId: number;
+  owner: string;
+  resources: Resource[];
+
 }

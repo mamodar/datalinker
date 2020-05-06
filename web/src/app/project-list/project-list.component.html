@@ -13,15 +13,9 @@
 
   <ng-template matExpansionPanelContent>
   <mat-list dense>
-    <mat-list-item> RDMO ID: {{project.rdmoId?project.rdmoId:'kein RDMO Projekt'}}  </mat-list-item>
     <mat-list-item> Beschreibung: {{project.description?project.description:'keine Beschreibung angegeben'}}</mat-list-item>
-    <mat-list-item> Ansprechpartner: {{project.rdmoId?project.owner:'kein Ansprechpartner angegeben'}}</mat-list-item>
-    <mat-list-item> Datum: {{
-      project.creationTimestamp.getDay() +'.'+
-      project.creationTimestamp.getMonth() +'.'+
-      project.creationTimestamp.getFullYear() +' '+
-      project.creationTimestamp.getHours() + ':'+
-      project.creationTimestamp.getMinutes()}} </mat-list-item>
+    <mat-list-item> Ansprechpartner: {{project.owner?project.owner:'kein Ansprechpartner angegeben'}}</mat-list-item>
+    <mat-list-item> Datum: {{project.creationTimestamp}} </mat-list-item>
   </mat-list>
   <app-resource-list [data$] = this.shownResources$></app-resource-list>
   </ng-template>

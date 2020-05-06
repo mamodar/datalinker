@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.ldap.userdetails.LdapUserDetailsImpl;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,36 +21,46 @@ public class ProjectController {
 
   private static final Logger log = LoggerFactory.getLogger(MamodarApplication.class);
   private final ProjectRepository repository;
-
   @Autowired
    RdmoRestConsumer rdmoRestConsumer;
+  @Autowired
+  AuthenticationFacade authenticationFacade;
 
   public ProjectController(ProjectRepository repository) {
     this.repository = repository;
   }
 
-  @GetMapping("/projects/")
-  List<Project> all() {
-    log.info("GET: /projects/");
-    return repository.findAll();
+
+  @GetMapping("/projects")
+  List<ProjectSendDTO> allRdmo() {
+    ArrayList<ProjectSendDTO> allProjects = new ArrayList<>();
+    try {
+
+      log.info("GET: /projects/rdmo " + authenticationFacade.getLdapUser().getDn());
+      ArrayList<Project> rdmoResponse = rdmoRestConsumer.getProjectsFromRdmo();
+      updateProjects(rdmoResponse);
+    } finally {
+      repository.findAll().forEach(project -> allProjects.add(new ProjectSendDTO(project)));
+      return allProjects;
+    }
+
   }
 
-@GetMapping("/projects")
-List<Project> searchProject(@RequestParam(name = "search") String search){
-return (repository.searchFTS(search).orElse(new ArrayList<>()));
-}
-  @GetMapping("/projects/rdmo")
-  List<Project> allRdmo(Authentication authentication) {
-    log.info(authentication.getPrincipal().toString());
-    ArrayList<Project> rdmoResponse = rdmoRestConsumer.getProjectsFromRdmo();
-    updateProjects(rdmoResponse);
-    return repository.findAll();
+  @GetMapping("/projects/search")
+  List<ProjectSendDTO> searchProject(@RequestParam(name = "search") String search){
+
+    ArrayList<Project> foundProjects = (repository.searchFTS(search).orElse(new ArrayList<>()));
+    ArrayList<ProjectSendDTO> foundProjectsDTO = new ArrayList<>();
+    foundProjects.forEach(project -> foundProjectsDTO.add(new ProjectSendDTO(project)));
+    log.info("GET: /projects?search " + ((UserDetails)authenticationFacade.getAuthentication().getPrincipal()).getUsername());
+    return foundProjectsDTO;
   }
 
   @GetMapping("/projects/{id}")
-  Project findId(@PathVariable Long id) {
+  ProjectSendDTO findId(@PathVariable Long id) {
     log.info("GET: /projects/{id}");
-    return repository.findById(id).orElseThrow(() -> new ObjectNotFoundException("project", id));
+    Project project =  repository.findById(id).orElseThrow(() -> new ObjectNotFoundException("project", id));
+    return new ProjectSendDTO(project,project.getResources());
   }
 
 

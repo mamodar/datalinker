@@ -28,7 +28,6 @@ export class ProjectListComponent implements OnInit {
       this.stateService.setSelectedProject(undefined);
       this.shownResources$ = this.stateService.setFilterByProject(undefined);
     } else {
-      project.creationTimestamp = new Date(project.creationTimestamp);
       this.stateService.setSelectedProject(project);
       this.shownResources$ = this.stateService.setFilterByProject(project);
     }

@@ -1,11 +1,15 @@
 package de.rki.mamodar;
 
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -35,6 +39,9 @@ public class Project {
 
   @Column(name = "owner")
   private String owner;
+
+  @OneToMany(mappedBy = "project", fetch = FetchType.EAGER)
+  private List<Resource> resources;
 
   public Project() {
   }
@@ -84,6 +91,14 @@ public class Project {
 
   public void setOwner(String owner) {
     this.owner = owner;
+  }
+
+  public List<Resource> getResources() {
+    return resources;
+  }
+
+  public void setResources(List<Resource> resources) {
+    this.resources = resources;
   }
 }
 

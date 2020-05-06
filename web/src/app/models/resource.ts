@@ -2,24 +2,16 @@ import { ResourceType } from './resourceType';
 
 export class Resource {
   id: number;
-  date: Date;
-  location: ResourceType ;
+  userName: string;
   path: string;
-  description: string;
-  personal: boolean;
-  thirdParty: boolean;
+  location: ResourceType ;
+  creationTimestamp: string;
   size: number;
-  archived: boolean;
-
-  constructor() {
-
-    return {id: null, date: null,
-      location: null, path: null,
-      description: null, personal: true,
-      thirdParty: false, archived: false,
-      size: 1};
-  }
-
+  description: string;
+  projectId: number;
+  personal = true;
+  thirdParty = false;
+  archived = false;
 
 }
 

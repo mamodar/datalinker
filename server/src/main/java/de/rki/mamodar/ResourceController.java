@@ -1,10 +1,12 @@
 package de.rki.mamodar;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,53 +22,57 @@ public class ResourceController {
 
   private static final Logger log = LoggerFactory.getLogger(MamodarApplication.class);
   private final ResourceRepository repository;
-  private final RelationshipRepository relationshipRepository;
+  private final UserRepository userRepository;
+  private final ProjectRepository projectRepository;
+  @Autowired
+  private AuthenticationFacade authenticationFacade;
 
-  public ResourceController(ResourceRepository repository, RelationshipRepository relationshipRepository ) {
+  public ResourceController(ResourceRepository repository, ProjectRepository projectRepository,
+      UserRepository userRepository) {
     this.repository = repository;
-    this.relationshipRepository = relationshipRepository;
+    this.userRepository = userRepository;
+    this.projectRepository = projectRepository;
   }
 
   @GetMapping("/resources/")
-  List<Resource> all() {
-
-    log.info("GET: /resources/");
-    return repository.findAll();
+  List<ResourceSendDTO> all() {
+    ArrayList<ResourceSendDTO> resources = new ArrayList<>();
+    repository.findAll().forEach(resource -> resources.add(new ResourceSendDTO(resource) ));
+    return resources;
   }
 
-
-
   @GetMapping("/resources/{id}")
-  Resource one(@PathVariable Long id) {
+  ResourceSendDTO one(@PathVariable Long id) {
     log.info("GET: /resources/id");
-    return repository.findById(id).orElseThrow(() -> new ObjectNotFoundException("resource", id));
+    Resource resource = repository.findById(id).orElseThrow(() -> new ObjectNotFoundException("resource", id));
+    return new ResourceSendDTO(resource);
 
   }
 
   //creates an empty resource
-  @PostMapping("/resources/")
-  Resource addResource() {
-    log.info("POST: /resources/");
-    Resource newResource = new Resource();
+  @PostMapping("/resources")
+  ResourceSendDTO addResource(@RequestBody @NotNull ResourceSendDTO resourceDTO) {
+    log.info("POST: /resources");
+    Resource newResource = new Resource(resourceDTO);
+    newResource.setUser(userRepository.getByDn(authenticationFacade.getLdapUser().getDn())) ;
     newResource.setCreationTimestamp(new Date());
+    Project correspondingProject = projectRepository.findById(resourceDTO.getProjectId()).
+        orElseThrow(() -> new ObjectNotFoundException("project", resourceDTO.getProjectId()));
+    newResource.setProject(correspondingProject);
     repository.save(newResource);
-    return newResource;
+    return new ResourceSendDTO(newResource);
   }
+
   @PutMapping("/resources/{id}")
-  Resource updateOne(@PathVariable Long id, @RequestBody @NotNull Resource updatedResource) {
+  ResourceSendDTO updateOne(@PathVariable Long id, @RequestBody @NotNull ResourceSendDTO updatedResource) {
     log.info("PUT: /resources/id");
     Resource resource = repository.findById(id)
         .orElseThrow(() -> new ObjectNotFoundException("resource", id));
-    resource.setDescription(updatedResource.getDescription());
-    resource.setLocation(updatedResource.getLocation());
-    resource.setPath(updatedResource.getPath());
+    resource.update(updatedResource);
+    resource.setUser(userRepository.getByDn(authenticationFacade.getLdapUser().getDn())) ;
     resource.setCreationTimestamp(new Date());
-    resource.setArchived(updatedResource.getArchived());
-    resource.setPersonal(updatedResource.getPersonal());
-    resource.setSize(updatedResource.getSize());
-    resource.setThirdParty(updatedResource.getThirdParty());
     repository.save(resource);
-    return resource;
+    return new ResourceSendDTO(resource);
 
   }
 
@@ -76,7 +82,11 @@ public class ResourceController {
     log.info("DELETE: /resources/id");
     Resource resource = repository.findById(id)
         .orElseThrow(() -> new ObjectNotFoundException("resource", id));
-    relationshipRepository.findRelationshipsByResource_Id(id).forEach( relationship -> relationshipRepository.delete(relationship));
+
+    Project project = projectRepository.findById(resource.getProject().getId())
+        .orElseThrow(() -> new ObjectNotFoundException("project", resource.getProject().getId()));
+    project.getResources().remove(resource);
+    projectRepository.save(project);
     repository.delete(resource);
   }
 }

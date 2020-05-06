@@ -1,13 +1,17 @@
 package de.rki.mamodar;
 
 import java.util.Date;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -25,21 +29,19 @@ public class Resource {
   @Temporal(TemporalType.TIMESTAMP)
   Date creationTimestamp;
 
-  @Column(name = "user_id")
-  private Long userId;
 
-  @Column(name = "path")
+  @Column(name = "path",nullable = false)
   private String path;
 
-  @Column
+  @Column(name="location",nullable = false)
   @Enumerated(EnumType.STRING)
   private Location location;
 
-  @Column
+  @Column(name="size")
   private Float size;
 
   @Column(name = "personal")
-  private Boolean isPersonal;
+  private Boolean isPersonal = true;
 
   @Column(name = "archived")
   private Boolean isArchived = false;
@@ -48,87 +50,128 @@ public class Resource {
   private Boolean isThirdParty = false;
 
 
-  @Column
+  @Column(name = "description")
   private String description;
 
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "user_id",nullable = false)
+  private User user;
+
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "project_id",nullable = false)
+  private Project project;
 
   public Resource() {
+  }
+  public Resource(ResourceSendDTO resourceSendDTO) {
+
+    this.path = resourceSendDTO.getPath();
+    this.location = Location.valueOf(resourceSendDTO.getLocation());
+    this.description =  resourceSendDTO.getDescription();
+    this.isArchived = resourceSendDTO.getArchived();
+    this.isPersonal = resourceSendDTO.getPersonal();
+    this.isThirdParty = resourceSendDTO.getThirdParty();
+    this.size = resourceSendDTO.getSize();
+
+  }
+
+  public void update(ResourceSendDTO resourceSendDTO) {
+    Objects.requireNonNull(resourceSendDTO.getPath());
+    Objects.requireNonNull(resourceSendDTO.getLocation());
+
+    this.path = resourceSendDTO.getPath();
+    this.location = Location.valueOf(resourceSendDTO.getLocation());
+    this.description =  resourceSendDTO.getDescription()!=null?resourceSendDTO.getDescription():this.description;
+    this.isArchived = resourceSendDTO.getArchived() != null?resourceSendDTO.getArchived():this.isArchived;
+    this.isPersonal = resourceSendDTO.getPersonal()!= null?resourceSendDTO.getPersonal():this.isPersonal;
+    this.isThirdParty = resourceSendDTO.getThirdParty()!= null?resourceSendDTO.getThirdParty():this.isThirdParty;
+    this.size = resourceSendDTO.getSize()!=null?resourceSendDTO.getSize():this.size;
   }
 
   public Long getId() {
     return id;
   }
 
-  public void setUserId(Long userId) {
-    this.userId = userId;
-  }
-
-  public void setPath(String path) {
-    this.path = path;
-  }
-
-  public void setLocation(Location location) {
-    this.location = location;
-  }
-
-  public void setDescription(String description) {
-    this.description = description;
-  }
 
   public Date getCreationTimestamp() {
     return creationTimestamp;
   }
 
-  public Long getUserId() {
-    return userId;
+  public void setCreationTimestamp(Date creationTimestamp) {
+    this.creationTimestamp = creationTimestamp;
+  }
+
+  public User getUser() {
+    return user;
+  }
+
+  public void setUser(User user) {
+    this.user = user;
   }
 
   public String getPath() {
     return path;
   }
 
+  public void setPath(String path) {
+    this.path = path;
+  }
+
   public Location getLocation() {
     return location;
   }
 
-  public String getDescription() {
-    return description;
-  }
-
-
-  public void setCreationTimestamp(Date date) {
-    this.creationTimestamp = date;
-  }
-
-  public void setSize(Float size) {
-    this.size = size;
-  }
-
-  public void setPersonal(Boolean personal) {
-    isPersonal = personal;
-  }
-
-  public void setArchived(Boolean archived) {
-    isArchived = archived;
-  }
-
-  public void setThirdParty(Boolean thirdParty) {
-    isThirdParty = thirdParty;
+  public void setLocation(Location location) {
+    this.location = location;
   }
 
   public Float getSize() {
     return size;
   }
 
+  public void setSize(Float size) {
+    this.size = size;
+  }
+
   public Boolean getPersonal() {
     return isPersonal;
+  }
+
+  public void setPersonal(Boolean personal) {
+    isPersonal = personal;
   }
 
   public Boolean getArchived() {
     return isArchived;
   }
 
+  public void setArchived(Boolean archived) {
+    isArchived = archived;
+  }
+
   public Boolean getThirdParty() {
     return isThirdParty;
   }
+
+  public void setThirdParty(Boolean thirdParty) {
+    isThirdParty = thirdParty;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  public Project getProject() {
+    return project;
+  }
+
+  public void setProject(Project project) {
+    this.project = project;
+  }
+
+
 }
