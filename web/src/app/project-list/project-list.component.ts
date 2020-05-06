@@ -3,6 +3,7 @@ import {Project} from '../models/project';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {StateService} from '../services/state.service';
 import {Resource} from '../models/resource';
+import {map, tap} from 'rxjs/operators';
 
 @Component({
   selector: 'app-project-list',
@@ -10,12 +11,10 @@ import {Resource} from '../models/resource';
   styleUrls: ['./project-list.component.css']
 })
 export class ProjectListComponent implements OnInit {
-  private shownResources$: Observable<Resource[]>;
-
   constructor(private stateService: StateService) { }
   @Input() projects$: Observable<Project[]>;
   selectedProject$: BehaviorSubject<Project>;
-  projectData: string;
+  private shownResources$: Observable<Resource[]>;
 
   ngOnInit() {
     this.selectedProject$ = this.stateService.getSelectedProject();

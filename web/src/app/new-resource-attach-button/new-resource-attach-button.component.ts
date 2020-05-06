@@ -16,18 +16,14 @@ export class NewResourceAttachButtonComponent implements OnInit {
   }
 
   connect() {
-    console.log('connect');
     this.stateService.getNewShownResources().
-    pipe(flatMap(_ => _), tap(_ => console.log('connect: ' + _.path))).
+    pipe(flatMap(_ => _)).
     subscribe(
       resource => this.stateService.createResource(resource).
-      pipe(take(1)).
-      subscribe(
-        newResource =>
-          this.stateService.createRelationship(this.stateService.getSelectedProject().getValue(), newResource).
-          pipe(take(1)).
-            subscribe(_ =>  this.stateService.resetNewResources()))).
-    unsubscribe();
+      pipe(take(1)).subscribe(_ => {
+        this.stateService.resetNewResources();
+        this.stateService.getResources();
+      }));
 
   }
 

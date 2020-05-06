@@ -14,7 +14,6 @@ import {ResourceListComponent} from './resource-list/resource-list.component';
 
 
 import {NewResourceAddButtonComponent} from './new-resource-add/new-resource-add-button.component';
-import {NewResourceAddDialogComponent} from './new-resource-add/new-resource-add-dialog.component';
 import {NewResourceListComponent} from './new-resource-list/new-resource-list.component';
 import {NewResourceAttachButtonComponent} from './new-resource-attach-button/new-resource-attach-button.component';
 
@@ -44,11 +43,11 @@ import {MatChipsModule} from '@angular/material/chips';
 import { RouterHeaderComponent } from './router-header/router-header.component';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { ResourceEditButtonComponent } from './shared/resource-edit-button/resource-edit-button.component';
-import { ResourceEditDialogComponent } from './shared/resource-edit-button/resource-edit-dialog.component';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { ResourceDeleteDialogComponent } from './shared/resource-delete-button/resource-delete-dialog.component';
 import { LoginComponent } from './login/login.component';
 import {LoginInterceptor} from './login.interceptor';
+import { ResourceManipulateDialogComponent } from './shared/resource-manipulate-dialog/resource-manipulate-dialog.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +56,6 @@ import {LoginInterceptor} from './login.interceptor';
     ProjectListComponent,
     ResourceListComponent,
     NewResourceAddButtonComponent,
-    NewResourceAddDialogComponent,
     NewResourceListComponent,
     NewResourceAttachButtonComponent,
     ResourceDeleteButtonComponent,
@@ -65,9 +63,9 @@ import {LoginInterceptor} from './login.interceptor';
     SearchTabComponent,
     RouterHeaderComponent,
     ResourceEditButtonComponent,
-    ResourceEditDialogComponent,
     ResourceDeleteDialogComponent,
-    LoginComponent
+    LoginComponent,
+    ResourceManipulateDialogComponent
   ],
   imports: [
     BrowserModule,

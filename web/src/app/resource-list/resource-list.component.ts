@@ -1,22 +1,16 @@
 import {
-  AfterViewInit,
-  ApplicationRef,
-  ChangeDetectorRef,
   Component,
-  EventEmitter,
-  Input, OnChanges,
+  Input,
   OnDestroy,
   OnInit,
-  Output,
+
   ViewChild
 } from '@angular/core';
-import {Project} from '../models/project';
-import {BehaviorSubject, Observable, of, Subscription} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {Resource} from '../models/resource';
-import {StateService} from '../services/state.service';
-import {tap} from 'rxjs/operators';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
+import {Router} from '@angular/router';
 
 
 @Component({
@@ -26,12 +20,13 @@ import {MatTableDataSource} from '@angular/material/table';
 })
 export class ResourceListComponent implements OnDestroy, OnInit {
   public dataSource: MatTableDataSource<Resource>;
-  public displayedColumns: string[] = ['path', 'location', 'action'];
+  public displayedColumns: string[];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @Input() data$: Observable<Resource[]>;
+
   sub: Subscription;
 
-  constructor() {
+  constructor(readonly router: Router) {
     this.dataSource = new MatTableDataSource<Resource>([]);
 
   }
@@ -44,6 +39,11 @@ export class ResourceListComponent implements OnDestroy, OnInit {
         this.dataSource.paginator = this.paginator;
         this.dataSource.filter = '';
       });
+    if (this.router.url === '/projects') {
+      this.displayedColumns = ['path', 'location', 'action'];
+    } else {
+      this.displayedColumns = ['path', 'location'];
+    }
   }
 
   ngOnDestroy() {

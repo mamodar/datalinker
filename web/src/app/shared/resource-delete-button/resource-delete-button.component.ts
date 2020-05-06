@@ -21,7 +21,7 @@ export class ResourceDeleteButtonComponent implements OnInit {
   }
   deleteResource($event) {
     const dialogRef = this.dialog.open(ResourceDeleteDialogComponent);
-    dialogRef.afterClosed().pipe(tap(_ => console.log(_))).subscribe(_ => { if (_) {this.stateService.deleteResource(this.parent); }} );
+    dialogRef.afterClosed().subscribe(_ => { if (_) {this.stateService.deleteResource(this.parent); }} );
     // this.stateService.deleteResource(this.parent);
   }
 }
