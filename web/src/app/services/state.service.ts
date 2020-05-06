@@ -1,15 +1,16 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {Relationship} from '../models/relationship';
 import {Resource} from '../models/resource';
 import {Project} from '../models/project';
 import {ProjectService} from './project.service';
-import {debounceTime, distinctUntilChanged, flatMap, map} from 'rxjs/operators';
-import {RelationshipService} from './relationship.service';
+import {debounceTime, distinctUntilChanged, flatMap, map, tap} from 'rxjs/operators';
 import {ResourceService} from './resource.service';
 import {ResourceType} from '../models/resourceType';
 import {AuthUser} from '../models/authUser';
 import {ApiService} from './api.service';
+import {User} from '../models/user';
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -19,8 +20,11 @@ export class StateService {
 
   constructor(private projectService: ProjectService,
               private resourceService: ResourceService,
-              private relationshipService: RelationshipService,
               private apiService: ApiService) {
+    this.currentUser.next({
+      userName: sessionStorage.getItem('currentUser'),
+      password: sessionStorage.getItem('currentPassword')
+    });
   }
 
 
@@ -28,15 +32,20 @@ export class StateService {
   private shownProjects = new BehaviorSubject<Project[]>(undefined);
   private selectedProject = new BehaviorSubject<Project>(undefined);
   private filterResourcesByProject = new BehaviorSubject<Project>(undefined);
-  private loggedIn = new BehaviorSubject<AuthUser>(undefined);
-
+  private currentUser = new BehaviorSubject<AuthUser>(undefined);
   private newResources = new Array<Resource>();
   private shownNewResources = new BehaviorSubject<Resource[]>(null);
 
 
   getResources(): BehaviorSubject<Resource[]> {
     if (this.filterResourcesByProject.getValue()) {
-      this.relationshipService.getResourcesForProject(this.filterResourcesByProject.getValue()).subscribe(_ => this.shownResources.next(_));
+      this.projectService.getProject(
+        this.filterResourcesByProject.getValue())
+      .subscribe(_ => {
+        // @ts-ignore comes in as a string
+        _.resources.map( resource => resource.location = new ResourceType(resource.location));
+        this.shownResources.next(_.resources);
+      });
     } else {
       this.shownResources.next([]);
     }
@@ -54,18 +63,12 @@ export class StateService {
       flatMap(term => this.projectService.searchProjects(term)));
   }
 
-  getFilterByProject(): BehaviorSubject<Project> {
-    return this.filterResourcesByProject;
-  }
-
   setFilterByProject(selectedProject: Project | undefined): Observable<Resource[]> {
     if (selectedProject !== this.filterResourcesByProject.getValue()) {
       this.filterResourcesByProject.next(selectedProject);
-
     }
     return this.getResources();
   }
-
 
   getSelectedProject(): BehaviorSubject<Project> {
     return this.selectedProject;
@@ -75,12 +78,11 @@ export class StateService {
     this.selectedProject.next(project);
   }
 
-  createResource(resource: Resource): Observable<Resource> {
-    return this.resourceService.createResource(resource);
-  }
-
-  createRelationship(project: Project, resource: Resource): Observable<Relationship> {
-    return this.relationshipService.createRelationship(project, resource);
+  createResource(resource: Resource, project?: Project, ): Observable<Resource> {
+    if (project) {
+    return this.resourceService.createResource(resource, project);
+    }
+    return this.resourceService.createResource(resource, this.getSelectedProject().getValue());
   }
 
   addNewResource(resource: Resource): void {
@@ -123,24 +125,26 @@ export class StateService {
   }
 
   updateResource(resource: Resource): Observable<Resource> {
-    return this.resourceService.updateResource(resource.id, resource);
-
+    return this.resourceService.updateResource(resource);
   }
 
   getLoggedInUser(): BehaviorSubject<AuthUser> {
-    return this.loggedIn;
+    return this.currentUser;
   }
 
   loginUser(user: string, password: string): Observable<any> {
-    console.log('user: ' + user + ' password: ' + password);
-    return this.apiService.get('/auth', {userName: user, password}).pipe(map(response => {
+    this.currentUser.next(undefined);
+    sessionStorage.clear();
+    return this.apiService.get('/user', {userName: user, password}).pipe(map(response => {
         if (response.name) {
-          this.loggedIn.next({userName: user, password});
+          this.currentUser.next({userName: user, password});
+          sessionStorage.setItem('currentUser', user);
+          sessionStorage.setItem('currentPassword', password);
+
         } else {
-          this.loggedIn.next(undefined);
+          console.warn('loginUser: ' + user + ' failed');
         }
-      }
-      )
-    );
+    }));
   }
+
 }

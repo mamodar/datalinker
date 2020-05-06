@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
 import {StateService} from './state.service';
+import {LoginComponent} from '../login/login.component';
 
 
 @Injectable({
@@ -15,8 +16,10 @@ export class AuthGuardService implements CanActivate {
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    if (!this.stateService.getLoggedInUser().getValue()) {
-      this.router.navigate(['/login']);
+    if (!this.stateService.getLoggedInUser().getValue().userName ) {
+      console.warn(route.queryParams)
+      this.router.navigate(['/login'], {queryParams: route.queryParams} );
+      return false;
     }
     return true;
   }

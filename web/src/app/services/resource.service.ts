@@ -5,6 +5,7 @@ import {environment} from '../../environments/environment';
 import {Resource} from '../models/resource';
 import {map, mergeMap, tap} from 'rxjs/operators';
 import {ApiService} from './api.service';
+import {Project} from '../models/project';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,7 @@ export class ResourceService {
 
   getResources(): Observable<Resource[]> {
 
-    return this.apiService.get('/resources/');
+    return this.apiService.get('/resources');
   }
 
   getResource(id: number): Observable<Resource[]> {
@@ -25,24 +26,20 @@ export class ResourceService {
   }
 
   createEmptyResource(): Observable<Resource> {
-    return this.apiService.post('/resources/');
+    return this.apiService.post('/resources');
   }
 
-  updateResource(id: number, resource: Resource): Observable<Resource> {
-    return this.apiService.put('/resources/' + id, {
-      id: resource.id,
-      location: resource.location.transferNumber,
-      path: resource.path,
-      archived: resource.archived,
-      thirdParty: resource.thirdParty,
-      personal: resource.personal,
-      size: resource.size,
-      description: resource.description
-    });
+  updateResource( resource: Resource): Observable<Resource> {
+    // @ts-ignore goes out  as a string
+    resource.location = resource.location.value;
+    return this.apiService.put('/resources/' + resource.id, resource);
   }
 
-  createResource(resource: Resource): Observable<Resource> {
-    return this.createEmptyResource().pipe(mergeMap(r => this.updateResource(r.id, resource)));
+  createResource(resource: Resource, project: Project): Observable<Resource> {
+    resource.projectId = project.id;
+    // @ts-ignore goes out  as a string
+    resource.location = resource.location.value;
+    return this.apiService.post('/resources/', resource );
   }
 
   deleteResource(id: number): Observable<void> {

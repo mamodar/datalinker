@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable, throwError} from 'rxjs';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {environment} from '../../environments/environment';
-import {catchError} from 'rxjs/operators';
+import {catchError, tap} from 'rxjs/operators';
 import {AuthUser} from '../models/authUser';
 
 @Injectable({
@@ -24,17 +24,17 @@ export class ApiService {
       httpOptions = {
         headers: new HttpHeaders({
           'Content-Type': 'application/json',
-          Authorization: 'Basic ' + btoa(user.userName + ':' +     user.password)
+          Authorization: 'Basic ' + btoa(user.userName + ':' + user.password)
         })
       };
     }
-    console.warn(Date() + ' GET:' + path);
+    console.log(Date() + ' GET:' + path + ' ' + user?.userName + ' ' + user?.password);
     return this.http.get(environment.appUrl + path, httpOptions)
     .pipe(catchError(ApiService.formatErrors));
   }
 
   put(path: string, body: any = {}): Observable<any> {
-    console.warn(Date() + ' PUT:' + path + 'body:' + JSON.stringify(body));
+    console.log(Date() + ' PUT:' + path + 'body:' + JSON.stringify(body));
     return this.http.put(
       environment.appUrl + path,
       body
@@ -42,7 +42,7 @@ export class ApiService {
   }
 
   post(path: string, body: any = {}): Observable<any> {
-    console.warn(Date() + ' POST:' + path + 'body:' + JSON.stringify(body));
+    console.log(Date() + ' POST:' + path + 'body:' + JSON.stringify(body));
     return this.http.post(
       environment.appUrl + path,
       body
@@ -50,7 +50,7 @@ export class ApiService {
   }
 
   delete(path): Observable<any> {
-    console.warn(Date() + ' DELETE:' + path);
+    console.log(Date() + ' DELETE:' + path);
     return this.http.delete(
       environment.appUrl + path
     ).pipe(catchError(ApiService.formatErrors));

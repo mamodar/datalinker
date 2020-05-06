@@ -14,14 +14,14 @@ export class ProjectService {
 
   getProjects(): Observable<Project[]> {
 
-    return this.apiService.get('/projects/rdmo');
+    return this.apiService.get('/projects');
   }
 
-  getProject(id: number): Observable<Project> {
-    return this.apiService.get('/projects/' + id);
+  getProject(project: Project): Observable<Project> {
+    return this.apiService.get('/projects/' + project.id);
   }
 
   searchProjects(query: string): Observable<Project[]> {
-    return this.apiService.get('/projects?search='+ query);
+    return this.apiService.get('/projects/search?search=' + query);
   }
 }

@@ -7,7 +7,7 @@ DROP SEQUENCE if exists hibernate_sequence;
 CREATE SEQUENCE hibernate_sequence START 1;
 
 -- CREATE PROJECT
-CREATE  TABLE "project" (
+CREATE TABLE "project" (
                            "id" BIGINT NOT NULL,
                            "creation_timestamp" TIMESTAMP NULL DEFAULT NULL,
                            "description" VARCHAR(255) NULL DEFAULT NULL,
@@ -15,7 +15,8 @@ CREATE  TABLE "project" (
                            "project_name" VARCHAR(255) NULL DEFAULT NULL,
                            "rdmo_id" BIGINT NULL DEFAULT NULL,
                            PRIMARY KEY ("id")
-);
+)
+;
 ALTER TABLE project ADD COLUMN tsv tsvector;
 UPDATE project SET
     tsv =
@@ -28,39 +29,29 @@ CREATE INDEX tsv_idx ON project USING gin(tsv);
 CREATE TABLE "resource" (
                             "id" BIGINT NOT NULL,
                             "creation_timestamp" TIMESTAMP NULL DEFAULT NULL,
-                            "description" VARCHAR(255) NULL DEFAULT 'NULL::character varying',
-                            "location" VARCHAR(255) NULL DEFAULT 'NULL::character varying',
-                            "path" VARCHAR(255) NULL DEFAULT 'NULL::character varying',
-                            "personal" BOOLEAN NULL DEFAULT TRUE,
+                            "description" VARCHAR(255) NULL DEFAULT NULL,
+                            "archived" BOOLEAN NULL DEFAULT NULL,
+                            "personal" BOOLEAN NULL DEFAULT NULL,
+                            "third_party" BOOLEAN NULL DEFAULT NULL,
+                            "location" VARCHAR(255) NULL DEFAULT NULL,
+                            "path" VARCHAR(255) NULL DEFAULT NULL,
+                            "size" REAL(24) NULL DEFAULT NULL,
+                            "project_id" BIGINT NOT NULL,
                             "user_id" BIGINT NULL DEFAULT NULL,
-                            "archived" BOOLEAN NULL DEFAULT FALSE,
-                            "third_party" BOOLEAN NULL DEFAULT FALSE,
-                            "size" REAL NULL DEFAULT NULL,
-                            PRIMARY KEY ("id")
-)
-;
-
--- CREATE project_resource
-
-CREATE TABLE "relationship" (
-                                    "id" BIGINT NOT NULL,
-                                    "creation_timestamp" TIMESTAMP NULL DEFAULT NULL,
-                                    "project_id" BIGINT NULL DEFAULT NULL,
-                                    "resource_id" BIGINT NULL DEFAULT NULL,
-                                    PRIMARY KEY ("id"),
-                                    CONSTRAINT "fkf5dm3ds6o6uqbbk8is7sge7jb" FOREIGN KEY ("resource_id") REFERENCES "resource" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION,
-                                    CONSTRAINT "fksia08gjbokwkenn8ipylim7e8" FOREIGN KEY ("project_id") REFERENCES "project" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+                            PRIMARY KEY ("id"),
+                            CONSTRAINT "fk959t5quy9sgha1ikrhaedo260" FOREIGN KEY ("project_id") REFERENCES "public"."project" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION,
+                            CONSTRAINT "fk9rx1aalrihjvhx59gmmurhuns" FOREIGN KEY ("user_id") REFERENCES "public"."users" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 ;
 -- CREATE users ("user" is disallowed by postgresql)
 
 CREATE TABLE "users" (
                          "id" BIGINT NOT NULL,
+                         "dn" VARCHAR(255) NULL DEFAULT NULL,
                          "username" VARCHAR(255) NULL DEFAULT NULL,
                          PRIMARY KEY ("id")
 )
 ;
-
 -- CREATE search
 
 DROP  MATERIALIZED VIEW  IF EXISTS search_view;
@@ -69,9 +60,8 @@ CREATE MATERIALIZED VIEW search_view AS
 -- concat all fields, aggregate it over multiple resources, replace non-alphanumeric by space
 SELECT p.id,p.project_name,
        to_tsvector(regexp_replace(string_agg(CONCAT_WS(' ', p.description,p.owner,p.project_name,r.description,r.location,r.path), ' '),'\W',' ', 'g')) AS tsv
-FROM project p FULL
-                   JOIN relationship pr ON pr.project_id = p.id FULL
-                   JOIN resource r ON r.id = pr.resource_id
+FROM resource r FULL
+                JOIN project p ON r.project_id = p.id
 GROUP BY p.id, p.project_name;
 
 -- http://www.vinsguru.com/cloud-design-patterns-materialized-view-pattern-using-spring-boot-postgresql/
@@ -89,12 +79,6 @@ END $$ LANGUAGE plpgsql;
 CREATE TRIGGER refresh_mat_view_after_po_insert
     AFTER INSERT OR DELETE OR UPDATE OR TRUNCATE
     ON project
-    FOR EACH STATEMENT
-EXECUTE PROCEDURE refresh_search_view();
---For HeidiSQL add DELIMITER //
-CREATE TRIGGER refresh_mat_view_after_po_insert
-    AFTER INSERT OR DELETE OR UPDATE OR TRUNCATE
-    ON relationship
     FOR EACH STATEMENT
 EXECUTE PROCEDURE refresh_search_view();
 
