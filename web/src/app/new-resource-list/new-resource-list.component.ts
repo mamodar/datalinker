@@ -19,9 +19,10 @@ export class NewResourceListComponent implements OnInit, AfterViewInit {
 
   newResources$: Observable<Resource[]>;
   ngOnInit() {
+    this.newResources$ = this.stateService.getNewShownResources();
   }
   ngAfterViewInit() {
-    this.newResources$ = this.stateService.getNewShownResources().pipe();
+
   }
 }
 
