@@ -29,6 +29,9 @@ public class Resource {
   @Temporal(TemporalType.TIMESTAMP)
   Date creationTimestamp;
 
+  @Column
+  @Temporal(TemporalType.TIMESTAMP)
+  Date updatedTimestamp;
 
   @Column(name = "path",nullable = false)
   private String path;
@@ -54,8 +57,12 @@ public class Resource {
   private String description;
 
   @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "user_id",nullable = false)
-  private User user;
+  @JoinColumn(name = "created_by_user_id",nullable = false)
+  private User createdByUser;
+
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "updated_by_user_id",nullable = false)
+  private User updatedByUser;
 
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "project_id",nullable = false)
@@ -63,6 +70,7 @@ public class Resource {
 
   public Resource() {
   }
+
   public Resource(ResourceSendDTO resourceSendDTO) {
 
     this.path = resourceSendDTO.getPath();
@@ -101,12 +109,28 @@ public class Resource {
     this.creationTimestamp = creationTimestamp;
   }
 
-  public User getUser() {
-    return user;
+  public Date getUpdatedTimestamp() {
+    return updatedTimestamp;
   }
 
-  public void setUser(User user) {
-    this.user = user;
+  public void setUpdatedTimestamp(Date updatedTimestamp) {
+    this.updatedTimestamp = updatedTimestamp;
+  }
+
+  public User getUpdatedByUser() {
+    return updatedByUser;
+  }
+
+  public void setUpdatedByUser(User updatedByUser) {
+    this.updatedByUser = updatedByUser;
+  }
+
+  public User getCreatedByUser() {
+    return createdByUser;
+  }
+
+  public void setCreatedByUser(User user) {
+    this.createdByUser = user;
   }
 
   public String getPath() {

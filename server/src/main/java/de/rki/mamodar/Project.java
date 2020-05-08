@@ -31,6 +31,10 @@ public class Project {
   @Temporal(TemporalType.TIMESTAMP)
   Date creationTimestamp;
 
+  @Column
+  @Temporal(TemporalType.TIMESTAMP)
+  Date updatedTimestamp;
+
   @Column(name = "project_name")
   private String projectName;
 
@@ -67,6 +71,14 @@ public class Project {
 
   public Date getCreationTimestamp() {
     return creationTimestamp;
+  }
+
+  public Date getUpdatedTimestamp() {
+    return updatedTimestamp;
+  }
+
+  public void setUpdatedTimestamp(Date updatedTimestamp) {
+    this.updatedTimestamp = updatedTimestamp;
   }
 
   public String getProjectName() {

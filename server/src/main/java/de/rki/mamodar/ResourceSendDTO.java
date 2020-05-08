@@ -1,13 +1,16 @@
 package de.rki.mamodar;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ResourceSendDTO {
   private Long id;
-  private String userName;
+  private String createdBy;
+  private String updatedBy;
   private String path;
   private String location;
-  private String creationTimestamp;
+  private String createdTimestamp;
+  private String updatedTimestamp;
   private Float size;
   private Boolean isPersonal;
   private Boolean isArchived = false;
@@ -15,7 +18,9 @@ public class ResourceSendDTO {
   private String description;
   private Long projectId;
 
+
 public ResourceSendDTO(){}
+
 public ResourceSendDTO(Resource resource){
   this.id = resource.getId();
   this.location = resource.getLocation().name();
@@ -24,30 +29,48 @@ public ResourceSendDTO(Resource resource){
   this.isThirdParty = resource.getThirdParty();
   this.isPersonal = resource.getPersonal();
   this.size = resource.getSize();
-  this.creationTimestamp = resource.getCreationTimestamp().toString();
+  this.createdTimestamp = resource.getCreationTimestamp().toString();
+  this.updatedTimestamp = resource.getUpdatedTimestamp().toString();
   this.projectId = resource.getProject().getId();
-  this.userName = resource.getUser().getUsername();
+  this.createdBy = resource.getCreatedByUser().getUsername();
+  this.updatedBy = resource.getUpdatedByUser().getUsername();
   this.description = resource.getDescription();
 }
 
-  public String getCreationTimestamp() {
-    return creationTimestamp;
+  public String getCreatedTimestamp() {
+    return createdTimestamp;
   }
 
-  public void setCreationTimestamp(String creationTimestamp) {
-    this.creationTimestamp = creationTimestamp;
+  public void setCreatedTimestamp(String createdTimestamp) {
+    this.createdTimestamp = createdTimestamp;
   }
 
   public Long getId() {
     return id;
   }
 
-  public String getUserName() {
-    return userName;
+  public String getCreatedBy() {
+    return createdBy;
   }
 
-  public void setUserName(String userName) {
-    this.userName = userName;
+  public void setCreatedBy(String createdBy) {
+    this.createdBy = createdBy;
+  }
+
+  public String getUpdatedBy() {
+    return updatedBy;
+  }
+
+  public void setUpdatedBy(String updatedBy) {
+    this.updatedBy = updatedBy;
+  }
+
+  public String getUpdatedTimestamp() {
+    return updatedTimestamp;
+  }
+
+  public void setUpdatedTimestamp(String updatedTimestamp) {
+    this.updatedTimestamp = updatedTimestamp;
   }
 
   public String getPath() {

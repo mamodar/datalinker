@@ -58,7 +58,9 @@
       <textarea matInput name = "description"  [(ngModel)]="data.description"> </textarea>
     </mat-form-field>
   </div>
-  <div *ngIf="data.userName" class="mat-caption">Angelegt von {{data.userName}} um {{data.creationTimestamp}}</div>
+  <div *ngIf="data.createdBy" class="mat-caption">Angelegt von {{data.createdBy}} um {{data.createdTimestamp}}</div>
+  <div *ngIf="data.createdBy && (data.updatedTimestamp !== data.createdTimestamp)"
+       class="mat-caption">Aktualisiert von {{data.updatedBy}} um {{data.updatedTimestamp}}</div>
   <mat-divider></mat-divider>
   <div mat-dialog-actions>
     <button mat-button mat-raised-button color="primary" (click)="onNoClick()">Abbrechen</button>

@@ -1,6 +1,11 @@
 package de.rki.mamodar;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 
 public class ProjectSendDTO {
   private Long id;
@@ -9,7 +14,10 @@ public class ProjectSendDTO {
   private String description;
   private String owner;
   private ArrayList<ResourceSendDTO> resources ;
-  public ProjectSendDTO(){};
+
+  public ProjectSendDTO(){
+
+  }
 
   public ProjectSendDTO(Project project){
     this.id = project.getId();
@@ -19,14 +27,18 @@ public class ProjectSendDTO {
     this.owner = project.getOwner();
   }
 
-  public ProjectSendDTO(Project project, Iterable<Resource> resources){
+  public ProjectSendDTO(Project project, List<Resource> resources){
     this.id = project.getId();
     this.creationTimestamp = project.creationTimestamp.toString();
     this.projectName = project.getProjectName();
     this.description = project.getDescription();
     this.owner = project.getOwner();
     this.resources = new ArrayList<>();
+    resources.sort(Comparator.comparing(Resource::getUpdatedTimestamp));
+    Collections.reverse(resources);
     resources.forEach(resource -> this.resources.add(new ResourceSendDTO(resource)));
+
+    //
   }
 
   public Long getId() {

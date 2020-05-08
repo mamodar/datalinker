@@ -14,6 +14,7 @@ CREATE TABLE "project" (
                            "owner" VARCHAR(255) NULL DEFAULT NULL,
                            "project_name" VARCHAR(255) NULL DEFAULT NULL,
                            "rdmo_id" BIGINT NULL DEFAULT NULL,
+                           "updated_timestamp" TIMESTAMP NULL DEFAULT NULL,
                            PRIMARY KEY ("id")
 )
 ;
@@ -33,14 +34,17 @@ CREATE TABLE "resource" (
                             "archived" BOOLEAN NULL DEFAULT NULL,
                             "personal" BOOLEAN NULL DEFAULT NULL,
                             "third_party" BOOLEAN NULL DEFAULT NULL,
-                            "location" VARCHAR(255) NULL DEFAULT NULL,
-                            "path" VARCHAR(255) NULL DEFAULT NULL,
+                            "location" VARCHAR(255) NOT NULL,
+                            "path" VARCHAR(255) NOT NULL,
                             "size" REAL(24) NULL DEFAULT NULL,
+                            "updated_timestamp" TIMESTAMP NULL DEFAULT NULL,
+                            "created_by_user_id" BIGINT NOT NULL,
                             "project_id" BIGINT NOT NULL,
-                            "user_id" BIGINT NULL DEFAULT NULL,
+                            "updated_by_user_id" BIGINT NOT NULL,
                             PRIMARY KEY ("id"),
-                            CONSTRAINT "fk959t5quy9sgha1ikrhaedo260" FOREIGN KEY ("project_id") REFERENCES "public"."project" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION,
-                            CONSTRAINT "fk9rx1aalrihjvhx59gmmurhuns" FOREIGN KEY ("user_id") REFERENCES "public"."users" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+                            CONSTRAINT "fk959t5quy9sgha1ikrhaedo260" FOREIGN KEY ("project_id") REFERENCES "project" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION,
+                            CONSTRAINT "fkgo5o5p15d2co1bun83j0a9ydn" FOREIGN KEY ("updated_by_user_id") REFERENCES "users" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION,
+                            CONSTRAINT "fko8ngrycha638ht39a7ip5u5hw" FOREIGN KEY ("created_by_user_id") REFERENCES "users" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 ;
 -- CREATE users ("user" is disallowed by postgresql)

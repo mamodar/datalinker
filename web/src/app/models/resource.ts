@@ -2,10 +2,13 @@ import { ResourceType } from './resourceType';
 
 export class Resource {
   id: number;
-  userName: string;
+
   path: string;
   location: ResourceType ;
-  creationTimestamp: string;
+  createdBy: string;
+  createdTimestamp: string;
+  updatedBy: string;
+  updatedTimestamp: string;
   size: number;
   description: string;
   projectId: number;

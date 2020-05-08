@@ -26,7 +26,7 @@ public class User {
   @Column(name = "dn")
   private String dn;
 
-  @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+  @OneToMany(mappedBy = "createdByUser", fetch = FetchType.EAGER)
   private List<Resource> resources;
 
   public User() {

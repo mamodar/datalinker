@@ -7,6 +7,7 @@ import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,7 +38,7 @@ public class ResourceController {
   @GetMapping("/resources/")
   List<ResourceSendDTO> all() {
     ArrayList<ResourceSendDTO> resources = new ArrayList<>();
-    repository.findAll().forEach(resource -> resources.add(new ResourceSendDTO(resource) ));
+    repository.findAll(Sort.by(Sort.Direction.ASC, "updatedTimestamp")).forEach(resource -> resources.add(new ResourceSendDTO(resource) ));
     return resources;
   }
 
@@ -49,15 +50,21 @@ public class ResourceController {
 
   }
 
-  //creates an empty resource
   @PostMapping("/resources")
   ResourceSendDTO addResource(@RequestBody @NotNull ResourceSendDTO resourceDTO) {
     log.info("POST: /resources");
-    Resource newResource = new Resource(resourceDTO);
-    newResource.setUser(userRepository.getByDn(authenticationFacade.getLdapUser().getDn())) ;
-    newResource.setCreationTimestamp(new Date());
+
     Project correspondingProject = projectRepository.findById(resourceDTO.getProjectId()).
         orElseThrow(() -> new ObjectNotFoundException("project", resourceDTO.getProjectId()));
+
+    Resource newResource = new Resource(resourceDTO);
+
+    newResource.setCreatedByUser(userRepository.getByDn(authenticationFacade.getLdapUser().getDn()));
+    newResource.setUpdatedByUser(newResource.getCreatedByUser());
+
+    newResource.setCreationTimestamp(new Date());
+    newResource.setUpdatedTimestamp(newResource.getCreationTimestamp());
+
     newResource.setProject(correspondingProject);
     repository.save(newResource);
     return new ResourceSendDTO(newResource);
@@ -69,8 +76,8 @@ public class ResourceController {
     Resource resource = repository.findById(id)
         .orElseThrow(() -> new ObjectNotFoundException("resource", id));
     resource.update(updatedResource);
-    resource.setUser(userRepository.getByDn(authenticationFacade.getLdapUser().getDn())) ;
-    resource.setCreationTimestamp(new Date());
+    resource.setUpdatedByUser(userRepository.getByDn(authenticationFacade.getLdapUser().getDn())); ;
+    resource.setUpdatedTimestamp(new Date());
     repository.save(resource);
     return new ResourceSendDTO(resource);
 

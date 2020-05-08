@@ -6,6 +6,8 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.ldap.userdetails.LdapUserDetailsImpl;
@@ -35,12 +37,12 @@ public class ProjectController {
   List<ProjectSendDTO> allRdmo() {
     ArrayList<ProjectSendDTO> allProjects = new ArrayList<>();
     try {
-
       log.info("GET: /projects/rdmo " + authenticationFacade.getLdapUser().getDn());
       ArrayList<Project> rdmoResponse = rdmoRestConsumer.getProjectsFromRdmo();
       updateProjects(rdmoResponse);
     } finally {
-      repository.findAll().forEach(project -> allProjects.add(new ProjectSendDTO(project)));
+      repository.findAll(Sort.by(Direction.ASC, "projectName")).forEach(project -> allProjects.add(new ProjectSendDTO(project)));
+
       return allProjects;
     }
 
