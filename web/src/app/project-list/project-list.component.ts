@@ -14,7 +14,7 @@ export class ProjectListComponent implements OnInit {
   constructor(private stateService: StateService) { }
   @Input() projects$: Observable<Project[]>;
   selectedProject$: BehaviorSubject<Project>;
-  private shownResources$: Observable<Resource[]>;
+  public shownResources$: Observable<Resource[]>;
 
   ngOnInit() {
     this.selectedProject$ = this.stateService.getSelectedProject();

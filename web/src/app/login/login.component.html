@@ -1,4 +1,4 @@
-<mat-form-field>
+<div *ngIf="!stateService.getLoggedInUser().getValue() || !stateService.getLoggedInUser().getValue().userName"><mat-form-field>
   <mat-label>Benutzername</mat-label>
   <input matInput type = "text" [(ngModel)]="login" [required] >
 </mat-form-field>
@@ -10,5 +10,14 @@
 <br>
 <p class = "mat-error" *ngIf="!passwordCorrect"> Passwort oder Benutzername nicht korrekt!</p>
 <button mat-raised-button color="primary"
-        (click)="onClick()"
+        (click)="loginClick()"
         [disabled]="!password?.length||!login?.length">Einloggen</button>
+</div>
+
+<div *ngIf="(stateService.getLoggedInUser().getValue()!==null) && (stateService.getLoggedInUser().getValue().userName !== null)">
+  <mat-list>
+    <mat-list-item>Benutzername: {{stateService.getLoggedInUser().getValue().userName}}  </mat-list-item>
+  </mat-list>
+  <button mat-raised-button color="warn"
+          (click)="logoutClick()">Ausloggen</button>
+</div>

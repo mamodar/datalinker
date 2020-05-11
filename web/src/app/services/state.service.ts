@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, Observable, of} from 'rxjs';
 import {Resource} from '../models/resource';
 import {Project} from '../models/project';
 import {ProjectService} from './project.service';
@@ -32,7 +32,7 @@ export class StateService {
   private shownProjects = new BehaviorSubject<Project[]>(undefined);
   private selectedProject = new BehaviorSubject<Project>(undefined);
   private filterResourcesByProject = new BehaviorSubject<Project>(undefined);
-  private currentUser = new BehaviorSubject<AuthUser>(undefined);
+  private currentUser = new BehaviorSubject<AuthUser>(null);
   private newResources = new Array<Resource>();
   private shownNewResources = new BehaviorSubject<Resource[]>(null);
 
@@ -128,12 +128,13 @@ export class StateService {
     return this.resourceService.updateResource(resource);
   }
 
-  getLoggedInUser(): BehaviorSubject<AuthUser> {
+  getLoggedInUser(): BehaviorSubject<AuthUser|null> {
     return this.currentUser;
   }
 
   loginUser(user: string, password: string): Observable<any> {
-    this.currentUser.next(undefined);
+    console.log("loginUser");
+    this.currentUser.next(null);
     sessionStorage.clear();
     return this.apiService.get('/user', {userName: user, password}).pipe(map(response => {
         if (response.name) {
@@ -146,5 +147,10 @@ export class StateService {
         }
     }));
   }
-
+  logoutUser(): Observable<any> {
+    console.log("logoutUser");
+    this.currentUser.next(null);
+    sessionStorage.clear();
+    return(of(true));
+  }
 }

@@ -1,3 +1,4 @@
+-- CREATE DATABASE mamodar;
 -- DROPS ALL TABLES
 DROP TABLE IF EXISTS "project" CASCADE;
 DROP TABLE IF exists "users" CASCADE ;
@@ -25,6 +26,16 @@ UPDATE project SET
             setweight(to_tsvector(description),'B');
 
 CREATE INDEX tsv_idx ON project USING gin(tsv);
+-- CREATE users ("user" is disallowed by postgresql)
+
+CREATE TABLE "users" (
+                         "id" BIGINT NOT NULL,
+                         "dn" VARCHAR(255) NULL DEFAULT NULL,
+                         "username" VARCHAR(255) NULL DEFAULT NULL,
+                         PRIMARY KEY ("id")
+)
+;
+
 -- CREATE resource
 
 CREATE TABLE "resource" (
@@ -36,7 +47,7 @@ CREATE TABLE "resource" (
                             "third_party" BOOLEAN NULL DEFAULT NULL,
                             "location" VARCHAR(255) NOT NULL,
                             "path" VARCHAR(255) NOT NULL,
-                            "size" REAL(24) NULL DEFAULT NULL,
+                            "size" REAL NULL DEFAULT NULL,
                             "updated_timestamp" TIMESTAMP NULL DEFAULT NULL,
                             "created_by_user_id" BIGINT NOT NULL,
                             "project_id" BIGINT NOT NULL,
@@ -47,15 +58,7 @@ CREATE TABLE "resource" (
                             CONSTRAINT "fko8ngrycha638ht39a7ip5u5hw" FOREIGN KEY ("created_by_user_id") REFERENCES "users" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 ;
--- CREATE users ("user" is disallowed by postgresql)
 
-CREATE TABLE "users" (
-                         "id" BIGINT NOT NULL,
-                         "dn" VARCHAR(255) NULL DEFAULT NULL,
-                         "username" VARCHAR(255) NULL DEFAULT NULL,
-                         PRIMARY KEY ("id")
-)
-;
 -- CREATE search
 
 DROP  MATERIALIZED VIEW  IF EXISTS search_view;

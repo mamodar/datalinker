@@ -41,7 +41,9 @@ public class ProjectController {
       ArrayList<Project> rdmoResponse = rdmoRestConsumer.getProjectsFromRdmo();
       updateProjects(rdmoResponse);
     } finally {
-      repository.findAll(Sort.by(Direction.ASC, "projectName")).forEach(project -> allProjects.add(new ProjectSendDTO(project)));
+      repository.findAll(Sort.by(Direction.ASC, "projectName")).
+          forEach(project -> allProjects.add(new ProjectSendDTO(project)));
+      allProjects.removeIf(project -> !project.getOwner().equals(authenticationFacade.getLdapUser().getUsername()));
 
       return allProjects;
     }
