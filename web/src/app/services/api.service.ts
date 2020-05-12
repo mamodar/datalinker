@@ -27,8 +27,8 @@ export class ApiService {
           Authorization: 'Basic ' + btoa(user.userName + ':' + user.password)
         })
       };
+      return this.http.get(environment.appUrl + path, httpOptions);
     }
-    console.log(Date() + ' GET:' + path + ' ' + user?.userName + ' ' + user?.password);
     return this.http.get(environment.appUrl + path, httpOptions)
     .pipe(catchError(ApiService.formatErrors));
   }

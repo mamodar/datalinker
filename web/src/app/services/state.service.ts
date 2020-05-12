@@ -133,7 +133,6 @@ export class StateService {
   }
 
   loginUser(user: string, password: string): Observable<any> {
-    console.log("loginUser");
     this.currentUser.next(null);
     sessionStorage.clear();
     return this.apiService.get('/user', {userName: user, password}).pipe(map(response => {
@@ -141,9 +140,6 @@ export class StateService {
           this.currentUser.next({userName: user, password});
           sessionStorage.setItem('currentUser', user);
           sessionStorage.setItem('currentPassword', password);
-
-        } else {
-          console.warn('loginUser: ' + user + ' failed');
         }
     }));
   }
