@@ -1,13 +1,10 @@
 package de.rki.mamodar;
 
-import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -25,9 +22,6 @@ public class User {
 
   @Column(name = "dn")
   private String dn;
-
-  @OneToMany(mappedBy = "createdByUser", fetch = FetchType.EAGER)
-  private List<Resource> resources;
 
   public User() {
   }
@@ -48,11 +42,4 @@ public class User {
     return dn;
   }
 
-  public List<Resource> getResources() {
-    return resources;
-  }
-
-  public void setResources(List<Resource> resources) {
-    this.resources = resources;
-  }
 }

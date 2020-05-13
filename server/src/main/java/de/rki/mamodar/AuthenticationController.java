@@ -1,10 +1,7 @@
 package de.rki.mamodar;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Collection;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.ldap.userdetails.LdapUserDetailsImpl;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;

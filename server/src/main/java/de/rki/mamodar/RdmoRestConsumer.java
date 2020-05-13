@@ -3,7 +3,6 @@ package de.rki.mamodar;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
