@@ -23,7 +23,7 @@ public ResourceSendDTO(){}
 
 public ResourceSendDTO(Resource resource){
   this.id = resource.getId();
-  this.location = resource.getLocation().name();
+  this.location = resource.getResourceType().name();
   this.path = resource.getPath();
   this.isArchived = resource.getArchived();
   this.isThirdParty = resource.getThirdParty();

@@ -38,7 +38,7 @@ public class Resource {
 
   @Column(name="location",nullable = false)
   @Enumerated(EnumType.STRING)
-  private Location location;
+  private ResourceType resourceType;
 
   @Column(name="size")
   private Float size;
@@ -74,7 +74,7 @@ public class Resource {
   public Resource(ResourceSendDTO resourceSendDTO) {
 
     this.path = resourceSendDTO.getPath();
-    this.location = Location.valueOf(resourceSendDTO.getLocation());
+    this.resourceType = ResourceType.valueOf(resourceSendDTO.getLocation());
     this.description =  resourceSendDTO.getDescription();
     this.isArchived = resourceSendDTO.getArchived();
     this.isPersonal = resourceSendDTO.getPersonal();
@@ -88,7 +88,7 @@ public class Resource {
     Objects.requireNonNull(resourceSendDTO.getLocation());
 
     this.path = resourceSendDTO.getPath();
-    this.location = Location.valueOf(resourceSendDTO.getLocation());
+    this.resourceType = ResourceType.valueOf(resourceSendDTO.getLocation());
     this.description =  resourceSendDTO.getDescription()!=null?resourceSendDTO.getDescription():this.description;
     this.isArchived = resourceSendDTO.getArchived() != null?resourceSendDTO.getArchived():this.isArchived;
     this.isPersonal = resourceSendDTO.getPersonal()!= null?resourceSendDTO.getPersonal():this.isPersonal;
@@ -141,12 +141,12 @@ public class Resource {
     this.path = path;
   }
 
-  public Location getLocation() {
-    return location;
+  public ResourceType getResourceType() {
+    return resourceType;
   }
 
-  public void setLocation(Location location) {
-    this.location = location;
+  public void setResourceType(ResourceType resourceType) {
+    this.resourceType = resourceType;
   }
 
   public Float getSize() {

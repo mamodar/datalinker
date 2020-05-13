@@ -45,7 +45,7 @@ CREATE TABLE "resource" (
                             "archived" BOOLEAN NULL DEFAULT NULL,
                             "personal" BOOLEAN NULL DEFAULT NULL,
                             "third_party" BOOLEAN NULL DEFAULT NULL,
-                            "location" VARCHAR(255) NOT NULL,
+                            "resourceType" VARCHAR(255) NOT NULL,
                             "path" VARCHAR(255) NOT NULL,
                             "size" REAL NULL DEFAULT NULL,
                             "updated_timestamp" TIMESTAMP NULL DEFAULT NULL,
@@ -66,7 +66,7 @@ DROP INDEX IF EXISTS tsv_idx;
 CREATE MATERIALIZED VIEW search_view AS
 -- concat all fields, aggregate it over multiple resources, replace non-alphanumeric by space
 SELECT p.id,p.project_name,
-       to_tsvector(regexp_replace(string_agg(CONCAT_WS(' ', p.description,p.owner,p.project_name,r.description,r.location,r.path), ' '),'\W',' ', 'g')) AS tsv
+       to_tsvector(regexp_replace(string_agg(CONCAT_WS(' ', p.description,p.owner,p.project_name,r.description,r.resourceType,r.path), ' '),'\W',' ', 'g')) AS tsv
 FROM resource r FULL
                 JOIN project p ON r.project_id = p.id
 GROUP BY p.id, p.project_name;
