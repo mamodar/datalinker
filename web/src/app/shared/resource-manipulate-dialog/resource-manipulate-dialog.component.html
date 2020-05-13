@@ -1,4 +1,4 @@
-<form #newResourceForm='ngForm' >
+<form #newResourceForm='ngForm'>
   <label class="mat-caption">Typ:</label><br><br>
   <mat-radio-group required [(ngModel)]="this.data.location.value" name = "location" (change)="setSelectedLocation()">
     <mat-radio-button class="radio" *ngFor="let option of (this.resourceTypes$ |async)"
@@ -9,7 +9,7 @@
     <div *ngSwitchCase="'SAN'">
       <mat-form-field class="pathinput" >
         <mat-label>{{data.location.pathDescriptor}}</mat-label>
-        <input id="name" name="name"  matInput #input = ngModel name = "path" [(ngModel)]="data.path" type="text" required pattern="S:\\.*"><br>
+        <input matInput #input = ngModel name = "path" [(ngModel)]="data.path" type="text" required pattern="S:\\.*"><br>
         <mat-error *ngIf="input.errors">Kein korrekter Pfad (muss mit 'S:\' beginnen)! </mat-error>
       </mat-form-field>
       <mat-form-field *ngIf="data">
@@ -18,6 +18,31 @@
       </mat-form-field>
       <mat-label>GB</mat-label>
     </div>
+
+    <div *ngSwitchCase="'PRIV'">
+      <mat-form-field class="pathinput" >
+        <mat-label>{{data.location.pathDescriptor}}</mat-label>
+        <input  matInput #input = ngModel name = "path" [(ngModel)]="data.path" type="text" required pattern="P:\\.*"><br>
+        <mat-error *ngIf="input.errors">Kein korrekter Pfad (muss mit 'P:\' beginnen)! </mat-error>
+      </mat-form-field>
+      <mat-form-field *ngIf="data">
+        <mat-label>maximale Größe in GB</mat-label>
+        <input matInput [(ngModel)]="data.size" name = "size"  type="number" max="1000" min="0.1" required>
+      </mat-form-field>
+      <mat-label>GB</mat-label>
+    </div>
+
+    <div *ngSwitchCase="'CLOUD'">
+      <mat-form-field class="pathinput" >
+        <mat-label>{{data.location.pathDescriptor}}</mat-label>
+        <mat-select [(ngModel)]="data.path" required name = "path">
+          <mat-option  *ngFor="let cloud of cloudTypes$ | async" [value] = "cloud.value">
+            {{cloud.viewValue}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
     <div *ngSwitchCase="'LOCAL'">
       <mat-form-field class="pathinput">
         <mat-label>{{data.location.pathDescriptor}}</mat-label>
@@ -25,6 +50,7 @@
         <mat-error *ngIf="input.errors">Kein korrekter Pfad! </mat-error>
       </mat-form-field>
     </div>
+
     <div *ngSwitchCase="'OPENBIS'" >
       <mat-form-field class="pathinput">
         <mat-label>{{data.location.pathDescriptor}}</mat-label>
@@ -32,6 +58,7 @@
         <mat-error *ngIf="input.errors">Kein korrekter Pfad! </mat-error>
       </mat-form-field>
     </div>
+
     <div *ngSwitchCase="'GIT'">
       <mat-form-field class="pathinput">
         <mat-label>{{data.location.pathDescriptor}}</mat-label>
@@ -39,6 +66,7 @@
         <mat-error *ngIf="input.errors">Kein korrekte URL! </mat-error>
       </mat-form-field>
     </div>
+
     <div  *ngSwitchCase = "'DOI'">
       <mat-form-field class="pathinput">
         <mat-label>{{data.location.pathDescriptor}}</mat-label>
@@ -46,6 +74,7 @@
         <mat-error *ngIf="input.errors">DOI nicht korrekt! </mat-error>
       </mat-form-field>
     </div>
+
   </div>
   <div *ngIf="data.location.value">
     <mat-slide-toggle color="primary" name = "personal"  [(ngModel)]="data.personal">persönliche Daten</mat-slide-toggle>

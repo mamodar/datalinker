@@ -8,6 +8,7 @@ import {ResourceType} from '../../models/resourceType';
 import {Observable} from 'rxjs';
 import {ResourceEditButtonComponent} from '../resource-edit-button/resource-edit-button.component';
 import {NewResourceAddButtonComponent} from '../../new-resource-add/new-resource-add-button.component';
+import {CloudType} from '../../models/cloudType';
 
 @Component({
   selector: 'app-resource-manipulate-dialog',
@@ -17,6 +18,7 @@ import {NewResourceAddButtonComponent} from '../../new-resource-add/new-resource
 export class ResourceManipulateDialogComponent implements OnInit {
   resourceTypes$: Observable<ResourceType[]>;
   dataBackup: Resource;
+  cloudTypes$: Observable<CloudType[]>;
   constructor(
     public dialogRef: MatDialogRef<NewResourceAddButtonComponent | ResourceEditButtonComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Resource,
@@ -27,6 +29,7 @@ export class ResourceManipulateDialogComponent implements OnInit {
 
   ngOnInit() {
     this.resourceTypes$ = this.stateService.getResourceTypes();
+    this.cloudTypes$ = this.stateService.getCloudTypes();
     this.activatedRoute.queryParamMap.pipe( take(1), map(
       // creates an object from aromatically selecting a location
       _ => {
@@ -43,7 +46,8 @@ export class ResourceManipulateDialogComponent implements OnInit {
 
 
 // creates an object from manually selecting a location
-  setSelectedLocation() {
+
+  setSelectedLocation(): void {
     this.data.location = new ResourceType(this.data.location.value);
   }
 

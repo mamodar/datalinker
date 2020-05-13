@@ -11,6 +11,7 @@ import {Resource} from '../models/resource';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
 import {Router} from '@angular/router';
+import {CloudType} from '../models/cloudType';
 
 
 @Component({
@@ -54,6 +55,10 @@ export class ResourceListComponent implements OnDestroy, OnInit {
 
   search($event): void {
     this.dataSource.filter = ($event.target as HTMLInputElement).value.trim().toLowerCase();
+  }
+
+  newCloudValue(path: string): string {
+    return new CloudType(path).viewValue;
   }
 
 }

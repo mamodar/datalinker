@@ -4,6 +4,7 @@ import { Observable} from 'rxjs';
 import {Resource} from '../models/resource';
 import { ViewChild } from '@angular/core';
 import {MatTable} from '@angular/material/table';
+import {CloudType} from '../models/cloudType';
 
 @Component({
   selector: 'app-new-resource-list',
@@ -23,6 +24,10 @@ export class NewResourceListComponent implements OnInit, AfterViewInit {
   }
   ngAfterViewInit() {
 
+  }
+
+  newCloudValue(path: string): string {
+    return new CloudType(path).viewValue;
   }
 }
 

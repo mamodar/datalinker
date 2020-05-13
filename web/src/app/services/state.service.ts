@@ -9,6 +9,7 @@ import {ResourceType} from '../models/resourceType';
 import {AuthUser} from '../models/authUser';
 import {ApiService} from './api.service';
 import {User} from '../models/user';
+import {CloudType} from '../models/cloudType';
 
 
 
@@ -18,6 +19,7 @@ import {User} from '../models/user';
 export class StateService {
 
 
+
   constructor(private projectService: ProjectService,
               private resourceService: ResourceService,
               private apiService: ApiService) {
@@ -25,6 +27,7 @@ export class StateService {
       userName: sessionStorage.getItem('currentUser'),
       password: sessionStorage.getItem('currentPassword')
     });
+    this.initializeTypes();
   }
 
 
@@ -35,8 +38,22 @@ export class StateService {
   private currentUser = new BehaviorSubject<AuthUser>(null);
   private newResources = new Array<Resource>();
   private shownNewResources = new BehaviorSubject<Resource[]>(null);
+  private resourceTypes: ResourceType[];
+  private cloudTypes: CloudType[];
 
-
+  private initializeTypes(): void {
+    this.resourceTypes = [];
+    this.resourceTypes.push(new ResourceType(0));
+    this.resourceTypes.push(new ResourceType(5));
+    this.resourceTypes.push(new ResourceType(2));
+    this.resourceTypes.push(new ResourceType(3));
+    this.resourceTypes.push(new ResourceType(4));
+    this.resourceTypes.push(new ResourceType(6));
+    this.cloudTypes = [];
+    this.cloudTypes.push(new CloudType(0));
+    this.cloudTypes.push(new CloudType(1));
+    this.cloudTypes.push(new CloudType(2));
+  }
   getResources(): BehaviorSubject<Resource[]> {
     if (this.filterResourcesByProject.getValue()) {
       this.projectService.getProject(
@@ -111,17 +128,14 @@ export class StateService {
     }
   }
 
-  /*SAN("WissData"),
-  LOCAL("Lokal"),
-  OPENBIS("OpenBIS"),
-  GIT("git"),
-  DOI("doi");*/
   getResourceTypes(): BehaviorSubject<ResourceType[]> {
-    const resource: ResourceType[] = [
-      new ResourceType(0), new ResourceType(1), new ResourceType(2), new ResourceType(3), new ResourceType(4)
-    ];
-    const resources: BehaviorSubject<ResourceType[]> = new BehaviorSubject<ResourceType[]>(resource);
-    return (resources);
+    const resourceTypes: BehaviorSubject<ResourceType[]> = new BehaviorSubject<ResourceType[]>(this.resourceTypes);
+    return (resourceTypes);
+  }
+
+  getCloudTypes(): BehaviorSubject<CloudType[]> {
+    const cloudTypes: BehaviorSubject<CloudType[]> = new BehaviorSubject<CloudType[]>(this.cloudTypes);
+    return (cloudTypes);
   }
 
   updateResource(resource: Resource): Observable<Resource> {
@@ -133,6 +147,7 @@ export class StateService {
   }
 
   loginUser(user: string, password: string): Observable<any> {
+    console.log('loginUser: ' + user);
     this.currentUser.next(null);
     sessionStorage.clear();
     return this.apiService.get('/user', {userName: user, password}).pipe(map(response => {
@@ -144,7 +159,7 @@ export class StateService {
     }));
   }
   logoutUser(): Observable<any> {
-    console.log("logoutUser");
+    console.log('logoutUser');
     this.currentUser.next(null);
     sessionStorage.clear();
     return(of(true));
