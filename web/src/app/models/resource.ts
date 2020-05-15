@@ -1,9 +1,10 @@
 import { ResourceType } from './resourceType';
+import {ResourcePath} from './resourcePath';
 
 export class Resource {
   id: number;
 
-  path: string;
+  path: ResourcePath;
   location: ResourceType ;
   createdBy: string;
   createdTimestamp: string;

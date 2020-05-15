@@ -25,13 +25,11 @@ export class ResourceService {
     return this.apiService.get('/resources/' + id);
   }
 
-  createEmptyResource(): Observable<Resource> {
-    return this.apiService.post('/resources');
-  }
-
   updateResource( resource: Resource): Observable<Resource> {
     // @ts-ignore goes out  as a string
     resource.location = resource.location.value;
+    // @ts-ignore goes out  as a string
+    resource.path = resource.path.value;
     return this.apiService.put('/resources/' + resource.id, resource);
   }
 
@@ -39,6 +37,8 @@ export class ResourceService {
     resource.projectId = project.id;
     // @ts-ignore goes out  as a string
     resource.location = resource.location.value;
+    // @ts-ignore goes out  as a string
+    resource.path = resource.path.value;
     return this.apiService.post('/resources/', resource );
   }
 

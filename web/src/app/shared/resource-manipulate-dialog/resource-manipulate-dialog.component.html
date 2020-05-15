@@ -5,11 +5,12 @@
                       [value]=option.value><span>{{option.viewValue}}</span></mat-radio-button>
   </mat-radio-group>
 
-  <div *ngIf="data.location && data.location.value" [ngSwitch]="data.location.value" >
+  <div *ngIf="data.location && data.location.value" [ngSwitch]="data.location.value"  >
     <div *ngSwitchCase="'SAN'">
-      <mat-form-field class="pathinput" >
+      <mat-form-field class="pathinput" (change)="changedResourcePath($event)" >
         <mat-label>{{data.location.pathDescriptor}}</mat-label>
-        <input matInput #input = ngModel name = "path" [(ngModel)]="data.path" type="text" required pattern="S:\\.*"><br>
+        <input matInput #input = ngModel name = "path" [ngModel]="data.path.viewValue"
+               type="text" required pattern="S:\\.*"><br>
         <mat-error *ngIf="input.errors">Kein korrekter Pfad (muss mit 'S:\' beginnen)! </mat-error>
       </mat-form-field>
       <mat-form-field *ngIf="data">
@@ -20,9 +21,10 @@
     </div>
 
     <div *ngSwitchCase="'PRIV'">
-      <mat-form-field class="pathinput" >
+      <mat-form-field class="pathinput" (change)="changedResourcePath($event)" >
         <mat-label>{{data.location.pathDescriptor}}</mat-label>
-        <input  matInput #input = ngModel name = "path" [(ngModel)]="data.path" type="text" required pattern="P:\\.*"><br>
+        <input  matInput #input = ngModel name = "path" [ngModel]="data.path.viewValue"
+                type="text" required pattern="P:\\.*"><br>
         <mat-error *ngIf="input.errors">Kein korrekter Pfad (muss mit 'P:\' beginnen)! </mat-error>
       </mat-form-field>
       <mat-form-field *ngIf="data">
@@ -33,10 +35,10 @@
     </div>
 
     <div *ngSwitchCase="'CLOUD'">
-      <mat-form-field class="pathinput" >
+      <mat-form-field class="pathinput"   >
         <mat-label>{{data.location.pathDescriptor}}</mat-label>
-        <mat-select [(ngModel)]="data.path" required name = "path">
-          <mat-option  *ngFor="let cloud of cloudTypes$ | async" [value] = "cloud.value">
+        <mat-select [ngModel]="data.path.viewValue" required name = "path" (selectionChange)="changedResourcePath($event)" >
+          <mat-option *ngFor="let cloud of cloudTypes$ | async" [value] = "cloud.viewValue">
             {{cloud.viewValue}}
           </mat-option>
         </mat-select>
@@ -44,33 +46,37 @@
     </div>
 
     <div *ngSwitchCase="'LOCAL'">
-      <mat-form-field class="pathinput">
+      <mat-form-field class="pathinput" (change)="changedResourcePath($event)">
         <mat-label>{{data.location.pathDescriptor}}</mat-label>
-        <input matInput #input = ngModel name = "path"  required [(ngModel)]="data.path" type="text" ><br>
+        <input matInput #input = ngModel name = "path"  required [ngModel]="data.path.viewValue"
+               type="text" ><br>
         <mat-error *ngIf="input.errors">Kein korrekter Pfad! </mat-error>
       </mat-form-field>
     </div>
 
     <div *ngSwitchCase="'OPENBIS'" >
-      <mat-form-field class="pathinput">
+      <mat-form-field class="pathinput" (change)="changedResourcePath($event)">
         <mat-label>{{data.location.pathDescriptor}}</mat-label>
-        <input matInput #input = ngModel  [(ngModel)]="data.path"  name = "path" required type="number" ><br>
+        <input matInput #input = ngModel  [ngModel]="data.path.viewValue"
+               name = "path" required type="number" ><br>
         <mat-error *ngIf="input.errors">Kein korrekter Pfad! </mat-error>
       </mat-form-field>
     </div>
 
     <div *ngSwitchCase="'GIT'">
-      <mat-form-field class="pathinput">
+      <mat-form-field class="pathinput" (change)="changedResourcePath($event)">
         <mat-label>{{data.location.pathDescriptor}}</mat-label>
-        <input matInput  #input = ngModel  [(ngModel)]="data.path" name = "path"  required type="url" pattern="https?://.+" ><br>
+        <input matInput  #input = ngModel  [ngModel]="data.path.viewValue"
+               name = "path"  required type="url" pattern="https?://.+" ><br>
         <mat-error *ngIf="input.errors">Kein korrekte URL! </mat-error>
       </mat-form-field>
     </div>
 
     <div  *ngSwitchCase = "'DOI'">
-      <mat-form-field class="pathinput">
+      <mat-form-field class="pathinput" (change)="changedResourcePath($event)">
         <mat-label>{{data.location.pathDescriptor}}</mat-label>
-        <input matInput  #input = ngModel [(ngModel)]="data.path" name = "path"  required type="text"  pattern="^10.\d{4,9}/[-._;()/:A-Z0-9]+"><br>
+        <input matInput  #input = ngModel [ngModel]="data.path.viewValue"
+               name = "path"  required type="text"  pattern="^10.\d{4,9}/[-._;()/:A-Z0-9]+"><br>
         <mat-error *ngIf="input.errors">DOI nicht korrekt! </mat-error>
       </mat-form-field>
     </div>

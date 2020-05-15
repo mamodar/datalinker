@@ -2,8 +2,10 @@
   <mat-expansion-panel *ngFor="let resource of newResources$ | async" hideToggle >
     <mat-expansion-panel-header>
       <mat-panel-title> Neuer Pfad</mat-panel-title>
-      <mat-panel-description *ngIf="resource.location?.value!=='CLOUD'"> Typ: {{resource.location?.viewValue}} {{resource.location?.pathDescriptor}} {{resource.path}}</mat-panel-description>
-      <mat-panel-description *ngIf="resource.location?.value==='CLOUD'"> Typ: {{resource.location?.viewValue}} {{resource.location?.pathDescriptor}} {{newCloudValue(resource.path)}}</mat-panel-description>
+      <mat-panel-description>
+        Typ: {{resource.location?.viewValue}}
+        {{resource.location?.pathDescriptor}} {{resource.path.viewValue}}</mat-panel-description>
+
       <app-resource-delete-button  [parent]="resource" ></app-resource-delete-button>
     </mat-expansion-panel-header>
     <ng-template matExpansionPanelContent>

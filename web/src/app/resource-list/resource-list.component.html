@@ -10,11 +10,10 @@
   <ng-container matColumnDef="path">
     <th mat-header-cell *matHeaderCellDef> Pfad</th>
     <td mat-cell *matCellDef="let resource" [ngSwitch]="resource.location.value">
+      <a  *ngSwitchCase="'GIT'" href="{{resource.path.value}}" target="_blank">{{resource.path.viewValue}}</a>
+      <a  *ngSwitchCase="'CLOUD'"> {{newCloudValue(resource.path.viewValue)}}</a>
 
-      <a  *ngSwitchCase="'GIT'" href="{{resource.path}}" target="_blank">{{resource.path}}</a>
-      <a  *ngSwitchCase="'CLOUD'"> {{newCloudValue(resource.path)}}</a>
-
-      <div *ngSwitchDefault> {{resource.path}}</div>
+      <div *ngSwitchDefault> {{resource.path.viewValue}}</div>
 
     </td>
   </ng-container>

@@ -10,6 +10,7 @@ import {AuthUser} from '../models/authUser';
 import {ApiService} from './api.service';
 import {User} from '../models/user';
 import {CloudType} from '../models/cloudType';
+import {ResourcePath} from '../models/resourcePath';
 
 
 
@@ -44,7 +45,6 @@ export class StateService {
   private initializeTypes(): void {
     this.resourceTypes = [];
     this.resourceTypes.push(new ResourceType(0));
-    this.resourceTypes.push(new ResourceType(5));
     this.resourceTypes.push(new ResourceType(2));
     this.resourceTypes.push(new ResourceType(3));
     this.resourceTypes.push(new ResourceType(4));
@@ -61,6 +61,9 @@ export class StateService {
       .subscribe(_ => {
         // @ts-ignore comes in as a string
         _.resources.map( resource => resource.location = new ResourceType(resource.location));
+        // @ts-ignore comes in as a string
+        _.resources.map( resource => resource.path = new ResourcePath().updateFromValue(resource.path, resource.location));
+        console.log(_);
         this.shownResources.next(_.resources);
       });
     } else {

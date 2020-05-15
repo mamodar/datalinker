@@ -9,6 +9,7 @@ import {Observable} from 'rxjs';
 import {ResourceEditButtonComponent} from '../resource-edit-button/resource-edit-button.component';
 import {NewResourceAddButtonComponent} from '../../new-resource-add/new-resource-add-button.component';
 import {CloudType} from '../../models/cloudType';
+import {ResourcePath} from '../../models/resourcePath';
 
 @Component({
   selector: 'app-resource-manipulate-dialog',
@@ -30,12 +31,13 @@ export class ResourceManipulateDialogComponent implements OnInit {
   ngOnInit() {
     this.resourceTypes$ = this.stateService.getResourceTypes();
     this.cloudTypes$ = this.stateService.getCloudTypes();
+    if (!this.data.path) {this.data.path = new ResourcePath(); }
     this.activatedRoute.queryParamMap.pipe( take(1), map(
       // creates an object from aromatically selecting a location
       _ => {
         if (_.get('path')) {
-            this.data.path = _.get('path');
             this.data.location = new ResourceType(_.get('location'));
+            this.data.path.updateFromViewValue( _.get('path'), this.data.location);
           }
       })).subscribe();
   }
@@ -51,4 +53,11 @@ export class ResourceManipulateDialogComponent implements OnInit {
     this.data.location = new ResourceType(this.data.location.value);
   }
 
+  changedResourcePath(event: any): void {
+    if (!event.target) {
+      this.data.path.updateFromViewValue(event.value, this.data.location);
+    } else {
+    this.data.path.updateFromViewValue(event.target.value, this.data.location);}
+    console.log(this.data.path);
+  }
 }
