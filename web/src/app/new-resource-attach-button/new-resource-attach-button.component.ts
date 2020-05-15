@@ -23,7 +23,7 @@ export class NewResourceAttachButtonComponent implements OnInit {
       pipe(take(1)).subscribe(_ => {
         this.stateService.resetNewResources();
         this.stateService.getResources();
-      }));
+      })).unsubscribe();
 
   }
 
