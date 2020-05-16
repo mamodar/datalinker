@@ -16,6 +16,11 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+/**
+ * This entity corresponds to the representation of a resource in the database.
+ * Resources are manipulated by calls to {@link de.rki.mamodar.ResourceController}.
+ * @author Kyanoush Yahosseini
+ */
 @Entity
 @Table(name = "resource")
 public class Resource {
@@ -25,10 +30,16 @@ public class Resource {
   @Column(name = "id", updatable = false, nullable = false)
   private Long id;
 
+  /**
+   * The timestamp when the resource was created.
+   */
   @Column
   @Temporal(TemporalType.TIMESTAMP)
   Date creationTimestamp;
 
+  /**
+   * The timestamp when the resource was last updated.
+   */
   @Column
   @Temporal(TemporalType.TIMESTAMP)
   Date updatedTimestamp;
@@ -68,9 +79,17 @@ public class Resource {
   @JoinColumn(name = "project_id",nullable = false)
   private Project project;
 
+  /**
+   * Instantiate a new empty Resource.
+   */
   public Resource() {
   }
 
+  /**
+   * Instantiate a new Resource from a {@link de.rki.mamodar.ResourceSendDTO}.
+   *
+   * @param resourceSendDTO the resource send dto
+   */
   public Resource(ResourceSendDTO resourceSendDTO) {
 
     this.path = resourceSendDTO.getPath();
@@ -83,6 +102,11 @@ public class Resource {
 
   }
 
+  /**
+   * Update a new Resource from a {@link de.rki.mamodar.ResourceSendDTO}.
+   *
+   * @param resourceSendDTO the resource send dto
+   */
   public void update(ResourceSendDTO resourceSendDTO) {
     Objects.requireNonNull(resourceSendDTO.getPath());
     Objects.requireNonNull(resourceSendDTO.getLocation());
@@ -96,103 +120,228 @@ public class Resource {
     this.size = resourceSendDTO.getSize()!=null?resourceSendDTO.getSize():this.size;
   }
 
+  /**
+   * Gets id.
+   *
+   * @return the id
+   */
   public Long getId() {
     return id;
   }
 
 
+  /**
+   * Gets creation timestamp.
+   *
+   * @return the creation timestamp
+   */
   public Date getCreationTimestamp() {
     return creationTimestamp;
   }
 
+  /**
+   * Sets creation timestamp.
+   *
+   * @param creationTimestamp the creation timestamp
+   */
   public void setCreationTimestamp(Date creationTimestamp) {
     this.creationTimestamp = creationTimestamp;
   }
 
+  /**
+   * Gets updated timestamp.
+   *
+   * @return the updated timestamp
+   */
   public Date getUpdatedTimestamp() {
     return updatedTimestamp;
   }
 
+  /**
+   * Sets updated timestamp.
+   *
+   * @param updatedTimestamp the updated timestamp
+   */
   public void setUpdatedTimestamp(Date updatedTimestamp) {
     this.updatedTimestamp = updatedTimestamp;
   }
 
+  /**
+   * Gets updated by user.
+   *
+   * @return the updated by user
+   */
   public User getUpdatedByUser() {
     return updatedByUser;
   }
 
+  /**
+   * Sets updated by user.
+   *
+   * @param updatedByUser the updated by user
+   */
   public void setUpdatedByUser(User updatedByUser) {
     this.updatedByUser = updatedByUser;
   }
 
+  /**
+   * Gets created by user.
+   *
+   * @return the created by user
+   */
   public User getCreatedByUser() {
     return createdByUser;
   }
 
+  /**
+   * Sets created by user.
+   *
+   * @param user the user
+   */
   public void setCreatedByUser(User user) {
     this.createdByUser = user;
   }
 
+  /**
+   * Gets path.
+   *
+   * @return the path
+   */
   public String getPath() {
     return path;
   }
 
+  /**
+   * Sets path.
+   *
+   * @param path the path
+   */
   public void setPath(String path) {
     this.path = path;
   }
 
+  /**
+   * Gets resource type.
+   *
+   * @return the resource type
+   */
   public ResourceType getResourceType() {
     return resourceType;
   }
 
+  /**
+   * Sets resource type.
+   *
+   * @param resourceType the resource type
+   */
   public void setResourceType(ResourceType resourceType) {
     this.resourceType = resourceType;
   }
 
+  /**
+   * Gets size.
+   *
+   * @return the size
+   */
   public Float getSize() {
     return size;
   }
 
+  /**
+   * Sets size.
+   *
+   * @param size the size
+   */
   public void setSize(Float size) {
     this.size = size;
   }
 
+  /**
+   * Gets personal.
+   *
+   * @return the personal
+   */
   public Boolean getPersonal() {
     return isPersonal;
   }
 
+  /**
+   * Sets personal.
+   *
+   * @param personal the personal
+   */
   public void setPersonal(Boolean personal) {
     isPersonal = personal;
   }
 
+  /**
+   * Gets archived.
+   *
+   * @return the archived
+   */
   public Boolean getArchived() {
     return isArchived;
   }
 
+  /**
+   * Sets archived.
+   *
+   * @param archived the archived
+   */
   public void setArchived(Boolean archived) {
     isArchived = archived;
   }
 
+  /**
+   * Gets third party.
+   *
+   * @return the third party
+   */
   public Boolean getThirdParty() {
     return isThirdParty;
   }
 
+  /**
+   * Sets third party.
+   *
+   * @param thirdParty the third party
+   */
   public void setThirdParty(Boolean thirdParty) {
     isThirdParty = thirdParty;
   }
 
+  /**
+   * Gets description.
+   *
+   * @return the description
+   */
   public String getDescription() {
     return description;
   }
 
+  /**
+   * Sets description.
+   *
+   * @param description the description
+   */
   public void setDescription(String description) {
     this.description = description;
   }
 
+  /**
+   * Gets project.
+   *
+   * @return the project
+   */
   public Project getProject() {
     return project;
   }
 
+  /**
+   * Sets project.
+   *
+   * @param project the project
+   */
   public void setProject(Project project) {
     this.project = project;
   }

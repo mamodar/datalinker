@@ -12,15 +12,30 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+/**
+ * This component accesses the API of a RDMO instance. Converts {link de.rki.mamodar.RdmoProject}s to {link de.rki.mamodar.Project}s
+ *
+ * @author Kyanoush Yahosseini
+ */
 @Component
 public class RdmoRestConsumer {
 
   private final Environment env;
 
+  /**
+   * Instantiates a new RDMO rest consumer.
+   *
+   * @param env the autowired enviorment
+   */
   public RdmoRestConsumer(Environment env) {
     this.env = env;
   }
 
+  /**
+   * Gets rdmo projects from rdmo and converts them to projects.
+   *
+   * @return the projects from rdmo
+   */
   public ArrayList<Project> getProjectsFromRdmo() {
     return rdmoProjectArrayToProjectList(requestRdmoProjects());
   }

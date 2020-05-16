@@ -7,6 +7,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * This entity corresponds to the representation of a User in the database.
+ * A user is created during the first login if a matching LDAP user is found.
+ * @author Kyanoush Yahosseini
+ */
 @Entity
 @Table(name = "users")
 public class User {

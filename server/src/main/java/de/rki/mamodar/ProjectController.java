@@ -15,22 +15,44 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * This controller provides a REST API to allow read access to projects and their corresponding resources.
+ * Projects are read from an RDMO instance, hence create, update, or delete are not provided.
+ * @author Kyanoush Yahosseini
+ */
 @RestController
 @CrossOrigin(origins = "*")
 public class ProjectController {
 
   private static final Logger log = LoggerFactory.getLogger(MamodarApplication.class);
   private final ProjectRepository repository;
+  /**
+   * The autowired {@link de.rki.mamodar.RdmoRestConsumer} for accessing all RDMO projects.
+   */
   @Autowired
    RdmoRestConsumer rdmoRestConsumer;
+  /**
+   * The autowired  {@link de.rki.mamodar.AuthenticationFacade} to validate the authenticity of the calling user.
+   */
   @Autowired
   AuthenticationFacade authenticationFacade;
 
+  /**
+   * Instantiates a new Project controller.
+   *
+   * @param repository the project repository
+   */
   public ProjectController(ProjectRepository repository) {
     this.repository = repository;
   }
 
 
+  /**
+   * Gets a list of the projects and converts them to {@link de.rki.mamodar.ProjectSendDTO} for a {@link
+   * de.rki.mamodar.User}**. Tries to update all projects by calling {@link de.rki.mamodar.RdmoRestConsumer} first.
+   *
+   * @return a list of projects as DTOs
+   */
   @GetMapping("/projects")
   List<ProjectSendDTO> allRdmo() {
     ArrayList<ProjectSendDTO> allProjects = new ArrayList<>();
@@ -48,6 +70,13 @@ public class ProjectController {
 
   }
 
+  /**
+   * Searches in all projects for projects matching the  search parameter and converts them to {@link
+   * de.rki.mamodar.ProjectSendDTO}**
+   *
+   * @param search the search parameter
+   * @return a list of projects as DTOs
+   */
   @GetMapping("/projects/search")
   List<ProjectSendDTO> searchProject(@RequestParam(name = "search") String search){
 
@@ -58,6 +87,13 @@ public class ProjectController {
     return foundProjectsDTO;
   }
 
+  /**
+   * Find a project by its id and converts it to {@link de.rki.mamodar.ProjectSendDTO}.
+   *
+   * @param id the project id
+   * @return a projects as DTO
+   * @throws ObjectNotFoundException
+   */
   @GetMapping("/projects/{id}")
   ProjectSendDTO findId(@PathVariable Long id) {
     log.info("GET: /projects/{id}");

@@ -6,6 +6,11 @@ import java.util.Comparator;
 import java.util.List;
 
 
+/**
+ * This class provides a DTO for sending {@link de.rki.mamodar.Project}s as part of the {@link de.rki.mamodar.ProjectController}
+ *
+ * @author Kyanoush Yahosseini
+ */
 public class ProjectSendDTO {
   private Long id;
   private String creationTimestamp;
@@ -14,10 +19,18 @@ public class ProjectSendDTO {
   private String owner;
   private ArrayList<ResourceSendDTO> resources ;
 
+  /**
+   * Instantiates a new Project DTO.
+   */
   public ProjectSendDTO(){
 
   }
 
+  /**
+   * Instantiates a new Project DTO from a {@link de.rki.mamodar.Project} without connected {@link de.rki.mamodar.Resource}s.
+   *
+   * @param project the project
+   */
   public ProjectSendDTO(Project project){
     this.id = project.getId();
     this.creationTimestamp = project.creationTimestamp.toString();
@@ -26,6 +39,12 @@ public class ProjectSendDTO {
     this.owner = project.getOwner();
   }
 
+  /**
+   * Instantiates a new Project DTO from a {@link de.rki.mamodar.Project} without connected {@link de.rki.mamodar.Resource}s.
+   *
+   * @param project   a project
+   * @param resources a list of connected resources
+   */
   public ProjectSendDTO(Project project, List<Resource> resources){
     this.id = project.getId();
     this.creationTimestamp = project.creationTimestamp.toString();
@@ -40,48 +59,12 @@ public class ProjectSendDTO {
     //
   }
 
-  public Long getId() {
-    return id;
-  }
-
-
-  public String getCreationTimestamp() {
-    return creationTimestamp;
-  }
-
-  public void setCreationTimestamp(String creationTimestamp) {
-    this.creationTimestamp = creationTimestamp;
-  }
-
-  public String getProjectName() {
-    return projectName;
-  }
-
-  public void setProjectName(String projectName) {
-    this.projectName = projectName;
-  }
-
-  public String getDescription() {
-    return description;
-  }
-
-  public void setDescription(String description) {
-    this.description = description;
-  }
-
+  /**
+   * Gets owner.
+   *
+   * @return the owner
+   */
   public String getOwner() {
     return owner;
-  }
-
-  public void setOwner(String owner) {
-    this.owner = owner;
-  }
-
-  public ArrayList<ResourceSendDTO> getResources() {
-    return resources;
-  }
-
-  public void setResources(ArrayList<ResourceSendDTO> resources) {
-    this.resources = resources;
   }
 }

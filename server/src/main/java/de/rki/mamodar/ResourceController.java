@@ -17,6 +17,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * This controller provides a REST API to create, read, update and delete access to resources.
+ *
+ * @author Kyanoush Yahosseini
+ */
 @RestController
 @CrossOrigin(origins = "*")
 public class ResourceController {
@@ -28,6 +33,13 @@ public class ResourceController {
   @Autowired
   private AuthenticationFacade authenticationFacade;
 
+  /**
+   * Instantiates a new Resource controller.
+   *
+   * @param repository        the resource repository
+   * @param projectRepository the project repository
+   * @param userRepository    the user repository
+   */
   public ResourceController(ResourceRepository repository, ProjectRepository projectRepository,
       UserRepository userRepository) {
     this.repository = repository;
@@ -35,6 +47,10 @@ public class ResourceController {
     this.projectRepository = projectRepository;
   }
 
+  /**
+   * Gets a list of all resources and converts them to {@link de.rki.mamodar.ResourceSendDTO} **
+   * @return a list of resource DTOs
+   */
   @GetMapping("/resources/")
   List<ResourceSendDTO> all() {
     ArrayList<ResourceSendDTO> resources = new ArrayList<>();
@@ -42,6 +58,13 @@ public class ResourceController {
     return resources;
   }
 
+  /**
+   * Gets a resource by its id and converts it to {@link de.rki.mamodar.ResourceSendDTO}
+   *
+   * @param id the id
+   * @return a resource DTO
+   * @throws ObjectNotFoundException if resource is not found
+   */
   @GetMapping("/resources/{id}")
   ResourceSendDTO one(@PathVariable Long id) {
     log.info("GET: /resources/id");
@@ -50,6 +73,13 @@ public class ResourceController {
 
   }
 
+  /**
+   * Creates a new resource from a received resource DTO. The resource is automatically connected to a {@link de.rki.mamodar.Project} identified by id.
+   *
+   * @param resourceDTO the resource DTO
+   * @return the created resource as an DTO
+   * @throws ObjectNotFoundException if project id is not found
+   */
   @PostMapping("/resources")
   ResourceSendDTO addResource(@RequestBody @NotNull ResourceSendDTO resourceDTO) {
     log.info("POST: /resources");
@@ -70,6 +100,13 @@ public class ResourceController {
     return new ResourceSendDTO(newResource);
   }
 
+  /**
+   * Updates a resource identified by id. The resource is automatically connected to a {@link de.rki.mamodar.Project} identified by id.
+   *
+   * @param id the resource id
+   * @return the updated resource as an DTO
+   * @throws ObjectNotFoundException if project id is not found or if resource id is not found
+   */
   @PutMapping("/resources/{id}")
   ResourceSendDTO updateOne(@PathVariable Long id, @RequestBody @NotNull ResourceSendDTO updatedResource) {
     log.info("PUT: /resources/id");
@@ -84,6 +121,12 @@ public class ResourceController {
   }
 
 
+  /**
+   * Deletes a resource identified by id.
+   *
+   * @param id the resource id
+   * @throws ObjectNotFoundException if the resource is not found
+   */
   @DeleteMapping("/resources/{id}")
   void removeLink(@PathVariable Long id) {
     log.info("DELETE: /resources/id");

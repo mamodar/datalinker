@@ -5,9 +5,18 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
+/**
+ * The class configures spring web security.
+ * @author Kyanoush Yahosseini
+ */
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+  /**
+   * Configures the {@link org.springframework.security.config.annotation.web.builders.HttpSecurity} class.
+   * @param http The autowired HttpSecurity
+   * @throws Exception if the configuration is invalid
+   */
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http.httpBasic().and().
@@ -16,7 +25,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     http.csrf().disable();
     http.formLogin().disable();
   }
-@Override
+
+  /**
+   * Configures the {@link org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder}
+   * @param auth The autowired AuthenticationManagerBuilder
+   * @throws Exception if the configuration is invalid
+   */
+  @Override
   public void configure(AuthenticationManagerBuilder auth) throws Exception {
     auth
         .ldapAuthentication()
