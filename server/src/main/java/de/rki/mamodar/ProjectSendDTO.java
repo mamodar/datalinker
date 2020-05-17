@@ -7,7 +7,8 @@ import java.util.List;
 
 
 /**
- * This class provides a DTO for sending {@link de.rki.mamodar.Project}s as part of the {@link de.rki.mamodar.ProjectController}
+ * This class provides a DTO for sending {@link de.rki.mamodar.Project}s as part of the {@link
+ * de.rki.mamodar.ProjectController}
  *
  * @author Kyanoush Yahosseini
  */
@@ -27,7 +28,8 @@ public class ProjectSendDTO {
   }
 
   /**
-   * Instantiates a new Project DTO from a {@link de.rki.mamodar.Project} without connected {@link de.rki.mamodar.Resource}s.
+   * Instantiates a new Project DTO from a {@link de.rki.mamodar.Project} without connected {@link
+   * de.rki.mamodar.Resource}s.
    *
    * @param project the project
    */
@@ -40,7 +42,8 @@ public class ProjectSendDTO {
   }
 
   /**
-   * Instantiates a new Project DTO from a {@link de.rki.mamodar.Project} without connected {@link de.rki.mamodar.Resource}s.
+   * Instantiates a new Project DTO from a {@link de.rki.mamodar.Project} without connected {@link
+   * de.rki.mamodar.Resource}s.
    *
    * @param project   a project
    * @param resources a list of connected resources
@@ -66,5 +69,50 @@ public class ProjectSendDTO {
    */
   public String getOwner() {
     return owner;
+  }
+
+  /**
+   * Gets id.
+   *
+   * @return the id
+   */
+  public Long getId() {
+    return id;
+  }
+
+  /**
+   * Gets creation timestamp.
+   *
+   * @return the creation timestamp
+   */
+  public String getCreationTimestamp() {
+    return creationTimestamp;
+  }
+
+  /**
+   * Gets project name.
+   *
+   * @return the project name
+   */
+  public String getProjectName() {
+    return projectName;
+  }
+
+  /**
+   * Gets description.
+   *
+   * @return the description
+   */
+  public String getDescription() {
+    return description;
+  }
+
+  /**
+   * Gets resources.
+   *
+   * @return the resources
+   */
+  public ArrayList<ResourceSendDTO> getResources() {
+    return resources;
   }
 }
