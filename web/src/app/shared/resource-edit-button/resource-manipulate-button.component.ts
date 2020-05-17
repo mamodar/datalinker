@@ -2,16 +2,20 @@ import {Component, Input, OnInit} from '@angular/core';
 import {StateService} from '../../services/state.service';
 import {Resource} from '../../models/resource';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
-import {filter, take, tap} from 'rxjs/operators';
+import {take} from 'rxjs/operators';
 import {ResourceManipulateDialogComponent} from '../resource-manipulate-dialog/resource-manipulate-dialog.component';
 
-
+/**
+ * This components manipulate a resource.
+ * It calls {@link ResourceManipulateDialogComponent} to enter the input.
+ * @author Kyanoush Yahosseini
+ */
 @Component({
-  selector: 'app-resource-edit-button',
-  templateUrl: './resource-edit-button.component.html',
-  styleUrls: ['./resource-edit-button.component.css']
+  selector: 'app-resource-manipulate-button',
+  templateUrl: './resource-manipulate-button.component.html',
+  styleUrls: ['./resource-manipulate-button.component.css']
 })
-export class ResourceEditButtonComponent implements OnInit {
+export class ResourceManipulateButtonComponent implements OnInit {
   constructor(private stateService: StateService, public matDialog: MatDialog) { }
 
   @Input() parent: Resource;

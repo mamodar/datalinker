@@ -20,7 +20,7 @@
 <ng-container matColumnDef="action">
   <th mat-header-cell *matHeaderCellDef> Aktion</th>
   <td mat-cell *matCellDef="let resource">
-    <app-resource-edit-button [parent] = "resource"></app-resource-edit-button>
+    <app-resource-manipulate-button [parent] = "resource"></app-resource-manipulate-button>
     <app-resource-delete-button [parent]="resource"></app-resource-delete-button>
 
   </td>

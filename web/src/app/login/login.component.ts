@@ -2,14 +2,18 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {StateService} from '../services/state.service';
 import {catchError} from 'rxjs/operators';
-import {of, throwError} from 'rxjs';
+import {of} from 'rxjs';
 
+/**
+ * The login and logout logic of the application.
+ * @author Kyanoush Yahosseini
+ */
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
   login: string;
   password: string;
   // no password and no username should not show the error message
@@ -19,9 +23,6 @@ export class LoginComponent implements OnInit {
   constructor(public stateService: StateService, private router: Router, private route: ActivatedRoute) {
   }
 
-  ngOnInit(): void {
-
-  }
 
   loginClick(): void {
     this.showSpinner = true;

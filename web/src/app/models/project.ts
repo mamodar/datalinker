@@ -1,5 +1,8 @@
 import {Resource} from './resource';
-
+/**
+ * This class represents a project as received by the API calls.
+ * @author Kyanoush Yahosseini
+ */
 export class Project {
   id: number;
   creationTimestamp: string;

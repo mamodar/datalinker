@@ -3,7 +3,12 @@ import {Project} from '../models/project';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {StateService} from '../services/state.service';
 import {Resource} from '../models/resource';
-import {map, tap} from 'rxjs/operators';
+
+/**
+ * This component shows all projects as an expansion panel.
+ *
+ * @author Kyanoush Yahosseini
+ */
 
 @Component({
   selector: 'app-project-list',

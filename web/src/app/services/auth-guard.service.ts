@@ -1,9 +1,11 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
 import {StateService} from './state.service';
-import {LoginComponent} from '../login/login.component';
 
-
+/**
+ * This service hides routes from users which are not logged in.
+ * @author Kyanoush Yahosseini
+ */
 @Injectable({
   providedIn: 'root'
 })

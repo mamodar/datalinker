@@ -8,12 +8,17 @@ import {ResourceService} from './resource.service';
 import {ResourceType} from '../models/resourceType';
 import {AuthUser} from '../models/authUser';
 import {ApiService} from './api.service';
-import {User} from '../models/user';
 import {CloudType} from '../models/cloudType';
 import {ResourcePath} from '../models/resourcePath';
 
 
-
+/**
+ * This service provides the current state of the application to all other components.
+ * It contains the single source of truth while allowing communication between unrelated components.
+ * It also hides all calls to the backend from other components.
+ * @todo KY should cleaned
+ * @author Kyanoush Yahosseini
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -42,18 +47,6 @@ export class StateService {
   private resourceTypes: ResourceType[];
   private cloudTypes: CloudType[];
 
-  private initializeTypes(): void {
-    this.resourceTypes = [];
-    this.resourceTypes.push(new ResourceType(0));
-    this.resourceTypes.push(new ResourceType(2));
-    this.resourceTypes.push(new ResourceType(3));
-    this.resourceTypes.push(new ResourceType(4));
-    this.resourceTypes.push(new ResourceType(6));
-    this.cloudTypes = [];
-    this.cloudTypes.push(new CloudType(0));
-    this.cloudTypes.push(new CloudType(1));
-    this.cloudTypes.push(new CloudType(2));
-  }
   getResources(): BehaviorSubject<Resource[]> {
     if (this.filterResourcesByProject.getValue()) {
       this.projectService.getProject(
@@ -83,18 +76,18 @@ export class StateService {
       flatMap(term => this.projectService.searchProjects(term)));
   }
 
-  setFilterByProject(selectedProject: Project | undefined): Observable<Resource[]> {
+  public setFilterByProject(selectedProject: Project | undefined): Observable<Resource[]> {
     if (selectedProject !== this.filterResourcesByProject.getValue()) {
       this.filterResourcesByProject.next(selectedProject);
     }
     return this.getResources();
   }
 
-  getSelectedProject(): BehaviorSubject<Project> {
+  public getSelectedProject(): BehaviorSubject<Project> {
     return this.selectedProject;
   }
 
-  setSelectedProject(project: Project): void {
+  public setSelectedProject(project: Project): void {
     this.selectedProject.next(project);
   }
 
@@ -166,5 +159,18 @@ export class StateService {
     this.currentUser.next(null);
     sessionStorage.clear();
     return(of(true));
+  }
+
+  private initializeTypes(): void {
+    this.resourceTypes = [];
+    this.resourceTypes.push(new ResourceType(0));
+    this.resourceTypes.push(new ResourceType(2));
+    this.resourceTypes.push(new ResourceType(3));
+    this.resourceTypes.push(new ResourceType(4));
+    this.resourceTypes.push(new ResourceType(6));
+    this.cloudTypes = [];
+    this.cloudTypes.push(new CloudType(0));
+    this.cloudTypes.push(new CloudType(1));
+    this.cloudTypes.push(new CloudType(2));
   }
 }

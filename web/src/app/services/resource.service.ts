@@ -1,11 +1,14 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {ObjectUnsubscribedError, Observable} from 'rxjs';
-import {environment} from '../../environments/environment';
+import {Observable} from 'rxjs';
 import {Resource} from '../models/resource';
-import {map, mergeMap, tap} from 'rxjs/operators';
 import {ApiService} from './api.service';
 import {Project} from '../models/project';
+
+/**
+ * This service implements the API exposed by the backend for all /resource calls.
+ * This service should not by called directly by components but is used by {@link StateService}.
+ * @author Kyanoush Yahosseini
+ */
 
 @Injectable({
   providedIn: 'root'

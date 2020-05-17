@@ -1,4 +1,9 @@
-
+/**
+ * This class represents the supported  types of resources.
+ * It converts a between a string representation of a resource type and an object containing value, viewValue, and pathDescriptor.
+ * @author Kyanoush Yahosseini
+ *
+ */
 export class ResourceType {
   value: string;
   viewValue: string;

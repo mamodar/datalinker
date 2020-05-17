@@ -5,11 +5,7 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './router-header.component.html',
   styleUrls: ['./router-header.component.css']
 })
-export class RouterHeaderComponent implements OnInit {
+export class RouterHeaderComponent {
 
   constructor() { }
-
-  ngOnInit(): void {
-  }
-
 }

@@ -1,4 +1,8 @@
-
+/**
+ * This class represents the supported  types of cloud  storage providers.
+ * @author Kyanoush Yahosseini
+ *
+ */
 export class CloudType {
   value: string;
   viewValue: string;

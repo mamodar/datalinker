@@ -1,11 +1,4 @@
-import {
-  Component,
-  Input,
-  OnDestroy,
-  OnInit,
-
-  ViewChild
-} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {Resource} from '../models/resource';
 import {MatPaginator} from '@angular/material/paginator';
@@ -13,18 +6,24 @@ import {MatTableDataSource} from '@angular/material/table';
 import {Router} from '@angular/router';
 import {CloudType} from '../models/cloudType';
 
+/**
+ * This component shows all resources of a project as a table.
+ * It allows manipulation of resources by containing {@link ResourceDeleteButtonComponent} and {@link ResourceManipulateButtonComponent} .
+ * @author Kyanoush Yahosseini
+ */
 
 @Component({
   selector: 'app-resource-list',
   templateUrl: './resource-list.component.html',
   styleUrls: ['./resource-list.component.css']
 })
+
 export class ResourceListComponent implements OnDestroy, OnInit {
+
   public dataSource: MatTableDataSource<Resource>;
   public displayedColumns: string[];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @Input() data$: Observable<Resource[]>;
-
   sub: Subscription;
 
   constructor(readonly router: Router) {

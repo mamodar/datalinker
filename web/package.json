@@ -9,7 +9,9 @@
     "buildprod": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "compodoc-generate": "npx compodoc -p ./tsconfig.app.json --minimal",
+    "compodoc-serve": "npx compodoc -s"
   },
   "private": true,
   "dependencies": {

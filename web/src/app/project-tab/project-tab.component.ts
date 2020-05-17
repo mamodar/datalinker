@@ -1,7 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Observable} from 'rxjs';
-import {Project} from '../../models/project';
-import {StateService} from '../../services/state.service';
+import {Project} from '../models/project';
+import {StateService} from '../services/state.service';
+
+/**
+ * The main component for the search navigation tab.
+ * @author Kyanoush Yahosseini
+ */
 
 @Component({
   selector: 'app-project-tab',

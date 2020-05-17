@@ -2,6 +2,11 @@ import {Injectable} from '@angular/core';
 import {HttpRequest, HttpHandler, HttpEvent, HttpInterceptor} from '@angular/common/http';
 import {Observable} from 'rxjs';
 
+/**
+ * This interceptor adds the current users' username and password to each http request.
+ * @author Kyanoush Yahosseini
+ */
+
 @Injectable()
 export class LoginInterceptor implements HttpInterceptor {
 

@@ -1,18 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import {StateService} from '../services/state.service';
-import {ActivatedRoute, Router} from '@angular/router';
 
+/**
+ * This component contains the components referenced by the router as a tab nav bar.
+ * Each of these referenced components enables one of the main functions of the application.
+ * @author Kyanoush Yahosseini
+ */
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit {
+
+export class HomeComponent {
 
   constructor() {
-  }
-
-  ngOnInit() {
   }
 }

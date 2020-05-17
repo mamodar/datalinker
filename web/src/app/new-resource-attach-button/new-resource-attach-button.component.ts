@@ -1,19 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import {StateService} from '../services/state.service';
-import {flatMap, take, tap} from 'rxjs/operators';
-import {Resource} from '../models/resource';
+import {flatMap, take} from 'rxjs/operators';
 
+/**
+ * This component connects new resources with a selected project.
+ * It persists new projects by calls to the backend.
+ * @author Kyanoush Yahosseini
+ */
 @Component({
   selector: 'app-new-resource-attach',
   templateUrl: './new-resource-attach.component.html',
   styleUrls: ['./new-resource-attach-button.component.css']
 })
-export class NewResourceAttachButtonComponent implements OnInit {
+export class NewResourceAttachButtonComponent {
 
   constructor(public stateService: StateService) { }
-
-  ngOnInit(): void {
-  }
 
   connect() {
     this.stateService.getNewShownResources().

@@ -3,6 +3,11 @@ import {Project} from '../models/project';
 import {Observable} from 'rxjs';
 import {ApiService} from './api.service';
 
+/**
+ * This service implements the API exposed by the backend for all /projects calls.
+ * This service should not by called directly by components but is used by {@link StateService}.
+ * @author Kyanoush Yahosseini
+ */
 @Injectable({
   providedIn: 'root'
 })

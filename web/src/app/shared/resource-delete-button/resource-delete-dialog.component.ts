@@ -2,6 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
 import {ResourceDeleteButtonComponent} from './resource-delete-button.component';
 
+/**
+ * This component generates a simple yes/no dialog.
+ * @author Kyanoush Yahosseini
+ */
 @Component({
   selector: 'app-resource-delete-dialog',
   templateUrl: './resource-delete-dialog.component.html',

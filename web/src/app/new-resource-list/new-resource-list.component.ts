@@ -1,17 +1,22 @@
-import { AfterViewInit, Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {StateService} from '../services/state.service';
-import { Observable} from 'rxjs';
+import {Observable} from 'rxjs';
 import {Resource} from '../models/resource';
-import { ViewChild } from '@angular/core';
+import {ViewChild} from '@angular/core';
 import {MatTable} from '@angular/material/table';
 import {CloudType} from '../models/cloudType';
+
+/**
+ * This component shows all new resources as an expansion panel.
+ * @author Kyanoush Yahosseini
+ */
 
 @Component({
   selector: 'app-new-resource-list',
   templateUrl: './new-resource-list.component.html',
   styleUrls: ['./new-resource-list.component.css']
 })
-export class NewResourceListComponent implements OnInit, AfterViewInit {
+export class NewResourceListComponent implements OnInit {
 
   @ViewChild('table', { static: false }) table: MatTable<any>;
 
@@ -22,12 +27,6 @@ export class NewResourceListComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.newResources$ = this.stateService.getNewShownResources();
   }
-  ngAfterViewInit() {
 
-  }
-
-  newCloudValue(path: string): string {
-    return new CloudType(path).viewValue;
-  }
 }
 

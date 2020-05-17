@@ -1,6 +1,11 @@
 import {ResourceType} from './resourceType';
 import {CloudType} from './cloudType';
 
+/**
+ * This class represents the a resource path.
+ * It converts a between a string representation of a path and an object containing value and viewValue.
+ * @author Kyanoush Yahosseini
+ */
 export class ResourcePath {
   value: string;
   viewValue: string;

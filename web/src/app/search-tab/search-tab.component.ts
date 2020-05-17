@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {Project} from '../../models/project';
-import {BehaviorSubject, Observable, Subject, Subscription} from 'rxjs';
-import {StateService} from '../../services/state.service';
-import {tap} from 'rxjs/operators';
+import {Project} from '../models/project';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {StateService} from '../services/state.service';
 
 @Component({
   selector: 'app-search-tab',

@@ -6,11 +6,15 @@ import {ActivatedRoute} from '@angular/router';
 import {map, take} from 'rxjs/operators';
 import {ResourceType} from '../../models/resourceType';
 import {Observable} from 'rxjs';
-import {ResourceEditButtonComponent} from '../resource-edit-button/resource-edit-button.component';
 import {NewResourceAddButtonComponent} from '../../new-resource-add/new-resource-add-button.component';
 import {CloudType} from '../../models/cloudType';
 import {ResourcePath} from '../../models/resourcePath';
 
+/**
+ * This component is a dialog which allows to manipulate or show details to a component.
+ * Depending on the route manipulation is either allowed or disallowed.
+ * @author Kyanoush Yahosseini
+ */
 @Component({
   selector: 'app-resource-manipulate-dialog',
   templateUrl: './resource-manipulate-dialog.component.html',
@@ -21,7 +25,7 @@ export class ResourceManipulateDialogComponent implements OnInit {
   dataBackup: Resource;
   cloudTypes$: Observable<CloudType[]>;
   constructor(
-    public dialogRef: MatDialogRef<NewResourceAddButtonComponent | ResourceEditButtonComponent>,
+    public dialogRef: MatDialogRef<NewResourceAddButtonComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Resource,
     public stateService: StateService,
     private activatedRoute: ActivatedRoute) {

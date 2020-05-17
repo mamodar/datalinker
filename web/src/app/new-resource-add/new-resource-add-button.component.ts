@@ -1,17 +1,17 @@
 import {Component, OnInit} from '@angular/core';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
 import {filter, map, take} from 'rxjs/operators';
 import {StateService} from '../services/state.service';
-
-
-
 import {Resource} from '../models/resource';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ResourceManipulateDialogComponent} from '../shared/resource-manipulate-dialog/resource-manipulate-dialog.component';
 import {ResourceType} from '../models/resourceType';
 
+/**
+ * This components contains the create new resource logic.
+ * It depends on {@link ResourceManipulateDialogComponent} to create a new resource.
+ * @author Kyanoush Yahosseini
+ */
 @Component({
   selector: 'app-new-resource-add-button',
   templateUrl: './new-resource-add-button.component.html',

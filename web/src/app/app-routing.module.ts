@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {SearchTabComponent} from './home/search-tab/search-tab.component';
-import {ProjectTabComponent} from './home/project-tab/project-tab.component';
+import {SearchTabComponent} from './search-tab/search-tab.component';
+import {ProjectTabComponent} from './project-tab/project-tab.component';
 import {AuthGuardService} from './services/auth-guard.service';
 import {LoginComponent} from './login/login.component';
 const routes: Routes = [

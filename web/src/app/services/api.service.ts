@@ -2,9 +2,14 @@ import {Injectable} from '@angular/core';
 import {Observable, throwError} from 'rxjs';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {environment} from '../../environments/environment';
-import {catchError, tap} from 'rxjs/operators';
+import {catchError} from 'rxjs/operators';
 import {AuthUser} from '../models/authUser';
 
+/**
+ * This service allows low-level API calls to a REST interface.
+ * This service should not be called directly from components but is used by {@link ProjectService} and {@link ResourceService}.
+ * @author Kyanoush Yahosseini
+ */
 @Injectable({
   providedIn: 'root'
 })
