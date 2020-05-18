@@ -1,5 +1,6 @@
 package de.rki.mamodar;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -12,7 +13,7 @@ private Long id;
 private String title;
 private String description;
 private boolean read_only;
-private RdmoOwner[] owners;
+private ArrayList<RdmoOwner> owners = new ArrayList<>();
 
   /**
    * Gets the  title.
@@ -73,7 +74,7 @@ private RdmoOwner[] owners;
    *
    * @return the rdmo owner array
    */
-  public RdmoOwner[] getOwners() {
+  public ArrayList<RdmoOwner> getOwners() {
     return owners;
   }
 
@@ -82,7 +83,7 @@ private RdmoOwner[] owners;
    *
    * @param owners the owners
    */
-  public void setOwners(RdmoOwner[] owners) {
+  public void setOwners(ArrayList<RdmoOwner> owners) {
     this.owners = owners;
   }
 
@@ -116,8 +117,9 @@ private RdmoOwner[] owners;
     project.setProjectName(this.title);
     project.setDescription(this.description);
     project.setCreationTimestamp(new Date());
+    project.setUpdatedTimestamp(project.getCreationTimestamp());
     //TODO: owners should be an array
-    project.setOwner(this.owners[0].getUsername());
+    project.setOwner(this.owners.size() > 0? this.owners.get(0).getUsername():null);
     return project;
   }
 }

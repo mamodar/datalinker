@@ -28,14 +28,19 @@ dependencies {
     runtimeOnly 'org.postgresql:postgresql'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+        exclude group: 'junit', module: 'juniut'
     }
     testImplementation 'org.springframework.security:spring-security-test'
     //include to build the angular application as well, not needed for development
     //implementation project(':web')
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.6.2'
 }
 
 test {
     useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
 }
 
 javadoc {
