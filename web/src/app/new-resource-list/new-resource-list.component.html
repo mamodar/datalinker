@@ -1,9 +1,16 @@
 <mat-accordion>
   <mat-expansion-panel *ngFor="let resource of newResources$ | async" hideToggle >
-    <mat-expansion-panel-header (click)="onSelect(resource);$event.stopPropagation();">
+    <mat-expansion-panel-header>
       <mat-panel-title> Typ: {{resource.location?.viewValue}}
         {{resource.location?.pathDescriptor}} {{resource.path.viewValue}}</mat-panel-title>
       <mat-panel-description> Neuer Pfad</mat-panel-description>
+      <ng-template matExpansionPanelContent>
+        <mat-list dense>
+          <mat-list-item> Typ:  {{resource.location?.viewValue}} </mat-list-item>
+          <mat-list-item> {{resource.location?.pathDescriptor}} {{resource.path.viewValue}}</mat-list-item>
+        </mat-list>
+      </ng-template>
+      <app-resource-manipulate-button [parent]="resource"></app-resource-manipulate-button>
       <app-resource-delete-button  [parent]="resource" ></app-resource-delete-button>
     </mat-expansion-panel-header>
   </mat-expansion-panel>
