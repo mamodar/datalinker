@@ -21,5 +21,6 @@ export class Resource {
   thirdParty = false;
   archived = false;
 
+
 }
 

@@ -46,11 +46,6 @@ export class ResourceManipulateDialogComponent implements OnInit {
       })).subscribe();
   }
 
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
-
-
 // creates an object from manually selecting a location
 
   setSelectedLocation(): void {
@@ -61,7 +56,7 @@ export class ResourceManipulateDialogComponent implements OnInit {
     if (!event.target) {
       this.data.path.updateFromViewValue(event.value, this.data.location);
     } else {
-    this.data.path.updateFromViewValue(event.target.value, this.data.location);}
-    console.log(this.data.path);
+    this.data.path.updateFromViewValue(event.target.value, this.data.location);
+    }
   }
 }

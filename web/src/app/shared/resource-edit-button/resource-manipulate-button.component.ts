@@ -16,7 +16,8 @@ import {ResourceManipulateDialogComponent} from '../resource-manipulate-dialog/r
   styleUrls: ['./resource-manipulate-button.component.css']
 })
 export class ResourceManipulateButtonComponent implements OnInit {
-  constructor(private stateService: StateService, public matDialog: MatDialog) { }
+  constructor(private stateService: StateService, public matDialog: MatDialog) {
+  }
 
   @Input() parent: Resource;
 
@@ -28,10 +29,12 @@ export class ResourceManipulateButtonComponent implements OnInit {
     dialogConfig.disableClose = true;
     dialogConfig.data = this.parent;
     const modalDialog = this.matDialog.open(ResourceManipulateDialogComponent, dialogConfig);
-    modalDialog.afterClosed().subscribe(resource => {
-      if (resource) {
-        this.stateService.updateResource(resource).pipe(take(1)).subscribe(_ => this.stateService.getResources());
+    modalDialog.afterClosed().subscribe(_ => {
+        if (_.send) {
+          this.stateService.updateResource(_.resource).pipe(take(1)).subscribe();
+        }
+        this.stateService.getResources();
       }
-    });
+    );
   }
 }

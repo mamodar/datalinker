@@ -98,7 +98,7 @@
        class="mat-caption">Aktualisiert von {{data.updatedBy}} um {{data.updatedTimestamp}}</div>
   <mat-divider></mat-divider>
   <div mat-dialog-actions>
-    <button mat-button mat-raised-button color="primary" (click)="onNoClick()">Abbrechen</button>
-    <button mat-button mat-raised-button color="warn" [mat-dialog-close]="data" [disabled]="!newResourceForm.form.valid">Speichern</button>
+    <button mat-button mat-raised-button color="primary" [mat-dialog-close]="{send: false , resource: dataBackup}">Abbrechen</button>
+    <button mat-button mat-raised-button color="warn" [mat-dialog-close]="{send: true , resource: data}" [disabled]="!newResourceForm.form.valid">Speichern</button>
   </div>
 </form>

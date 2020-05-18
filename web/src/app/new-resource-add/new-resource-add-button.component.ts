@@ -26,7 +26,7 @@ export class NewResourceAddButtonComponent implements OnInit {
   newResource: Resource;
 
   ngOnInit() {
-    this.activatedRoute.queryParamMap.pipe( take(1), map(_ => _.has('path') ? this.openAddNew() : null)).subscribe();
+    this.activatedRoute.queryParamMap.pipe(take(1), map(_ => _.has('path') ? this.openAddNew() : null)).subscribe();
   }
 
   openAddNew(): void {
@@ -38,9 +38,11 @@ export class NewResourceAddButtonComponent implements OnInit {
     // https://material.angular.io/components/dialog/overview
     const modalDialog = this.matDialog.open(ResourceManipulateDialogComponent, dialogConfig);
     modalDialog.afterClosed().pipe(filter(_ => !!_)).subscribe(
-      resource => {
-        this.stateService.addNewResource(resource);
-        this.router.navigate([], {queryParams: null});
+      _ => {
+        if (_.send) {
+          this.stateService.addNewResource(_.resource);
+          this.router.navigate([], {queryParams: null});
+        }
       });
   }
 }

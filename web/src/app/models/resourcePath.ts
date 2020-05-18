@@ -11,7 +11,6 @@ export class ResourcePath {
   viewValue: string;
 
   public updateFromViewValue(viewValue: string, resourceType: ResourceType): ResourcePath {
-    console.log('udapteFromViewValue' + viewValue + resourceType.value);
     switch (resourceType.value) {
       case 'SAN':
         this.viewValue = viewValue;
@@ -35,7 +34,6 @@ export class ResourcePath {
   }
 
   public updateFromValue(value: string, resourceType: ResourceType): ResourcePath {
-    console.log('updateFromValue' + resourceType.value + value);
     switch (resourceType.value) {
       case 'SAN':
         this.value = value;

@@ -8,7 +8,6 @@ export class CloudType {
   viewValue: string;
 
   constructor(value: string | number) {
-    console.log(value);
     switch (value) {
       case 'DROPBOX':
       case 'Dropbox':

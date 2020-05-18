@@ -56,7 +56,6 @@ export class StateService {
         _.resources.map( resource => resource.location = new ResourceType(resource.location));
         // @ts-ignore comes in as a string
         _.resources.map( resource => resource.path = new ResourcePath().updateFromValue(resource.path, resource.location));
-        console.log(_);
         this.shownResources.next(_.resources);
       });
     } else {
