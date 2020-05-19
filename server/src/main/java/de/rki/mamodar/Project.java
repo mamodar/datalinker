@@ -1,5 +1,8 @@
 package de.rki.mamodar;
 
+import java.lang.reflect.Array;
+import java.security.acl.Owner;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
@@ -8,6 +11,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -51,8 +56,9 @@ public class Project {
   @Column(name = "description")
   private String description;
 
+  @ManyToMany(fetch = FetchType.LAZY)
   @Column(name = "owner")
-  private String owner;
+  private List<User> owner;
 
   @OneToMany(mappedBy = "project", fetch = FetchType.EAGER)
   private List<Resource> resources;
@@ -168,7 +174,7 @@ public class Project {
    *
    * @return the owner
    */
-  public String getOwner() {
+  public List<User> getOwner() {
     return owner;
   }
 
@@ -177,8 +183,21 @@ public class Project {
    *
    * @param owner the owner
    */
-  public void setOwner(String owner) {
-    this.owner = owner;
+  public void setOwner(List<User> owner) {
+    if (this.owner == null) {
+      this.owner = new ArrayList<>();
+    }
+    this.owner.clear();
+    this.owner.addAll(owner);
+  }
+
+  /**
+   * Appends the owner list.
+   *
+   * @param owner the owner
+   */
+  public void addOwner(User owner) {
+    this.owner.add(owner);
   }
 
   /**
@@ -197,6 +216,16 @@ public class Project {
    */
   public void setResources(List<Resource> resources) {
     this.resources = resources;
+  }
+
+  public ArrayList<User> findDuplicatesByUsername(User deleteOwner) {
+    ArrayList<User> duplicates = new ArrayList<>();
+    for(User user : this.owner){
+      if(user.getUsername().equals(deleteOwner.getUsername())) {
+        duplicates.add(user);
+      }
+    }
+    return duplicates;
   }
 }
 

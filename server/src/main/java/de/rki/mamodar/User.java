@@ -47,4 +47,15 @@ public class User {
     return dn;
   }
 
+  public void setId(Long id) {
+    this.id = id;
+  }
+
+  public void setUsername(String username) {
+    this.username = username;
+  }
+
+  public void setDn(String dn) {
+    this.dn = dn;
+  }
 }

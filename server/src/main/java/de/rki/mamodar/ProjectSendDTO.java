@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -17,7 +18,7 @@ public class ProjectSendDTO {
   private String creationTimestamp;
   private String projectName;
   private String description;
-  private String owner;
+  private List<String> owner;
   private ArrayList<ResourceSendDTO> resources ;
 
   /**
@@ -38,7 +39,7 @@ public class ProjectSendDTO {
     this.creationTimestamp = project.creationTimestamp.toString();
     this.projectName = project.getProjectName();
     this.description = project.getDescription();
-    this.owner = project.getOwner();
+    this.owner = project.getOwner().stream().map(user -> user.getUsername()).collect(Collectors.toList());
   }
 
   /**
@@ -53,7 +54,7 @@ public class ProjectSendDTO {
     this.creationTimestamp = project.creationTimestamp.toString();
     this.projectName = project.getProjectName();
     this.description = project.getDescription();
-    this.owner = project.getOwner();
+    this.owner = project.getOwner().stream().map(user -> user.getUsername()).collect(Collectors.toList());
     this.resources = new ArrayList<>();
     resources.sort(Comparator.comparing(Resource::getUpdatedTimestamp));
     Collections.reverse(resources);
@@ -67,7 +68,7 @@ public class ProjectSendDTO {
    *
    * @return the owner
    */
-  public String getOwner() {
+  public List<String> getOwner() {
     return owner;
   }
 

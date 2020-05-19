@@ -4,6 +4,7 @@ DROP TABLE IF EXISTS "project" CASCADE;
 DROP TABLE IF exists "users" CASCADE ;
 DROP TABLE if EXISTS "resource" CASCADE ;
 DROP TABLE if exists "relationship" CASCADE ;
+DROP TABLE IF EXISTS "project_owner" CASCADE;
 DROP SEQUENCE if exists hibernate_sequence;
 CREATE SEQUENCE hibernate_sequence START 1;
 
@@ -12,7 +13,6 @@ CREATE TABLE "project" (
                            "id" BIGINT NOT NULL,
                            "creation_timestamp" TIMESTAMP NULL DEFAULT NULL,
                            "description" VARCHAR(255) NULL DEFAULT NULL,
-                           "owner" VARCHAR(255) NULL DEFAULT NULL,
                            "project_name" VARCHAR(255) NULL DEFAULT NULL,
                            "rdmo_id" BIGINT NULL DEFAULT NULL,
                            "updated_timestamp" TIMESTAMP NULL DEFAULT NULL,
@@ -26,8 +26,8 @@ UPDATE project SET
             setweight(to_tsvector(description),'B');
 
 CREATE INDEX tsv_idx ON project USING gin(tsv);
--- CREATE users ("user" is disallowed by postgresql)
 
+-- CREATE users ("user" is disallowed by postgresql)
 CREATE TABLE "users" (
                          "id" BIGINT NOT NULL,
                          "dn" VARCHAR(255) NULL DEFAULT NULL,
@@ -45,9 +45,9 @@ CREATE TABLE "resource" (
                             "archived" BOOLEAN NULL DEFAULT NULL,
                             "personal" BOOLEAN NULL DEFAULT NULL,
                             "third_party" BOOLEAN NULL DEFAULT NULL,
-                            "resourceType" VARCHAR(255) NOT NULL,
                             "path" VARCHAR(255) NOT NULL,
-                            "size" REAL NULL DEFAULT NULL,
+                            "location" VARCHAR(255) NOT NULL,
+                            "size" REAL(24) NULL DEFAULT NULL,
                             "updated_timestamp" TIMESTAMP NULL DEFAULT NULL,
                             "created_by_user_id" BIGINT NOT NULL,
                             "project_id" BIGINT NOT NULL,
@@ -59,6 +59,19 @@ CREATE TABLE "resource" (
 )
 ;
 
+
+-- CREATE project_owner relationship
+CREATE TABLE "project_owner" (
+                                 "project_id" BIGINT NOT NULL,
+                                 "owner_id" BIGINT NOT NULL,
+                                 CONSTRAINT "fk5iy9lk0uau6523pkp9ei9bk64" FOREIGN KEY ("project_id") REFERENCES "project" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION,
+                                 CONSTRAINT "fkqb39868ogh7w8fjc2b4fvddr1" FOREIGN KEY ("owner_id") REFERENCES "users" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+;
+COMMENT ON COLUMN "project_owner"."project_id" IS '';
+COMMENT ON COLUMN "project_owner"."owner_id" IS '';
+
+
 -- CREATE search
 
 DROP  MATERIALIZED VIEW  IF EXISTS search_view;
@@ -66,10 +79,12 @@ DROP INDEX IF EXISTS tsv_idx;
 CREATE MATERIALIZED VIEW search_view AS
 -- concat all fields, aggregate it over multiple resources, replace non-alphanumeric by space
 SELECT p.id,p.project_name,
-       to_tsvector(regexp_replace(string_agg(CONCAT_WS(' ', p.description,p.owner,p.project_name,r.description,r.resourceType,r.path), ' '),'\W',' ', 'g')) AS tsv
-FROM resource r FULL
-                JOIN project p ON r.project_id = p.id
-GROUP BY p.id, p.project_name;
+       to_tsvector(regexp_replace(string_agg(CONCAT_WS(' ', p.description,u.username,p.project_name,r.description,r.location,r.path), ' '),'\W',' ', 'g')) AS tsv
+FROM resource r FULL JOIN
+     project p ON r.project_id = p.id FULL JOIN
+     project_owner po on p.id = po.project_id FULL JOIN
+     users u ON  u.id = po.owner_id
+     GROUP BY p.id, p.project_name;
 
 -- http://www.vinsguru.com/cloud-design-patterns-materialized-view-pattern-using-spring-boot-postgresql/
 

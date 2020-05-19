@@ -25,7 +25,7 @@ public class RdmoRestConsumer {
   /**
    * Instantiates a new RDMO rest consumer.
    *
-   * @param env the autowired enviorment
+   * @param env the autowired environment
    */
   public RdmoRestConsumer(Environment env) {
     this.env = env;

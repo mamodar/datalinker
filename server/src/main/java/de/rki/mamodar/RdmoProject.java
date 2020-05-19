@@ -2,6 +2,8 @@ package de.rki.mamodar;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The representation of a RDMO project. Used by {@link de.rki.mamodar.RdmoRestConsumer} to handle RDMO projects.
@@ -118,8 +120,8 @@ private ArrayList<RdmoOwner> owners = new ArrayList<>();
     project.setDescription(this.description);
     project.setCreationTimestamp(new Date());
     project.setUpdatedTimestamp(project.getCreationTimestamp());
-    //TODO: owners should be an array
-    project.setOwner(this.owners.size() > 0? this.owners.get(0).getUsername():null);
+    List<User> owners = this.owners.stream().map(owner -> owner.toUser()).collect(Collectors.toList());
+    project.setOwner(owners);
     return project;
   }
 }

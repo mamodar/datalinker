@@ -30,7 +30,7 @@ public class MamodarApplication {
    *
    * @param projectRepository the project repository
    * @return the command line runner
-   */
+
   @Bean
   public CommandLineRunner demoProjects(ProjectRepository projectRepository) {
     return (args) -> {
@@ -43,4 +43,5 @@ public class MamodarApplication {
       log.info("");
     };
   }
+   */
 }

@@ -26,11 +26,13 @@ public class ProjectController {
 
   private static final Logger log = LoggerFactory.getLogger(MamodarApplication.class);
   private final ProjectRepository repository;
+  private final UserRepository userRepository;
+
   /**
    * The autowired {@link de.rki.mamodar.RdmoRestConsumer} for accessing all RDMO projects.
    */
   @Autowired
-   RdmoRestConsumer rdmoRestConsumer;
+  RdmoRestConsumer rdmoRestConsumer;
   /**
    * The autowired  {@link de.rki.mamodar.AuthenticationFacade} to validate the authenticity of the calling user.
    */
@@ -40,10 +42,12 @@ public class ProjectController {
   /**
    * Instantiates a new Project controller.
    *
-   * @param repository the project repository
+   * @param repository     the project repository
+   * @param userRepository the user repository
    */
-  public ProjectController(ProjectRepository repository) {
+  public ProjectController(ProjectRepository repository, UserRepository userRepository) {
     this.repository = repository;
+    this.userRepository = userRepository;
   }
 
 
@@ -60,10 +64,12 @@ public class ProjectController {
       log.info("GET: /projects/rdmo " + authenticationFacade.getLdapUser().getDn());
       ArrayList<Project> rdmoResponse = rdmoRestConsumer.getProjectsFromRdmo();
       updateProjects(rdmoResponse);
+    } catch (Exception e) {
+      log.warn(e.toString());
     } finally {
       repository.findAll(Sort.by(Direction.ASC, "projectName")).
           forEach(project -> allProjects.add(new ProjectSendDTO(project)));
-      allProjects.removeIf(project -> !project.getOwner().equals(authenticationFacade.getLdapUser().getUsername()));
+      allProjects.removeIf(project -> !project.getOwner().contains(authenticationFacade.getLdapUser().getUsername()));
 
       return allProjects;
     }
@@ -78,12 +84,13 @@ public class ProjectController {
    * @return a list of projects as DTOs
    */
   @GetMapping("/projects/search")
-  List<ProjectSendDTO> searchProject(@RequestParam(name = "search") String search){
+  List<ProjectSendDTO> searchProject(@RequestParam(name = "search") String search) {
 
     ArrayList<Project> foundProjects = (repository.searchFTS(search).orElse(new ArrayList<>()));
     ArrayList<ProjectSendDTO> foundProjectsDTO = new ArrayList<>();
     foundProjects.forEach(project -> foundProjectsDTO.add(new ProjectSendDTO(project)));
-    log.info("GET: /projects?search " + ((UserDetails)authenticationFacade.getAuthentication().getPrincipal()).getUsername());
+    log.info("GET: /projects?search " + ((UserDetails) authenticationFacade.getAuthentication().getPrincipal())
+        .getUsername());
     return foundProjectsDTO;
   }
 
@@ -97,25 +104,48 @@ public class ProjectController {
   @GetMapping("/projects/{id}")
   ProjectSendDTO findId(@PathVariable Long id) {
     log.info("GET: /projects/{id}");
-    Project project =  repository.findById(id).orElseThrow(() -> new ObjectNotFoundException("project", id));
-    return new ProjectSendDTO(project,project.getResources());
+    Project project = repository.findById(id).orElseThrow(() -> new ObjectNotFoundException("project", id));
+    return new ProjectSendDTO(project, project.getResources());
   }
 
 
   private void updateProjects(ArrayList<Project> projects) {
-    projects.forEach(p->updateProject(p));
+    projects.forEach(p -> updateProject(p));
   }
 
-  private void updateProject(Project updatedProject){
+  private void updateProject(Project updatedProject) {
     Optional<Project> project = repository.findByRdmoId(updatedProject.getRdmoId());
-    if(project.isPresent()){
+    if (project.isPresent()) {
       project.get().setProjectName(updatedProject.getProjectName());
       project.get().setDescription(updatedProject.getDescription());
-      project.get().setOwner(updatedProject.getOwner());
+
+      updateUsersForPoject(updatedProject);
       repository.save(project.get());
-    }else{
+    } else {
+      updateUsersForPoject(updatedProject);
       repository.save(updatedProject);
     }
   }
 
+  private void updateUsersForPoject(Project updatedProject) {
+    ArrayList<User> toRemoveUsers = new ArrayList<>();
+    ArrayList<User> toAddUsers = new ArrayList<>();
+
+    for (User updatedUser : updatedProject.getOwner()) {
+      if (!userRepository.existsByUsername(updatedUser.getUsername())) {
+        userRepository.save(updatedUser);
+      } else {
+        User replaceUpdatedByExistingUser = userRepository.getByUsername(updatedUser.getUsername());
+        toRemoveUsers.addAll(updatedProject.findDuplicatesByUsername(replaceUpdatedByExistingUser));
+        toAddUsers.add(replaceUpdatedByExistingUser);
+        userRepository.save(replaceUpdatedByExistingUser);
+      }
+    }
+
+    updatedProject.getOwner().removeAll(toRemoveUsers);
+    updatedProject.getOwner().addAll(toAddUsers);
+    userRepository.flush();
+  }
 }
+
+

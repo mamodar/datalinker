@@ -38,8 +38,13 @@ public class AuthenticationController {
     LdapUserDetailsImpl ldapUser =
         ((LdapUserDetailsImpl)((UsernamePasswordAuthenticationToken) user).getPrincipal());
 
-    if(!repository.existsByDn(ldapUser.getDn())) {
+    if(!repository.existsByUsername(ldapUser.getUsername())) {
       repository.save(new User(ldapUser.getUsername(), ldapUser.getDn()));
+    }else{
+      User toUpdateUser = repository.getByUsername(ldapUser.getUsername());
+      toUpdateUser.setDn(ldapUser.getDn());
+      toUpdateUser.setUsername(ldapUser.getUsername());
+      repository.save(toUpdateUser);
     }
     return user;
   }

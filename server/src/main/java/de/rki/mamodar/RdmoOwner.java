@@ -45,4 +45,11 @@ private String email;
   public void setEmail(String email) {
     this.email = email;
   }
+
+  public User toUser(){
+    User user = new User();
+    user.setUsername(this.getUsername());
+
+    return user;
+  }
 }
