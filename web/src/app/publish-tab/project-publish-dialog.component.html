@@ -1,0 +1,10 @@
+
+<mat-form-field> <mat-label>Projekt</mat-label> <input matInput [(ngModel)]="data.name" required></mat-form-field><br>
+<mat-form-field> <mat-label>Beschreibung</mat-label> <input matInput [(ngModel)]="data.description" required></mat-form-field><br>
+<mat-form-field> <mat-label>Verantwortlicher</mat-label> <input matInput [(ngModel)]="data.person" required></mat-form-field><br>
+
+<button type="button" mat-raised-button (click)="fileInput.click()">Datei auswählen</button>
+<input hidden  #fileInput type="file" id="file" (change) = "uploadFile($event.target.files)"> <br> <br>
+
+<button mat-raised-button  [mat-dialog-close]="{send: false , resource: data}" color="primary">Abbrechen</button>
+<button mat-raised-button [mat-dialog-close]="{send: true , resource: data}" color="primary">Exportieren</button>

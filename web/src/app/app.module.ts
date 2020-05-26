@@ -46,11 +46,10 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {ResourceDeleteDialogComponent} from './shared/resource-delete-button/resource-delete-dialog.component';
 import {LoginComponent} from './login/login.component';
 import {LoginInterceptor} from './login.interceptor';
-import {ResourceManipulateDialogComponent} from './shared/resource-manipulate-dialog/resource-manipulate-dialog.component';
 import {ResourceManipulateButtonComponent} from './shared/resource-edit-button/resource-manipulate-button.component';
 import {SearchFilterComponent} from './search-filter/search-filter.component';
-import {SearchSearchComponent} from './search-search/search-search.component';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { PublishTabComponent, ProjectPublishDialogComponent } from './publish-tab/publish-tab.component';
 
 @NgModule({
   declarations: [
@@ -68,9 +67,9 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     ResourceDeleteDialogComponent,
     ResourceManipulateButtonComponent,
     LoginComponent,
-    ResourceManipulateDialogComponent,
     SearchFilterComponent,
-    SearchSearchComponent
+    PublishTabComponent,
+    ProjectPublishDialogComponent
   ],
   imports: [
     BrowserModule,

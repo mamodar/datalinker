@@ -1,0 +1,16 @@
+<div class="grid">
+  <div class="flex-grid">
+    <app-project-list [projects$]="this.projects$" class="colleft"></app-project-list>
+  </div>
+  <mat-divider class="divider"></mat-divider>
+
+  <div class = "buttons">
+    <mat-form-field class = "selector">
+      <mat-label>Repositorium</mat-label>
+      <mat-select [(ngModel)]="selectedRepo" matNativeControl required>
+        <mat-option value="edoc">eDoc</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button mat-raised-button color="primary" [disabled]="exportPossible()" (click)="openExportDialog()">Export</button>
+  </div>
+</div>

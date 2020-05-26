@@ -1,0 +1,37 @@
+
+.grid {
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: 1fr 4px 10%;
+  grid-template-areas:
+    "buttonView"
+    "dividerView"
+    "mainView";
+
+}
+
+.flex-grid {
+  display: flex;
+  grid-area: mainView;
+  margin: 8px;
+}
+.colleft {
+  flex-basis: 100%;
+  margin:  16px;
+}
+.colright {
+  flex-basis: 0%;
+  margin:  16px;
+}
+
+.divider{
+  grid-area: dividerView;
+}
+.buttons {
+  grid-area: buttonView;
+  justify-self: center;
+}
+.selector {
+  margin-right: 16px !important;
+}
+
