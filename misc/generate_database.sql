@@ -1,4 +1,5 @@
 -- CREATE DATABASE mamodar;
+-- \connect mamodar
 -- DROPS ALL TABLES
 DROP TABLE IF EXISTS "project" CASCADE;
 DROP TABLE IF exists "users" CASCADE ;
@@ -47,7 +48,7 @@ CREATE TABLE "resource" (
                             "third_party" BOOLEAN NULL DEFAULT NULL,
                             "path" VARCHAR(255) NOT NULL,
                             "location" VARCHAR(255) NOT NULL,
-                            "size" REAL(24) NULL DEFAULT NULL,
+                            "size" REAL NULL DEFAULT NULL,
                             "updated_timestamp" TIMESTAMP NULL DEFAULT NULL,
                             "created_by_user_id" BIGINT NOT NULL,
                             "project_id" BIGINT NOT NULL,
@@ -68,8 +69,6 @@ CREATE TABLE "project_owner" (
                                  CONSTRAINT "fkqb39868ogh7w8fjc2b4fvddr1" FOREIGN KEY ("owner_id") REFERENCES "users" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 ;
-COMMENT ON COLUMN "project_owner"."project_id" IS '';
-COMMENT ON COLUMN "project_owner"."owner_id" IS '';
 
 
 -- CREATE search
@@ -106,10 +105,11 @@ EXECUTE PROCEDURE refresh_search_view();
 
 
  -- If non root is running the database
-GRANT SELECT ON ALL TABLES IN SCHEMA public TO mamodaruser;
-GRANT UPDATE ON ALL TABLES IN SCHEMA public TO mamodaruser;
-GRANT INSERT ON ALL TABLES IN SCHEMA public TO mamodaruser;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO mamodar;
+GRANT UPDATE ON ALL TABLES IN SCHEMA public TO mamodar;
+GRANT INSERT ON ALL TABLES IN SCHEMA public TO mamodar;
 
-GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO mamodaruser;
-GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public to mamodaruser;
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO mamodar;
+GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public to mamodar;
 
+ALTER ROLE mamodar WITH LOGIN;
