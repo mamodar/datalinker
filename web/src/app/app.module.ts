@@ -49,7 +49,8 @@ import {LoginInterceptor} from './login.interceptor';
 import {ResourceManipulateButtonComponent} from './shared/resource-edit-button/resource-manipulate-button.component';
 import {SearchFilterComponent} from './search-filter/search-filter.component';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
-import { PublishTabComponent, ProjectPublishDialogComponent } from './publish-tab/publish-tab.component';
+import {PublishTabComponent, ProjectPublishDialogComponent} from './publish-tab/publish-tab.component';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 @NgModule({
   declarations: [
@@ -95,7 +96,8 @@ import { PublishTabComponent, ProjectPublishDialogComponent } from './publish-ta
     MatChipsModule,
     MatProgressSpinnerModule,
     MatSlideToggleModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatProgressBarModule
   ],
   providers: [{ provide: HTTP_INTERCEPTORS, useClass: LoginInterceptor, multi: true }],
   bootstrap: [AppComponent]
