@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Observable, throwError} from 'rxjs';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpRequest} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 import {catchError} from 'rxjs/operators';
 import {AuthUser} from '../models/authUser';
@@ -49,10 +49,18 @@ export class ApiService {
 
   post(path: string, body: any = {}): Observable<any> {
     console.log(Date() + ' POST:' + path + 'body:' + JSON.stringify(body));
+
     return this.http.post(
       environment.appUrl + path,
-      body
-    ).pipe(catchError(ApiService.formatErrors));
+      body).pipe(catchError(ApiService.formatErrors));
+  }
+
+  postWithProgress(path: string, body: any = {}): Observable<any> {
+    const req = new HttpRequest('POST', environment.appUrl + path, body, {
+      reportProgress: true
+    });
+    return this.http.request(req).pipe(catchError(ApiService.formatErrors)
+    );
   }
 
   delete(path): Observable<any> {

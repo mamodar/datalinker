@@ -5,6 +5,8 @@ import {Project} from '../models/project';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material/dialog';
 import {NewResourceAddButtonComponent} from '../new-resource-add/new-resource-add-button.component';
 import {EdocTransfer} from '../models/edocTransfer';
+import {HttpEventType, HttpResponse} from '@angular/common/http';
+
 /**
  * The main component for the publish tab.
  * @author Kyanoush Yahosseini
@@ -19,23 +21,43 @@ export class PublishTabComponent implements OnInit {
   projects$: Observable<Project[]>;
   private selectedProject$: BehaviorSubject<Project>;
   selectedRepo: string;
-  constructor(  public matDialog: MatDialog, private stateService: StateService) { }
+  progress: number;
+
+  constructor(public matDialog: MatDialog, private stateService: StateService) {
+  }
+
   ngOnInit(): void {
     this.projects$ = this.stateService.getProjects();
     this.selectedProject$ = this.stateService.getSelectedProject();
+    this.progress = undefined;
 
   }
+
   exportPossible(): boolean {
     return !((this.selectedProject$.getValue() !== undefined) && (this.selectedRepo !== undefined));
   }
+
   openExportDialog(): void {
+    this.progress = undefined;
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     const edocTransfer = new EdocTransfer();
     edocTransfer.fromProject(this.selectedProject$.getValue());
     dialogConfig.data = edocTransfer;
     const modalDialog = this.matDialog.open(ProjectPublishDialogComponent, dialogConfig);
-    modalDialog.afterClosed().subscribe(_ => {this.selectedRepo = undefined; } )
+    modalDialog.afterClosed().subscribe(_ => {
+      if (_.send) {
+        this.stateService.publishToExternalService('edoc', edocTransfer).pipe().subscribe(event => {
+          if (event.type === HttpEventType.UploadProgress) {
+            // This is an upload progress event. Compute the % done:
+            this.progress = Math.round(100 * event.loaded / event.total);
+          } else if (event instanceof HttpResponse) {
+            // server has responded
+            this.progress = 101;
+          }
+        });
+      }
+    });
   }
 }
 
@@ -44,17 +66,18 @@ export class PublishTabComponent implements OnInit {
   selector: 'app-resource-manipulate-dialog',
   templateUrl: './project-publish-dialog.component.html',
 })
-export class ProjectPublishDialogComponent  {
+export class ProjectPublishDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<NewResourceAddButtonComponent>,
     @Inject(MAT_DIALOG_DATA) public data: EdocTransfer) {
 
   }
+
   onNoClick(): void {
     this.dialogRef.close();
   }
 
   uploadFile(files: any) {
-
+    this.data.file = files[0];
   }
 }

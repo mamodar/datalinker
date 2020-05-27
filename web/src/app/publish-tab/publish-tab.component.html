@@ -4,13 +4,15 @@
   </div>
   <mat-divider class="divider"></mat-divider>
 
-  <div class = "buttons">
-    <mat-form-field class = "selector">
+  <div class="buttons">
+    <mat-form-field class="selector">
       <mat-label>Repositorium</mat-label>
       <mat-select [(ngModel)]="selectedRepo" matNativeControl required>
         <mat-option value="edoc">eDoc</mat-option>
       </mat-select>
     </mat-form-field>
     <button mat-raised-button color="primary" [disabled]="exportPossible()" (click)="openExportDialog()">Export</button>
+    <mat-progress-bar *ngIf="progress && progress<=100" [value]=progress mode="determinate"></mat-progress-bar>
+    <mat-progress-bar *ngIf="progress > 100" [value]=100 color="accent" mode="determinate"></mat-progress-bar>
   </div>
 </div>

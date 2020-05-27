@@ -1,12 +1,11 @@
 package de.rki.mamodar;
 
 import de.rki.mamodar.edoc.EdocItemDTO;
-import java.io.IOException;
-import org.springframework.ui.ModelMap;
+import de.rki.mamodar.edoc.EdocRestConsumer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,20 +19,24 @@ import org.springframework.web.multipart.MultipartFile;
 @CrossOrigin(origins = "*")
 public class PublicationController {
 
-  @GetMapping("/publication")
-  boolean up(){
-    return true;
-  }
-  @PostMapping("/publication/edoc")
-  boolean createEdocPublication(
-      @RequestParam MultipartFile file,
-      @RequestParam ProjectSendDTO project,
-      ModelMap modelMap) throws IOException {
-    EdocItemDTO edocItem = new EdocItemDTO();
-    edocItem.setEmail(project.getOwner().get(0));
-    edocItem.setName(project.getProjectName());
-    edocItem.setFile(file.getInputStream());
-    return true;
+  /**
+   * The autowired {@link EdocRestConsumer}.
+   */
+  @Autowired
+  EdocRestConsumer edocRestConsumer;
+
+  /**
+   * Create edoc publication.
+   *
+   * @param item the item
+   * @param file the file to publish
+   */
+  @PostMapping(value = "/publication/edoc", consumes = {"multipart/form-data"})
+  void createEdocPublication(
+      @RequestPart(value = "item") EdocItemDTO item,
+      @RequestPart(value = "file") MultipartFile file) {
+    item.setFile(file);
+    this.edocRestConsumer.publishToEdoc(item);
   }
 
 }

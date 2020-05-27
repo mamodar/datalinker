@@ -11,6 +11,7 @@ import {ApiService} from './api.service';
 import {CloudType} from '../models/cloudType';
 import {ResourcePath} from '../models/resourcePath';
 import {Value} from '../models/value';
+import {PublicationService} from './publication.service';
 
 
 /**
@@ -29,6 +30,7 @@ export class StateService {
 
   constructor(private projectService: ProjectService,
               private resourceService: ResourceService,
+              private publicationService: PublicationService,
               private apiService: ApiService) {
     this.currentUser.next({
       userName: sessionStorage.getItem('currentUser'),
@@ -104,7 +106,7 @@ export class StateService {
     this.selectedProject.next(project);
   }
 
-  public createResource(resource: Resource, project?: Project,): Observable<Resource> {
+  public createResource(resource: Resource, project?: Project, ): Observable<Resource> {
     if (project) {
       return this.resourceService.createResource(resource, project);
     }
@@ -175,6 +177,7 @@ export class StateService {
     return (of(true));
   }
 
+
   private concatValueAnswers(values: Value[]): Value[] {
     const reducedValues: Value[] = [];
     values.forEach(
@@ -186,6 +189,13 @@ export class StateService {
         }
       });
     return reducedValues;
+  }
+  publishToExternalService(type: string, transferObject: any): Observable<any> {
+    switch (type) {
+      case 'edoc':
+        return this.publicationService.publishEdoc(transferObject);
+        break;
+    }
   }
 
   private initializeTypes(): void {

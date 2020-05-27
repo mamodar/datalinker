@@ -35,3 +35,6 @@
   margin-right: 16px !important;
 }
 
+mat-progress-bar {
+  margin-bottom: 8px;
+}

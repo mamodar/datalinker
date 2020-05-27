@@ -6,12 +6,11 @@ import {Project} from './project';
 
 export class EdocTransfer {
   name: string;
-  description: string;
-  person: string;
+  email: string;
+  file: File;
 
   public fromProject(project: Project) {
     this.name = project.projectName;
-    this.description = project.description;
-    this.person = project.owner[0];
+    this.email = project.owner[0] + '@rki.de';
   }
 }
