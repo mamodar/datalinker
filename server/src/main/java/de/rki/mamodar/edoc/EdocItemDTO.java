@@ -6,7 +6,7 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * This class provides a DTO for publishing a {@link de.rki.mamodar.Project} and a binary file on an edoc instance.
+ * This class provides a DTO for receiving and sending a binary file and metadata to an edoc instance.
  *
  * @author Kyanoush Yahosseini
  */
@@ -14,6 +14,7 @@ public class EdocItemDTO {
 
   private String name;
   private String email;
+  private String description;
   // we always send/receive the file in a separate part
   @JsonIgnore
   private ByteArrayResource file;
@@ -91,5 +92,23 @@ public class EdocItemDTO {
     } catch (IOException e) {
       e.printStackTrace();
     }
+  }
+
+  /**
+   * Gets description.
+   *
+   * @return the description
+   */
+  public String getDescription() {
+    return description;
+  }
+
+  /**
+   * Sets description.
+   *
+   * @param description the description
+   */
+  public void setDescription(String description) {
+    this.description = description;
   }
 }

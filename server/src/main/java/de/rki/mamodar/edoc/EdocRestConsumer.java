@@ -44,6 +44,7 @@ public class EdocRestConsumer {
     body.add("file", edocItemDTO.getFile());
     body.add("name", edocItemDTO.getName());
     body.add("email", edocItemDTO.getEmail());
+    // body.add("description", edocItemDTO.getDescription());
 
     HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(body, headers);
     ResponseEntity<String> response = new RestTemplate().
