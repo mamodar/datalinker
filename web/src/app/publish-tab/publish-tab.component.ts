@@ -6,6 +6,7 @@ import {MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogRef} from '@angula
 import {NewResourceAddButtonComponent} from '../new-resource-add/new-resource-add-button.component';
 import {EdocTransfer} from '../models/edocTransfer';
 import {HttpEventType, HttpResponse} from '@angular/common/http';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 /**
  * The main component for the publish tab.
@@ -23,7 +24,7 @@ export class PublishTabComponent implements OnInit {
   selectedRepo: string;
   progress: number;
 
-  constructor(public matDialog: MatDialog, private stateService: StateService) {
+  constructor(public matDialog: MatDialog, private snackBar: MatSnackBar, private stateService: StateService) {
   }
 
   ngOnInit(): void {
@@ -43,6 +44,7 @@ export class PublishTabComponent implements OnInit {
     dialogConfig.disableClose = true;
     const edocTransfer = new EdocTransfer();
     edocTransfer.fromProject(this.selectedProject$.getValue());
+    console.warn(edocTransfer);
     dialogConfig.data = edocTransfer;
     const modalDialog = this.matDialog.open(ProjectPublishDialogComponent, dialogConfig);
     modalDialog.afterClosed().subscribe(_ => {
@@ -53,10 +55,24 @@ export class PublishTabComponent implements OnInit {
             this.progress = Math.round(100 * event.loaded / event.total);
           } else if (event instanceof HttpResponse) {
             // server has responded
-            this.progress = 101;
+            if (event.status === 200) {
+              this.openSnackBar('Erfolg!');
+              this.progress = 101;
+            } else {
+              this.openSnackBar('Fehler!');
+            }
           }
         });
       }
+    });
+
+  }
+
+  private openSnackBar(message): void {
+    this.snackBar.open(message, null, {
+      duration: 1000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
     });
   }
 }
@@ -78,6 +94,7 @@ export class ProjectPublishDialogComponent {
   }
 
   uploadFile(files: any) {
+    console.log(files[0]);
     this.data.file = files[0];
   }
 }

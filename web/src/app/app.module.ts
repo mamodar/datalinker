@@ -51,6 +51,7 @@ import {SearchFilterComponent} from './search-filter/search-filter.component';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {PublishTabComponent, ProjectPublishDialogComponent} from './publish-tab/publish-tab.component';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -97,7 +98,8 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
     MatProgressSpinnerModule,
     MatSlideToggleModule,
     MatAutocompleteModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatSnackBarModule
   ],
   providers: [{ provide: HTTP_INTERCEPTORS, useClass: LoginInterceptor, multi: true }],
   bootstrap: [AppComponent]

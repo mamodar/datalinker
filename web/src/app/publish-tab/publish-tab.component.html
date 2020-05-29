@@ -11,7 +11,7 @@
         <mat-option value="edoc">eDoc</mat-option>
       </mat-select>
     </mat-form-field>
-    <button mat-raised-button color="primary" [disabled]="exportPossible()" (click)="openExportDialog()">Export</button>
+    <button (click)="openExportDialog()" [disabled]="exportPossible()" color="primary" mat-raised-button>Export</button>
     <mat-progress-bar *ngIf="progress && progress<=100" [value]=progress mode="determinate"></mat-progress-bar>
     <mat-progress-bar *ngIf="progress > 100" [value]=100 color="accent" mode="determinate"></mat-progress-bar>
   </div>
