@@ -26,22 +26,17 @@ public class MamodarApplication {
   }
 
   /**
-   * Show all available projects at startup.
+   * Show version information at startup
    *
    * @param projectRepository the project repository
    * @return the command line runner
-
+  */
   @Bean
   public CommandLineRunner demoProjects(ProjectRepository projectRepository) {
     return (args) -> {
       // fetch all customers
-      log.info("Projects found with findAll():");
-      log.info("-------------------------------");
-      for (Project it : projectRepository.findAll()) {
-        log.info(it.toString());
-      }
-      log.info("");
+      log.info("202005225588");
     };
   }
-   */
+
 }

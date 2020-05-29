@@ -4,7 +4,7 @@ import {Project} from '../models/project';
 import {StateService} from '../services/state.service';
 
 /**
- * The main component for the search navigation tab.
+ * The main component for the project navigation tab.
  * @author Kyanoush Yahosseini
  */
 

@@ -9,7 +9,7 @@ export class Project {
   projectName: string;
   description: string;
   rdmoId: number;
-  owner: string;
+  owner: string[];
   resources: Resource[];
 
 }

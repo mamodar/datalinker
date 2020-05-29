@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpRequest, HttpHandler, HttpEvent, HttpInterceptor} from '@angular/common/http';
+import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {Observable} from 'rxjs';
 
 /**
@@ -20,7 +20,7 @@ export class LoginInterceptor implements HttpInterceptor {
     if (currentUser  && currentPassword) {
       return next.handle(request.clone(
         {headers: request.headers.
-          set('Content-Type', 'application/json').
+            // do not set 'Content-Type' as it interferes with multi-part request
           set('Authorization', 'Basic ' + btoa(currentUser + ':' + currentPassword) )}));
     } else {
       return next.handle(request);
