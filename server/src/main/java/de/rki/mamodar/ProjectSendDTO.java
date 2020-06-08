@@ -1,8 +1,6 @@
 package de.rki.mamodar;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,13 +12,15 @@ import java.util.stream.Collectors;
  * @author Kyanoush Yahosseini
  */
 public class ProjectSendDTO {
+
+
   private Long id;
   private String creationTimestamp;
   private String projectName;
   private String description;
   private List<String> owner;
-  private ArrayList<ResourceSendDTO> resources ;
-
+  private ArrayList<ResourceSendDTO> resources;
+  private ArrayList<ValueSendDTO> information;
   /**
    * Instantiates a new Project DTO.
    */
@@ -40,27 +40,6 @@ public class ProjectSendDTO {
     this.projectName = project.getProjectName();
     this.description = project.getDescription();
     this.owner = project.getOwner().stream().map(user -> user.getUsername()).collect(Collectors.toList());
-  }
-
-  /**
-   * Instantiates a new Project DTO from a {@link de.rki.mamodar.Project} without connected {@link
-   * de.rki.mamodar.Resource}s.
-   *
-   * @param project   a project
-   * @param resources a list of connected resources
-   */
-  public ProjectSendDTO(Project project, List<Resource> resources){
-    this.id = project.getId();
-    this.creationTimestamp = project.creationTimestamp.toString();
-    this.projectName = project.getProjectName();
-    this.description = project.getDescription();
-    this.owner = project.getOwner().stream().map(user -> user.getUsername()).collect(Collectors.toList());
-    this.resources = new ArrayList<>();
-    resources.sort(Comparator.comparing(Resource::getUpdatedTimestamp));
-    Collections.reverse(resources);
-    resources.forEach(resource -> this.resources.add(new ResourceSendDTO(resource)));
-
-    //
   }
 
   /**
@@ -115,5 +94,13 @@ public class ProjectSendDTO {
    */
   public ArrayList<ResourceSendDTO> getResources() {
     return resources;
+  }
+
+  public ArrayList<ValueSendDTO> getInformation() {
+    return information;
+  }
+
+  public void setInformation(ArrayList<ValueSendDTO> information) {
+    this.information = information;
   }
 }

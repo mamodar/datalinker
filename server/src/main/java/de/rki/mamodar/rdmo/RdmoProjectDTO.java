@@ -1,21 +1,26 @@
-package de.rki.mamodar;
+package de.rki.mamodar.rdmo;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import de.rki.mamodar.Project;
+import de.rki.mamodar.User;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * The representation of a RDMO project. Used by {@link de.rki.mamodar.RdmoRestConsumer} to handle RDMO projects.
+ * The representation of a RDMO project. Used by {@link RdmoApiConsumer} to handle RDMO projects.
+ *
  * @author Kyanoush Yahosseini
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RdmoProject {
-private Long id;
-private String title;
-private String description;
-private boolean read_only;
-private ArrayList<RdmoOwner> owners = new ArrayList<>();
+public class RdmoProjectDTO {
+
+  private Long id;
+  private String title;
+  private String description;
+  private boolean read_only;
+  private ArrayList<RdmoOwnerDTO> owners = new ArrayList<>();
 
   /**
    * Gets the  title.
@@ -76,7 +81,7 @@ private ArrayList<RdmoOwner> owners = new ArrayList<>();
    *
    * @return the rdmo owner array
    */
-  public ArrayList<RdmoOwner> getOwners() {
+  public ArrayList<RdmoOwnerDTO> getOwners() {
     return owners;
   }
 
@@ -85,7 +90,7 @@ private ArrayList<RdmoOwner> owners = new ArrayList<>();
    *
    * @param owners the owners
    */
-  public void setOwners(ArrayList<RdmoOwner> owners) {
+  public void setOwners(ArrayList<RdmoOwnerDTO> owners) {
     this.owners = owners;
   }
 

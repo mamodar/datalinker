@@ -1,14 +1,19 @@
-package de.rki.mamodar;
+package de.rki.mamodar.rdmo;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import de.rki.mamodar.User;
 
 /**
- * This class provides the representation of a RDMO project owner. This should be replaced by a correct LDAP implementation.
+ * This class provides the representation of a RDMO project owner. This should be replaced by a correct LDAP
+ * implementation.
+ *
  * @author Kyanoush Yahosseini
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RdmoOwner {
-private String username;
-private String email;
+public class RdmoOwnerDTO {
+
+  private String username;
+  private String email;
 
   /**
    * Gets username.

@@ -1,7 +1,6 @@
 package de.rki.mamodar;
 
-import java.lang.reflect.Array;
-import java.security.acl.Owner;
+import de.rki.mamodar.rdmo.RdmoApiConsumer;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -12,7 +11,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -20,8 +18,9 @@ import javax.persistence.TemporalType;
 
 
 /**
- * This entity corresponds to the representation of a project in the database.
- * A project is a RDMO project imported by {@link de.rki.mamodar.RdmoRestConsumer}.
+ * This entity corresponds to the representation of a project in the database. A project is a RDMO project imported by
+ * {@link RdmoApiConsumer}.
+ *
  * @author Kyanoush Yahosseini
  */
 @Entity
