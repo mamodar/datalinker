@@ -75,8 +75,7 @@ public class Resource {
   @JoinColumn(name = "updated_by_user_id",nullable = false)
   private User updatedByUser;
 
-  @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "project_id",nullable = false)
+  @ManyToOne(targetEntity = Project.class)
   private Project project;
 
   /**
@@ -86,38 +85,38 @@ public class Resource {
   }
 
   /**
-   * Instantiate a new Resource from a {@link de.rki.mamodar.ResourceSendDTO}.
+   * Instantiate a new Resource from a {@link ResourceDTO}.
    *
-   * @param resourceSendDTO the resource send dto
+   * @param resourceDTO the resource send dto
    */
-  public Resource(ResourceSendDTO resourceSendDTO) {
+  public Resource(ResourceDTO resourceDTO) {
 
-    this.path = resourceSendDTO.getPath();
-    this.resourceType = ResourceType.valueOf(resourceSendDTO.getLocation());
-    this.description =  resourceSendDTO.getDescription();
-    this.isArchived = resourceSendDTO.getArchived();
-    this.isPersonal = resourceSendDTO.getPersonal();
-    this.isThirdParty = resourceSendDTO.getThirdParty();
-    this.size = resourceSendDTO.getSize();
+    this.path = resourceDTO.getPath();
+    this.resourceType = ResourceType.valueOf(resourceDTO.getLocation());
+    this.description = resourceDTO.getDescription();
+    this.isArchived = resourceDTO.getArchived();
+    this.isPersonal = resourceDTO.getPersonal();
+    this.isThirdParty = resourceDTO.getThirdParty();
+    this.size = resourceDTO.getSize();
 
   }
 
   /**
-   * Update a new Resource from a {@link de.rki.mamodar.ResourceSendDTO}.
+   * Update a new Resource from a {@link ResourceDTO}.
    *
-   * @param resourceSendDTO the resource send dto
+   * @param resourceDTO the resource send dto
    */
-  public void update(ResourceSendDTO resourceSendDTO) {
-    Objects.requireNonNull(resourceSendDTO.getPath());
-    Objects.requireNonNull(resourceSendDTO.getLocation());
+  public void update(ResourceDTO resourceDTO) {
+    Objects.requireNonNull(resourceDTO.getPath());
+    Objects.requireNonNull(resourceDTO.getLocation());
 
-    this.path = resourceSendDTO.getPath();
-    this.resourceType = ResourceType.valueOf(resourceSendDTO.getLocation());
-    this.description =  resourceSendDTO.getDescription()!=null?resourceSendDTO.getDescription():this.description;
-    this.isArchived = resourceSendDTO.getArchived() != null?resourceSendDTO.getArchived():this.isArchived;
-    this.isPersonal = resourceSendDTO.getPersonal()!= null?resourceSendDTO.getPersonal():this.isPersonal;
-    this.isThirdParty = resourceSendDTO.getThirdParty()!= null?resourceSendDTO.getThirdParty():this.isThirdParty;
-    this.size = resourceSendDTO.getSize()!=null?resourceSendDTO.getSize():this.size;
+    this.path = resourceDTO.getPath();
+    this.resourceType = ResourceType.valueOf(resourceDTO.getLocation());
+    this.description = resourceDTO.getDescription() != null ? resourceDTO.getDescription() : this.description;
+    this.isArchived = resourceDTO.getArchived() != null ? resourceDTO.getArchived() : this.isArchived;
+    this.isPersonal = resourceDTO.getPersonal() != null ? resourceDTO.getPersonal() : this.isPersonal;
+    this.isThirdParty = resourceDTO.getThirdParty() != null ? resourceDTO.getThirdParty() : this.isThirdParty;
+    this.size = resourceDTO.getSize() != null ? resourceDTO.getSize() : this.size;
   }
 
   /**

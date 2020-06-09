@@ -2,20 +2,21 @@ package de.rki.mamodar.rdmo;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * This DAO entity corresponding to the representation of a rdmo value in the database. No getters or setters as the
+ * table is only used to created the {@link de.rki.mamodar.ValueRepository} view.
+ *
+ * @author Kyanoush Yahosseini
+ */
 @Entity
 @Table(name = "rdmo_value")
 public class RdmoValue {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE)
-  @Column(name = "id", updatable = false, nullable = false)
-  Long id;
-
+  @Column(name = "id", nullable = false)
   private Long rdmoId;
   private Integer setIndex;
   private Integer collectionIndex;
@@ -27,9 +28,17 @@ public class RdmoValue {
   private Long project;
   private Long attribute;
 
+  /**
+   * Instantiates a new empty Rdmo value.
+   */
   public RdmoValue() {
   }
 
+  /**
+   * Instantiates a new Rdmo value from a rdmo value dto.
+   *
+   * @param rdmoValueDTO the rdmo value dto
+   */
   public RdmoValue(RdmoValueDTO rdmoValueDTO) {
     this.rdmoId = rdmoValueDTO.getRdmoId();
     this.setIndex = rdmoValueDTO.getSetIndex();

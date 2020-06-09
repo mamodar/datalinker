@@ -8,29 +8,75 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * This component saves rdmo data in the corresponding databases. Data is received by calls to the rdmo API via {@link
+ * de.rki.mamodar.rdmo.RdmoApiConsumer}. This class converts the DTOs to DAO before saving.
+ *
+ * @author Kyanoush Yahosseini
+ */
 @Component
 public class RdmoConverter {
 
-  @Autowired
-  RdmoApiConsumer rdmoApiConsumer;
+  private RdmoQuestionRepository rdmoQuestionRepository;
+  private RdmoOptionRepository rdmoOptionRepository;
+  private RdmoValueRepository rdmoValueRepository;
+  private ProjectRepository projectRepository;
+  private UserRepository userRepository;
+  /**
+   * A list of all attribute ids of rdmo which should be included in the value table of the datalinker
+   */
+  private final ArrayList<Long> ALLOWED_RDMO_ATTRIBUTES = new ArrayList<Long>(
+      Arrays.asList(new Long[]{6L, 158L, 206L}));
 
-  RdmoQuestionRepository rdmoQuestionRepository;
-  RdmoOptionRepository rdmoOptionRepository;
-  RdmoValueRepository rdmoValueRepository;
-  ProjectRepository projectRepository;
-  UserRepository userRepository;
-
-  private RdmoConverter(RdmoOptionRepository rdmoOptionRepository,
-      RdmoQuestionRepository rdmoQuestionRepository,
+  private RdmoConverter(RdmoOptionRepository rdmoOptionRepository, RdmoQuestionRepository rdmoQuestionRepository,
       RdmoValueRepository rdmoValueRepository, ProjectRepository projectRepository, UserRepository userRepository) {
     this.rdmoOptionRepository = rdmoOptionRepository;
     this.rdmoQuestionRepository = rdmoQuestionRepository;
     this.rdmoValueRepository = rdmoValueRepository;
     this.projectRepository = projectRepository;
     this.userRepository = userRepository;
+  }
+
+  /**
+   * Delete and create the rdmo questions in the database.
+   *
+   * @param rdmoQuestions the array of rdmo questions
+   */
+  public void addRdmoQuestions(RdmoQuestionDTO[] rdmoQuestions) {
+    this.rdmoQuestionRepository.deleteAll();
+    this.rdmoQuestionRepository.saveAll(this.questionsToDAO(rdmoQuestions));
+  }
+
+  /**
+   * Delete and create therdmo options in the database.
+   *
+   * @param rdmoOptions the array of rdmo options
+   */
+  public void addRdmoOptions(RdmoOptionDTO[] rdmoOptions) {
+    this.rdmoOptionRepository.deleteAll();
+    this.rdmoOptionRepository.saveAll(this.optionsToDAO(rdmoOptions));
+  }
+
+  /**
+   * Delete and create the rdmo values in the database. Only values which pass the {@code ALLOWED_RDMO_ATTRIBUTES}
+   * filter are saved.
+   *
+   * @param rdmoValues the array of rdmo values
+   */
+  public void addRdmoValues(RdmoValueDTO[] rdmoValues) {
+    this.rdmoValueRepository.deleteAll();
+    this.rdmoValueRepository.saveAll(this.valuesToDAO(rdmoValues));
+  }
+
+  /**
+   * Update or create the rdmo projects in the database.
+   *
+   * @param rdmoProjects the array of rdmo projects
+   */
+  public void updateRdmoProjects(RdmoProjectDTO[] rdmoProjects) {
+    this.projectsToDAO(rdmoProjects).forEach(project -> this.updateProject(project));
   }
 
   private List<RdmoQuestion> questionsToDAO(RdmoQuestionDTO[] rdmoQuestions) {
@@ -49,8 +95,10 @@ public class RdmoConverter {
   }
 
   private List<RdmoValue> valuesToDAO(RdmoValueDTO[] rdmoValues) {
-    List<RdmoValueDTO> rdmoValueDTOs = Arrays.asList(rdmoValues);
-    List<RdmoValue> rdmoValueDAOs = new ArrayList<>();
+
+    ArrayList<RdmoValueDTO> rdmoValueDTOs = new ArrayList<>(Arrays.asList(rdmoValues));
+    ArrayList<RdmoValue> rdmoValueDAOs = new ArrayList<>();
+    rdmoValueDTOs.removeIf(rdmoValueDTO -> !ALLOWED_RDMO_ATTRIBUTES.contains(rdmoValueDTO.getAttribute()));
     rdmoValueDTOs.forEach(rdmoValueDTO -> rdmoValueDAOs.add(new RdmoValue(rdmoValueDTO)));
     return (rdmoValueDAOs);
   }
@@ -58,36 +106,15 @@ public class RdmoConverter {
   private List<Project> projectsToDAO(RdmoProjectDTO[] rdmoProjects) {
     List<RdmoProjectDTO> rdmoProjectDTOs = Arrays.asList(rdmoProjects);
     List<Project> projectDAOs = new ArrayList<>();
-    rdmoProjectDTOs.forEach(projectDTO -> projectDAOs.add(projectDTO.toProject()));
+    rdmoProjectDTOs.forEach(projectDTO -> projectDAOs.add(new Project(projectDTO)));
     return projectDAOs;
   }
-
-  public void addRdmoQuestions(RdmoQuestionDTO[] rdmoQuestions) {
-    this.rdmoQuestionRepository.deleteAll();
-    this.rdmoQuestionRepository.saveAll(this.questionsToDAO(rdmoQuestions));
-  }
-
-  public void addRdmoOptions(RdmoOptionDTO[] rdmoOptions) {
-    this.rdmoOptionRepository.deleteAll();
-    this.rdmoOptionRepository.saveAll(this.optionsToDAO(rdmoOptions));
-  }
-
-  public void addRdmoValues(RdmoValueDTO[] rdmoValues) {
-    this.rdmoValueRepository.deleteAll();
-    this.rdmoValueRepository.saveAll(this.valuesToDAO(rdmoValues));
-  }
-
-  public void updateRdmoProjects(RdmoProjectDTO[] rdmoProjects) {
-    this.projectsToDAO(rdmoProjects).forEach(project -> this.updateProject(project));
-  }
-
 
   private void updateProject(Project updatedProject) {
     Optional<Project> project = projectRepository.findByRdmoId(updatedProject.getRdmoId());
     if (project.isPresent()) {
-      project.get().setProjectName(updatedProject.getProjectName());
-      project.get().setDescription(updatedProject.getDescription());
-      updateUsersForPoject(updatedProject);
+      project.get().update(updatedProject);
+      updateUsersForPoject(project.get());
       projectRepository.save(project.get());
     } else {
       updateUsersForPoject(updatedProject);
@@ -109,7 +136,6 @@ public class RdmoConverter {
         userRepository.save(replaceUpdatedByExistingUser);
       }
     }
-
     updatedProject.getOwner().removeAll(toRemoveUsers);
     updatedProject.getOwner().addAll(toAddUsers);
     userRepository.flush();

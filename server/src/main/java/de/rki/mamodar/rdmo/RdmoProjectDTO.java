@@ -1,12 +1,7 @@
 package de.rki.mamodar.rdmo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import de.rki.mamodar.Project;
-import de.rki.mamodar.User;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * The representation of a RDMO project. Used by {@link RdmoApiConsumer} to handle RDMO projects.
@@ -112,21 +107,4 @@ public class RdmoProjectDTO {
     this.id = id;
   }
 
-  /**
-   * Converts a RDMO project to a {@link de.rki.mamodar.Project}
-   *
-   * @return the project
-   */
-  public Project toProject(){
-
-    Project project = new Project();
-    project.setRdmoId(this.id);
-    project.setProjectName(this.title);
-    project.setDescription(this.description);
-    project.setCreationTimestamp(new Date());
-    project.setUpdatedTimestamp(project.getCreationTimestamp());
-    List<User> owners = this.owners.stream().map(owner -> owner.toUser()).collect(Collectors.toList());
-    project.setOwner(owners);
-    return project;
-  }
 }

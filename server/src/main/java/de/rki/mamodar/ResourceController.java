@@ -48,40 +48,43 @@ public class ResourceController {
   }
 
   /**
-   * Gets a list of all resources and converts them to {@link de.rki.mamodar.ResourceSendDTO} **
+   * Gets a list of all resources and converts them to {@link ResourceDTO} **
+   *
    * @return a list of resource DTOs
    */
   @GetMapping("/resources/")
-  List<ResourceSendDTO> all() {
-    ArrayList<ResourceSendDTO> resources = new ArrayList<>();
-    repository.findAll(Sort.by(Sort.Direction.ASC, "updatedTimestamp")).forEach(resource -> resources.add(new ResourceSendDTO(resource) ));
+  List<ResourceDTO> getAllResources() {
+    ArrayList<ResourceDTO> resources = new ArrayList<>();
+    repository.findAll(Sort.by(Sort.Direction.ASC, "updatedTimestamp")).
+        forEach(resource -> resources.add(new ResourceDTO(resource)));
     return resources;
   }
 
   /**
-   * Gets a resource by its id and converts it to {@link de.rki.mamodar.ResourceSendDTO}
+   * Gets a resource by its id and converts it to {@link ResourceDTO}
    *
    * @param id the id
    * @return a resource DTO
    * @throws ObjectNotFoundException if resource is not found
    */
   @GetMapping("/resources/{id}")
-  ResourceSendDTO one(@PathVariable Long id) {
+  ResourceDTO getOneResource(@PathVariable Long id) {
     log.info("GET: /resources/id");
     Resource resource = repository.findById(id).orElseThrow(() -> new ObjectNotFoundException("resource", id));
-    return new ResourceSendDTO(resource);
+    return new ResourceDTO(resource);
 
   }
 
   /**
-   * Creates a new resource from a received resource DTO. The resource is automatically connected to a {@link de.rki.mamodar.Project} identified by id.
+   * Creates a new resource from a received resource DTO. The resource is automatically connected to a {@link
+   * de.rki.mamodar.Project} identified by id.
    *
    * @param resourceDTO the resource DTO
    * @return the created resource as an DTO
    * @throws ObjectNotFoundException if project id is not found
    */
   @PostMapping("/resources")
-  ResourceSendDTO addResource(@RequestBody @NotNull ResourceSendDTO resourceDTO) {
+  ResourceDTO addOneResource(@RequestBody @NotNull ResourceDTO resourceDTO) {
     log.info("POST: /resources");
 
     Project correspondingProject = projectRepository.findById(resourceDTO.getProjectId()).
@@ -97,26 +100,28 @@ public class ResourceController {
 
     newResource.setProject(correspondingProject);
     repository.save(newResource);
-    return new ResourceSendDTO(newResource);
+    return new ResourceDTO(newResource);
   }
 
   /**
-   * Updates a resource identified by id. The resource is automatically connected to a {@link de.rki.mamodar.Project} identified by id.
+   * Updates a resource identified by id.
    *
-   * @param id the resource id
+   * @param id              the resource id
+   * @param updatedResource the updated resource
    * @return the updated resource as an DTO
    * @throws ObjectNotFoundException if project id is not found or if resource id is not found
    */
   @PutMapping("/resources/{id}")
-  ResourceSendDTO updateOne(@PathVariable Long id, @RequestBody @NotNull ResourceSendDTO updatedResource) {
+  ResourceDTO updateOneResource(@PathVariable Long id, @RequestBody @NotNull ResourceDTO updatedResource) {
     log.info("PUT: /resources/id");
     Resource resource = repository.findById(id)
         .orElseThrow(() -> new ObjectNotFoundException("resource", id));
     resource.update(updatedResource);
-    resource.setUpdatedByUser(userRepository.getByDn(authenticationFacade.getLdapUser().getDn())); ;
+    resource.setUpdatedByUser(userRepository.getByDn(authenticationFacade.getLdapUser().getDn()));
+    ;
     resource.setUpdatedTimestamp(new Date());
     repository.save(resource);
-    return new ResourceSendDTO(resource);
+    return new ResourceDTO(resource);
 
   }
 
@@ -128,15 +133,10 @@ public class ResourceController {
    * @throws ObjectNotFoundException if the resource is not found
    */
   @DeleteMapping("/resources/{id}")
-  void removeLink(@PathVariable Long id) {
+  void DeleteOneResource(@PathVariable Long id) {
     log.info("DELETE: /resources/id");
     Resource resource = repository.findById(id)
         .orElseThrow(() -> new ObjectNotFoundException("resource", id));
-
-    Project project = projectRepository.findById(resource.getProject().getId())
-        .orElseThrow(() -> new ObjectNotFoundException("project", resource.getProject().getId()));
-    project.getResources().remove(resource);
-    projectRepository.save(project);
     repository.delete(resource);
   }
 }

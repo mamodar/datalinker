@@ -2,21 +2,23 @@ package de.rki.mamodar.rdmo;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * This DAO entity corresponding to the representation of a rdmo option in the database. No getters or setters as the
+ * table is only used to created the {@link de.rki.mamodar.ValueRepository} view.
+ *
+ * @author Kyanoush Yahosseini
+ */
 @Entity
 @Table(name = "rdmo_option")
 public class RdmoOption {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE)
-  @Column(name = "id", updatable = false, nullable = false)
-  Long id;
+  @Column(name = "id", nullable = false)
+  private Long rdmoId;
 
-  private Integer rdmoId;
   private Integer optionset;
   private String uriPrefix;
   private String key;
@@ -25,9 +27,17 @@ public class RdmoOption {
   private String textEn;
   private String textDe;
 
+  /**
+   * Instantiates a new empty rdmo option.
+   */
   public RdmoOption() {
   }
 
+  /**
+   * Instantiates a new rdmo option from a {@link de.rki.mamodar.rdmo.RdmoOptionDTO}
+   *
+   * @param rdmoOptionDTO the rdmo option dto
+   */
   public RdmoOption(RdmoOptionDTO rdmoOptionDTO) {
     this.rdmoId = rdmoOptionDTO.getRdmoId();
     this.optionset = rdmoOptionDTO.getOptionset();

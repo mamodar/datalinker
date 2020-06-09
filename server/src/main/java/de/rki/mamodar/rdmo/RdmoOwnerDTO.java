@@ -51,7 +51,12 @@ public class RdmoOwnerDTO {
     this.email = email;
   }
 
-  public User toUser(){
+  /**
+   * To user user.
+   *
+   * @return the user
+   */
+  public User toUser() {
     User user = new User();
     user.setUsername(this.getUsername());
 

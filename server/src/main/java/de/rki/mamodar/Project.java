@@ -1,6 +1,7 @@
 package de.rki.mamodar;
 
 import de.rki.mamodar.rdmo.RdmoApiConsumer;
+import de.rki.mamodar.rdmo.RdmoProjectDTO;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -11,15 +12,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 
 /**
- * This entity corresponds to the representation of a project in the database. A project is a RDMO project imported by
- * {@link RdmoApiConsumer}.
+ * This DAO entity corresponding to the representation of a project in the database. A project is a RDMO project
+ * imported by {@link RdmoApiConsumer}.
  *
  * @author Kyanoush Yahosseini
  */
@@ -55,12 +55,11 @@ public class Project {
   @Column(name = "description")
   private String description;
 
-  @ManyToMany(fetch = FetchType.LAZY)
+  //set fetch to eager as we always want all users for a project
+  @ManyToMany(fetch = FetchType.EAGER)
   @Column(name = "owner")
   private List<User> owner;
 
-  @OneToMany(mappedBy = "project", fetch = FetchType.EAGER)
-  private List<Resource> resources;
 
   /**
    * Instantiates a new empty project.
@@ -68,6 +67,45 @@ public class Project {
   public Project() {
   }
 
+  /**
+   * Instantiates a  new project from a rdmo project dto.
+   */
+  public Project(RdmoProjectDTO projectDTO) {
+    this.rdmoId = projectDTO.getId();
+    this.projectName = projectDTO.getTitle();
+    this.description = projectDTO.getDescription();
+    this.creationTimestamp = new Date();
+    this.updatedTimestamp = this.creationTimestamp;
+    this.owner = new ArrayList<>();
+    projectDTO.getOwners().forEach(owner -> this.owner.add(new User(owner)));
+  }
+
+  /**
+   * Updates a project from a rdmo project dto
+   *
+   * @return the udpated project
+   */
+  public Project update(Project project) {
+    this.projectName = project.getProjectName();
+    this.description = project.getDescription();
+    return this;
+  }
+
+  /**
+   * Find duplicates by username array list.
+   *
+   * @param deleteOwner the delete owner
+   * @return the array list
+   */
+  public ArrayList<User> findDuplicatesByUsername(User deleteOwner) {
+    ArrayList<User> duplicates = new ArrayList<>();
+    for (User user : this.owner) {
+      if (user.getUsername().equals(deleteOwner.getUsername())) {
+        duplicates.add(user);
+      }
+    }
+    return duplicates;
+  }
 
   /**
    * Gets the auto generated id.
@@ -88,24 +126,6 @@ public class Project {
   }
 
   /**
-   * Sets the imported RDMO id.
-   *
-   * @param rdmoId the RDMO id
-   */
-  public void setRdmoId(Long rdmoId) {
-    this.rdmoId = rdmoId;
-  }
-
-  /**
-   * Sets the creation timestamp.
-   *
-   * @param date the date
-   */
-  public void setCreationTimestamp(Date date) {
-    this.creationTimestamp = date;
-  }
-
-  /**
    * Gets the creation timestamp.
    *
    * @return the creation timestamp
@@ -123,14 +143,6 @@ public class Project {
     return updatedTimestamp;
   }
 
-  /**
-   * Sets the last time updated timestamp.
-   *
-   * @param updatedTimestamp the updated timestamp
-   */
-  public void setUpdatedTimestamp(Date updatedTimestamp) {
-    this.updatedTimestamp = updatedTimestamp;
-  }
 
   /**
    * Gets project name.
@@ -177,54 +189,6 @@ public class Project {
     return owner;
   }
 
-  /**
-   * Sets owner.
-   *
-   * @param owner the owner
-   */
-  public void setOwner(List<User> owner) {
-    if (this.owner == null) {
-      this.owner = new ArrayList<>();
-    }
-    this.owner.clear();
-    this.owner.addAll(owner);
-  }
 
-  /**
-   * Appends the owner list.
-   *
-   * @param owner the owner
-   */
-  public void addOwner(User owner) {
-    this.owner.add(owner);
-  }
-
-  /**
-   * Gets resources.
-   *
-   * @return the resources
-   */
-  public List<Resource> getResources() {
-    return resources;
-  }
-
-  /**
-   * Sets resources.
-   *
-   * @param resources the resources
-   */
-  public void setResources(List<Resource> resources) {
-    this.resources = resources;
-  }
-
-  public ArrayList<User> findDuplicatesByUsername(User deleteOwner) {
-    ArrayList<User> duplicates = new ArrayList<>();
-    for(User user : this.owner){
-      if(user.getUsername().equals(deleteOwner.getUsername())) {
-        duplicates.add(user);
-      }
-    }
-    return duplicates;
-  }
 }
 

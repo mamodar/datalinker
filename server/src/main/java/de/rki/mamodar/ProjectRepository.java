@@ -18,6 +18,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
    * @param rdmoId the rdmo id
    * @return An Optional Project.
    */
+  @Query(value = "SELECT p FROM Project p LEFT JOIN FETCH p.owner WHERE p.rdmoId = :rdmo_id")
   Optional<Project> findByRdmoId(@Param("rdmo_id") long rdmoId);
 
   /**

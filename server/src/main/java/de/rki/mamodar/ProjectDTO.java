@@ -1,17 +1,16 @@
 package de.rki.mamodar;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 
 /**
  * This class provides a DTO for sending {@link de.rki.mamodar.Project}s as part of the {@link
- * de.rki.mamodar.ProjectController}
+ * de.rki.mamodar.ProjectController}*
  *
  * @author Kyanoush Yahosseini
  */
-public class ProjectSendDTO {
+public class ProjectDTO {
 
 
   private Long id;
@@ -19,22 +18,20 @@ public class ProjectSendDTO {
   private String projectName;
   private String description;
   private List<String> owner;
-  private ArrayList<ResourceSendDTO> resources;
-  private ArrayList<ValueSendDTO> information;
+
   /**
-   * Instantiates a new Project DTO.
+   * Instantiates a new empty Project DTO.
    */
-  public ProjectSendDTO(){
+  public ProjectDTO() {
 
   }
 
   /**
-   * Instantiates a new Project DTO from a {@link de.rki.mamodar.Project} without connected {@link
-   * de.rki.mamodar.Resource}s.
+   * Instantiates a new Project DTO from a {@link de.rki.mamodar.Project} DAO.
    *
    * @param project the project
    */
-  public ProjectSendDTO(Project project){
+  public ProjectDTO(Project project) {
     this.id = project.getId();
     this.creationTimestamp = project.creationTimestamp.toString();
     this.projectName = project.getProjectName();
@@ -87,20 +84,4 @@ public class ProjectSendDTO {
     return description;
   }
 
-  /**
-   * Gets resources.
-   *
-   * @return the resources
-   */
-  public ArrayList<ResourceSendDTO> getResources() {
-    return resources;
-  }
-
-  public ArrayList<ValueSendDTO> getInformation() {
-    return information;
-  }
-
-  public void setInformation(ArrayList<ValueSendDTO> information) {
-    this.information = information;
-  }
 }

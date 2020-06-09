@@ -2,10 +2,15 @@
 -- \connect mamodar
 -- DROPS ALL TABLES
 DROP TABLE IF EXISTS "project" CASCADE;
-DROP TABLE IF exists "users" CASCADE;
+DROP TABLE IF EXISTS "users" CASCADE;
 DROP TABLE if EXISTS "resource" CASCADE;
-DROP TABLE if exists "relationship" CASCADE;
+DROP TABLE if EXISTS "relationship" CASCADE;
 DROP TABLE IF EXISTS "project_owner" CASCADE;
+
+DROP TABLE if EXISTS "rdmo_option" CASCADE;
+DROP TABLE if EXISTS "rdmo_question" CASCADE;
+DROP TABLE if EXISTS "rdmo_value" CASCADE;
+
 DROP SEQUENCE if exists hibernate_sequence;
 CREATE SEQUENCE hibernate_sequence START 1;
 
@@ -14,21 +19,13 @@ CREATE TABLE "project"
 (
     "id"                 BIGINT       NOT NULL,
     "creation_timestamp" TIMESTAMP    NULL DEFAULT NULL,
-    "description"        VARCHAR(255) NULL DEFAULT NULL,
-    "project_name"       VARCHAR(255) NULL DEFAULT NULL,
+    "description"        VARCHAR(255) NULL DEFAULT 'NULL::character varying',
+    "project_name"       VARCHAR(255) NULL DEFAULT 'NULL::character varying',
     "rdmo_id"            BIGINT       NULL DEFAULT NULL,
     "updated_timestamp"  TIMESTAMP    NULL DEFAULT NULL,
     PRIMARY KEY ("id")
 )
 ;
-ALTER TABLE project
-    ADD COLUMN tsv tsvector;
-UPDATE project
-SET tsv =
-            setweight(to_tsvector(project_name), 'A') ||
-            setweight(to_tsvector(description), 'B');
-
-CREATE INDEX tsv_idx ON project USING gin (tsv);
 
 -- CREATE users ("user" is disallowed by postgresql)
 CREATE TABLE "users"
@@ -46,21 +43,21 @@ CREATE TABLE "resource"
 (
     "id"                 BIGINT       NOT NULL,
     "creation_timestamp" TIMESTAMP    NULL DEFAULT NULL,
-    "description"        VARCHAR(255) NULL DEFAULT NULL,
+    "description"        VARCHAR(255) NULL DEFAULT 'NULL::character varying',
     "archived"           BOOLEAN      NULL DEFAULT NULL,
     "personal"           BOOLEAN      NULL DEFAULT NULL,
     "third_party"        BOOLEAN      NULL DEFAULT NULL,
     "path"               VARCHAR(255) NOT NULL,
     "location"           VARCHAR(255) NOT NULL,
-    "size"               REAL         NULL DEFAULT NULL,
+    "size"               REAL(24) NULL DEFAULT NULL,
     "updated_timestamp"  TIMESTAMP    NULL DEFAULT NULL,
     "created_by_user_id" BIGINT       NOT NULL,
     "project_id"         BIGINT       NOT NULL,
     "updated_by_user_id" BIGINT       NOT NULL,
     PRIMARY KEY ("id"),
-    CONSTRAINT "fk959t5quy9sgha1ikrhaedo260" FOREIGN KEY ("project_id") REFERENCES "project" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION,
-    CONSTRAINT "fkgo5o5p15d2co1bun83j0a9ydn" FOREIGN KEY ("updated_by_user_id") REFERENCES "users" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION,
-    CONSTRAINT "fko8ngrycha638ht39a7ip5u5hw" FOREIGN KEY ("created_by_user_id") REFERENCES "users" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+    CONSTRAINT "fk959t5quy9sgha1ikrhaedo260" FOREIGN KEY ("project_id") REFERENCES "public"."project" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION,
+    CONSTRAINT "fkgo5o5p15d2co1bun83j0a9ydn" FOREIGN KEY ("updated_by_user_id") REFERENCES "public"."users" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION,
+    CONSTRAINT "fko8ngrycha638ht39a7ip5u5hw" FOREIGN KEY ("created_by_user_id") REFERENCES "public"."users" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 ;
 
@@ -106,7 +103,7 @@ CREATE TABLE "rdmo_question"
     "verbose_name_plural_de" VARCHAR(255)  NULL DEFAULT NULL,
     "verbose_name_plural_en" VARCHAR(255)  NULL DEFAULT NULL,
     PRIMARY KEY ("id")
-)
+);
 --CREATE RDMO Values
 
 CREATE TABLE "rdmo_value"
@@ -155,10 +152,12 @@ AS
 $$
 BEGIN
     REFRESH MATERIALIZED VIEW search_view;
+    REFRESH MATERIALIZED VIEW question_answer_view;
     RETURN new;
 END
 $$ LANGUAGE plpgsql;
 --For HeidiSQL add DELIMITER //
+DROP TRIGGER IF EXISTS refresh_mat_view_after_po_insert ON project;
 CREATE TRIGGER refresh_mat_view_after_po_insert
     AFTER INSERT OR DELETE OR UPDATE OR TRUNCATE
     ON project
@@ -177,7 +176,7 @@ SELECT DISTINCT v.id        AS id,
                 o.text      AS option_text
 FROM rdmo_value v
          LEFT JOIN
-     rdmo_option o ON v.option = o.rdmo_id
+     rdmo_option o ON v.option = o.id
          LEFT JOIN
      rdmo_question q ON v.attribute = q.attribute;
 

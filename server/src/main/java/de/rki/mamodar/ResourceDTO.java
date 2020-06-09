@@ -3,12 +3,14 @@ package de.rki.mamodar;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
- * This class provides a DTO for sending {@link de.rki.mamodar.Resource}s as part of {@link de.rki.mamodar.ProjectController} or {@link de.rki.mamodar.ResourceController}.
+ * This class provides a DTO for sending {@link de.rki.mamodar.Resource}s as part of {@link
+ * de.rki.mamodar.ProjectController} or {@link de.rki.mamodar.ResourceController}.
  *
  * @author Kyanoush Yahosseini
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ResourceSendDTO {
+public class ResourceDTO {
+
   private Long id;
   private String createdBy;
   private String updatedBy;
@@ -25,26 +27,27 @@ public class ResourceSendDTO {
 
 
   /**
-   * Instantiates a new Resource send dto.
+   * Instantiates a new empty Resource dto.
    */
-  public ResourceSendDTO(){}
+  public ResourceDTO() {
+  }
 
   /**
-   * Instantiates a new Resource send dto.
+   * Instantiates a new Resource dto from a resource DAO.
    *
    * @param resource the resource
    */
-  public ResourceSendDTO(Resource resource){
-  this.id = resource.getId();
-  this.location = resource.getResourceType().name();
-  this.path = resource.getPath();
-  this.isArchived = resource.getArchived();
-  this.isThirdParty = resource.getThirdParty();
-  this.isPersonal = resource.getPersonal();
-  this.size = resource.getSize();
-  this.createdTimestamp = resource.getCreationTimestamp().toString();
-  this.updatedTimestamp = resource.getUpdatedTimestamp().toString();
-  this.projectId = resource.getProject().getId();
+  public ResourceDTO(Resource resource) {
+    this.id = resource.getId();
+    this.location = resource.getResourceType().name();
+    this.path = resource.getPath();
+    this.isArchived = resource.getArchived();
+    this.isThirdParty = resource.getThirdParty();
+    this.isPersonal = resource.getPersonal();
+    this.size = resource.getSize();
+    this.createdTimestamp = resource.getCreationTimestamp().toString();
+    this.updatedTimestamp = resource.getUpdatedTimestamp().toString();
+    this.projectId = resource.getProject().getId();
   this.createdBy = resource.getCreatedByUser().getUsername();
   this.updatedBy = resource.getUpdatedByUser().getUsername();
   this.description = resource.getDescription();

@@ -2,7 +2,6 @@ package de.rki.mamodar.rdmo;
 
 import de.rki.mamodar.MamodarApplication;
 import java.util.Collections;
-import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
@@ -15,8 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * This component accesses the API of a RDMO instance. Converts {link de.rki.mamodar.rdmo.RdmoProject}s to {link
- * de.rki.mamodar.Project}s
+ * This component implements the API consumer for a RDMO instance.
  *
  * @author Kyanoush Yahosseini
  */
@@ -47,6 +45,11 @@ public class RdmoApiConsumer {
     return request;
   }
 
+  /**
+   * Requests all rdmo projects into {@link de.rki.mamodar.rdmo.RdmoProjectDTO}.
+   *
+   * @return the raw rdmo projects as an array
+   */
   public RdmoProjectDTO[] requestRdmoProjects() {
     log.info(env.getProperty("rdmo.url") + "/projects/projects/");
     String rdmoUrl = env.getProperty("rdmo.url") + "/projects/projects/";
@@ -56,10 +59,14 @@ public class RdmoApiConsumer {
         getRdmoCompatibleHttpEntity(),
         RdmoProjectDTO[].class
     );
-    log.warn(new Date().toInstant().toString());
     return response.getBody();
   }
 
+  /**
+   * Requests all rdmo values into {@link de.rki.mamodar.rdmo.RdmoValue}.
+   *
+   * @return the raw rdmo values as an array
+   */
   public RdmoValueDTO[] requestRdmoValues() {
     log.info(env.getProperty("rdmo.url") + "/projects/values/");
     String rdmoUrl = env.getProperty("rdmo.url") + "/projects/values/";
@@ -73,6 +80,11 @@ public class RdmoApiConsumer {
     return response.getBody();
   }
 
+  /**
+   * Requests all rdmo options into {@link de.rki.mamodar.rdmo.RdmoOptionDTO}.
+   *
+   * @return the raw rdmo options as an array
+   */
   public RdmoOptionDTO[] requestRdmoOptions() {
     log.info(env.getProperty("rdmo.url") + "/options/options/");
     String rdmoUrl = env.getProperty("rdmo.url") + "/options/options/";
@@ -86,6 +98,11 @@ public class RdmoApiConsumer {
   }
 
 
+  /**
+   * Requests all rdmo questions into {@link de.rki.mamodar.rdmo.RdmoQuestion}.
+   *
+   * @return the raw rdmo questions as an array
+   */
   public RdmoQuestionDTO[] requestRdmoQuestions() {
     log.info(env.getProperty("rdmo.url") + "/questions/questions/");
     String rdmoUrl = env.getProperty("rdmo.url") + "/questions/questions/";
@@ -95,7 +112,6 @@ public class RdmoApiConsumer {
         getRdmoCompatibleHttpEntity(),
         RdmoQuestionDTO[].class
     );
-    log.warn(new Date().toInstant().toString());
     return response.getBody();
   }
 }

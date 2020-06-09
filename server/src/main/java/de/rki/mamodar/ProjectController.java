@@ -1,6 +1,5 @@
 package de.rki.mamodar;
 
-import de.rki.mamodar.rdmo.RdmoApiConsumer;
 import de.rki.mamodar.rdmo.RdmoConverter;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +32,9 @@ public class ProjectController {
   private final ResourceRepository resourceRepository;
 
 
+  /**
+   * The autowired  {@link de.rki.mamodar.rdmo.RdmoConverter}.
+   */
   @Autowired
   RdmoConverter rdmoConverter;
 
@@ -45,8 +47,10 @@ public class ProjectController {
   /**
    * Instantiates a new Project controller.
    *
-   * @param projectRepository the project repository
-   * @param userRepository    the user repository
+   * @param projectRepository  the project repository
+   * @param userRepository     the user repository
+   * @param resourceRepository the resource repository
+   * @param valueRepository    the value repository
    */
   public ProjectController(
       ProjectRepository projectRepository,
@@ -61,70 +65,81 @@ public class ProjectController {
 
 
   /**
-   * Gets a list of the projects and converts them to {@link de.rki.mamodar.ProjectSendDTO} for a {@link
-   * de.rki.mamodar.User}**. Tries to update all projects by calling {@link RdmoApiConsumer} first.
+   * Gets a list of the projects and converts them to {@link ProjectDTO} for a {@link de.rki.mamodar.User}.
    *
    * @return a list of projects as DTOs
    */
   @GetMapping("/projects")
-  List<ProjectSendDTO> allProjects() {
+  List<ProjectDTO> getAllProjects() {
     log.info("GET: /projects/rdmo " + authenticationFacade.getLdapUser().getDn());
-    ArrayList<ProjectSendDTO> allProjects = new ArrayList<>();
+    ArrayList<ProjectDTO> allProjects = new ArrayList<>();
     projectRepository.findAll(Sort.by(Direction.ASC, "projectName")).
-        forEach(project -> allProjects.add(new ProjectSendDTO(project)));
+        forEach(project -> allProjects.add(new ProjectDTO(project)));
     allProjects.removeIf(project -> !project.getOwner().contains(authenticationFacade.getLdapUser().getUsername()));
     return allProjects;
 
   }
 
   /**
-   * Searches in all projects for projects matching the  search parameter and converts them to {@link
-   * de.rki.mamodar.ProjectSendDTO}**
+   * Searches in all projects for projects matching the  search parameter and converts them to {@link ProjectDTO}.
    *
    * @param search the search parameter
    * @return a list of projects as DTOs
    */
   @GetMapping("/projects/search")
-  List<ProjectSendDTO> searchProjects(@RequestParam(name = "search") String search) {
+  List<ProjectDTO> searchAllProjects(@RequestParam(name = "search") String search) {
     log.info("GET: /projects?search " + ((UserDetails) authenticationFacade.getAuthentication().getPrincipal())
         .getUsername());
     ArrayList<Project> foundProjects = (projectRepository.searchFTS(search).orElse(new ArrayList<>()));
-    ArrayList<ProjectSendDTO> foundProjectsDTO = new ArrayList<>();
-    foundProjects.forEach(project -> foundProjectsDTO.add(new ProjectSendDTO(project)));
+    ArrayList<ProjectDTO> foundProjectsDTO = new ArrayList<>();
+    foundProjects.forEach(project -> foundProjectsDTO.add(new ProjectDTO(project)));
 
     return foundProjectsDTO;
   }
 
   /**
-   * Find a project by its id and converts it to {@link de.rki.mamodar.ProjectSendDTO}.
+   * Find a project by its id and converts it to {@link ProjectDTO}.
    *
    * @param id the project id
    * @return a projects as DTO
    * @throws ObjectNotFoundException
    */
   @GetMapping("/projects/{id}")
-  ProjectSendDTO findProjectById(@PathVariable Long id) {
+  ProjectDTO getOneProject(@PathVariable Long id) {
     log.info("GET: /projects/{id}");
     Project project = projectRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("project", id));
-    return new ProjectSendDTO(project);
+    return new ProjectDTO(project);
   }
 
+  /**
+   * Gets the {@link de.rki.mamodar.Resource}s for one project and converts them to {@link
+   * de.rki.mamodar.ResourceDTO}s.
+   *
+   * @param id the id
+   * @return the resources for one project
+   */
   @GetMapping("/projects/{id}/resources")
-  List<ResourceSendDTO> findResourcesForProject(@PathVariable Long id) {
+  List<ResourceDTO> getResourcesForOneProject(@PathVariable Long id) {
     log.info("GET: /projects/{id}/resources");
     Project project = projectRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("project", id));
-    List<ResourceSendDTO> resourceSendDTOs = new ArrayList<>();
-    resourceRepository.findByProject(project).forEach(resource -> resourceSendDTOs.add(new ResourceSendDTO(resource)));
-    return resourceSendDTOs;
+    List<ResourceDTO> resourceDTOs = new ArrayList<>();
+    resourceRepository.getByProject(project).forEach(resource -> resourceDTOs.add(new ResourceDTO(resource)));
+    return resourceDTOs;
   }
 
+  /**
+   * Gets the {@link de.rki.mamodar.Value}s for one project and converts them to {@link de.rki.mamodar.ValueDTO}s.
+   *
+   * @param id the id
+   * @return the values for one project
+   */
   @GetMapping("/projects/{id}/values")
-  List<ValueSendDTO> findInformationForProject(@PathVariable Long id) {
+  List<ValueDTO> getValuesForOneProject(@PathVariable Long id) {
     log.info("GET: /projects/{id}/values");
     Project project = projectRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("project", id));
-    List<ValueSendDTO> valueSendDTOs = new ArrayList<>();
-    valueRepository.getByProjectId(project.getId()).forEach(value -> valueSendDTOs.add(new ValueSendDTO(value)));
-    return valueSendDTOs;
+    List<ValueDTO> valueDTOs = new ArrayList<>();
+    valueRepository.getByProject(project).forEach(value -> valueDTOs.add(new ValueDTO(value)));
+    return valueDTOs;
 
   }
 }
