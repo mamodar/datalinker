@@ -3,13 +3,14 @@ import {BehaviorSubject, Observable, of} from 'rxjs';
 import {Resource} from '../models/resource';
 import {Project} from '../models/project';
 import {ProjectService} from './project.service';
-import {debounceTime, distinctUntilChanged, flatMap, map, tap} from 'rxjs/operators';
+import {debounceTime, distinctUntilChanged, flatMap, map} from 'rxjs/operators';
 import {ResourceService} from './resource.service';
 import {ResourceType} from '../models/resourceType';
 import {AuthUser} from '../models/authUser';
 import {ApiService} from './api.service';
 import {CloudType} from '../models/cloudType';
 import {ResourcePath} from '../models/resourcePath';
+import {Value} from '../models/value';
 
 
 /**
@@ -39,6 +40,7 @@ export class StateService {
 
   private shownResources = new BehaviorSubject<Resource[]>(undefined);
   private shownProjects = new BehaviorSubject<Project[]>(undefined);
+  private shownValues = new BehaviorSubject<Value[]>(undefined);
   private selectedProject = new BehaviorSubject<Project>(undefined);
   private filterResourcesByProject = new BehaviorSubject<Project>(undefined);
   private currentUser = new BehaviorSubject<AuthUser>(null);
@@ -49,20 +51,29 @@ export class StateService {
 
   getResources(): BehaviorSubject<Resource[]> {
     if (this.filterResourcesByProject.getValue()) {
-      this.projectService.getProject(
-        this.filterResourcesByProject.getValue())
-      .subscribe(_ => {
+      this.projectService.getResourcesOfProject(this.filterResourcesByProject.getValue())
+      .subscribe(resources => {
         // @ts-ignore comes in as a string
-        _.resources.map( resource => resource.location = new ResourceType(resource.location));
+        resources.map(resource => resource.location = new ResourceType(resource.location));
         // @ts-ignore comes in as a string
-        _.resources.map( resource => resource.path = new ResourcePath().updateFromValue(resource.path, resource.location));
-        this.shownResources.next(_.resources);
+        resources.map(resource => resource.path = new ResourcePath().updateFromValue(resource.path, resource.location));
+        this.shownResources.next(resources);
       });
     } else {
       this.shownResources.next([]);
     }
 
     return this.shownResources;
+  }
+
+  public getValues(): Observable<Value[]> {
+    if (this.filterResourcesByProject.getValue()) {
+      this.projectService.getValuesOfProject(this.filterResourcesByProject.getValue())
+      .subscribe(value => this.shownValues.next(value));
+    } else {
+      this.shownResources.next([]);
+    }
+    return this.shownValues;
   }
 
   getProjects(): BehaviorSubject<Project[]> {
@@ -81,6 +92,7 @@ export class StateService {
     }
     return this.getResources();
   }
+
 
   public getSelectedProject(): BehaviorSubject<Project> {
     return this.selectedProject;

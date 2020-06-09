@@ -2,6 +2,8 @@ import {Injectable} from '@angular/core';
 import {Project} from '../models/project';
 import {Observable} from 'rxjs';
 import {ApiService} from './api.service';
+import {Resource} from '../models/resource';
+import {Value} from '../models/value';
 
 /**
  * This service implements the API exposed by the backend for all /projects calls.
@@ -26,7 +28,15 @@ export class ProjectService {
     return this.apiService.get('/projects/' + project.id);
   }
 
+  getResourcesOfProject(project: Project): Observable<Resource[]> {
+    return this.apiService.get('/projects/' + project.id + '/resources');
+  }
+
   searchProjects(query: string): Observable<Project[]> {
     return this.apiService.get('/projects/search?search=' + query);
+  }
+
+  getValuesOfProject(project: Project): Observable<Value[]> {
+    return this.apiService.get('/projects/' + project.id + '/values');
   }
 }
