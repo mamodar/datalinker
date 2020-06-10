@@ -29,11 +29,11 @@ export class ResourceManipulateButtonComponent implements OnInit {
     dialogConfig.disableClose = true;
     dialogConfig.data = this.parent;
     const modalDialog = this.matDialog.open(ResourceManipulateDialogComponent, dialogConfig);
-    modalDialog.afterClosed().subscribe(_ => {
-        if (_.send) {
-          this.stateService.updateResource(_.resource).pipe(take(1)).subscribe();
+    modalDialog.afterClosed().subscribe(dialogData => {
+        if (dialogData.send) {
+          this.stateService.updateResource(dialogData.resource).pipe(take(1)).subscribe(_ => this.stateService.getResources());
         }
-        this.stateService.getResources();
+
       }
     );
   }
