@@ -16,8 +16,8 @@
     <mat-list-item> Beschreibung: {{project.description?project.description:'keine Beschreibung angegeben'}}</mat-list-item>
     <mat-list-item> Ansprechpartner: {{project.owner?project.owner:'kein Ansprechpartner angegeben'}}</mat-list-item>
     <mat-list-item> Datum: {{project.creationTimestamp}} </mat-list-item>
-    <mat-list-item *ngFor="let values of shownValues$  | async">{{values.questionText}}
-      : {{values.answerText}}</mat-list-item>
+    <mat-list-item
+      *ngFor="let values of shownValues$  | async">{{values.questionText}} {{values.answerText}}</mat-list-item>
   </mat-list>
 
     <app-resource-list [data$] = this.shownResources$></app-resource-list>

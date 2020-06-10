@@ -9,26 +9,11 @@ package de.rki.mamodar;
  */
 public class ValueDTO {
 
-  /**
-   * The Id.
-   */
-  Long id;
-  /**
-   * The Project id.
-   */
-  Long projectId;
-  /**
-   * The Attribute.
-   */
-  Long attribute;
-  /**
-   * The Question text.
-   */
-  String questionText;
-  /**
-   * The Answer text.
-   */
-  String answerText;
+  private Long id;
+  private Long projectId;
+  private Long attribute;
+  private String questionText;
+  private String answerText;
 
   /**
    * Instantiates a new Value dto.
@@ -52,6 +37,8 @@ public class ValueDTO {
     } else {
       if (!value.getAnswer().isBlank()) {
         this.answerText = value.getAnswer();
+      } else {
+        this.answerText = "";
       }
     }
   }

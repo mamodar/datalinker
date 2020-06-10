@@ -69,7 +69,7 @@ export class StateService {
   public getValues(): Observable<Value[]> {
     if (this.filterResourcesByProject.getValue()) {
       this.projectService.getValuesOfProject(this.filterResourcesByProject.getValue())
-      .subscribe(value => this.shownValues.next(value));
+      .subscribe(values => this.shownValues.next(values.map(value => new Value(value))));
     } else {
       this.shownResources.next([]);
     }

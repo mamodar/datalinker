@@ -139,6 +139,7 @@ public class ProjectController {
     Project project = projectRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("project", id));
     List<ValueDTO> valueDTOs = new ArrayList<>();
     valueRepository.getByProject(project).forEach(value -> valueDTOs.add(new ValueDTO(value)));
+    valueDTOs.removeIf(valueDTO -> valueDTO.getAnswerText().isBlank());
     return valueDTOs;
 
   }
