@@ -17,7 +17,7 @@ import {Value} from '../models/value';
   styleUrls: ['./project-list.component.css']
 })
 export class ProjectListComponent implements OnInit {
-  private shownValues$: Observable<Value[]>;
+  public shownValues$: Observable<Value[]>;
   constructor(private stateService: StateService) { }
   @Input() projects$: Observable<Project[]>;
   selectedProject$: BehaviorSubject<Project>;

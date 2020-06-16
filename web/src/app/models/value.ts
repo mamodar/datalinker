@@ -13,10 +13,9 @@ export class Value {
 
   id: number;
   projectId: number;
-  attribute: number;
   questionText: string;
   // tslint:disable-next-line:variable-name
-  private readonly _answerText: string;
+  private _answerText: string;
 
   get answerText(): string {
     if (this._answerText === '1') {
@@ -32,4 +31,7 @@ export class Value {
     return this._answerText;
   }
 
+  public appendAnswerText(answerText): void {
+    this._answerText = this.answerText + answerText;
+  }
 }

@@ -49,7 +49,7 @@ export class StateService {
   private resourceTypes: ResourceType[];
   private cloudTypes: CloudType[];
 
-  getResources(): BehaviorSubject<Resource[]> {
+  public getResources(): BehaviorSubject<Resource[]> {
     if (this.filterResourcesByProject.getValue()) {
       this.projectService.getResourcesOfProject(this.filterResourcesByProject.getValue())
       .subscribe(resources => {
@@ -69,19 +69,19 @@ export class StateService {
   public getValues(): Observable<Value[]> {
     if (this.filterResourcesByProject.getValue()) {
       this.projectService.getValuesOfProject(this.filterResourcesByProject.getValue())
-      .subscribe(values => this.shownValues.next(values.map(value => new Value(value))));
+      .subscribe(values => this.shownValues.next(this.concatValueAnswers(values.map(value => new Value(value)))));
     } else {
       this.shownResources.next([]);
     }
     return this.shownValues;
   }
 
-  getProjects(): BehaviorSubject<Project[]> {
+  public getProjects(): BehaviorSubject<Project[]> {
     this.projectService.getProjects().subscribe(_ => this.shownProjects.next(_));
     return this.shownProjects;
   }
 
-  searchProjects(terms: Observable<string>): Observable<Project[]> {
+  public searchProjects(terms: Observable<string>): Observable<Project[]> {
     return terms.pipe(debounceTime(400), distinctUntilChanged(),
       flatMap(term => this.projectService.searchProjects(term)));
   }
@@ -102,30 +102,30 @@ export class StateService {
     this.selectedProject.next(project);
   }
 
-  createResource(resource: Resource, project?: Project, ): Observable<Resource> {
+  public createResource(resource: Resource, project?: Project,): Observable<Resource> {
     if (project) {
-    return this.resourceService.createResource(resource, project);
+      return this.resourceService.createResource(resource, project);
     }
     return this.resourceService.createResource(resource, this.getSelectedProject().getValue());
   }
 
-  addNewResource(resource: Resource): void {
+  public addNewResource(resource: Resource): void {
     this.newResources.push(resource);
     this.shownNewResources.next(this.newResources);
   }
 
-  getNewShownResources(): BehaviorSubject<Resource[]> {
+  public getNewShownResources(): BehaviorSubject<Resource[]> {
     return this.shownNewResources;
   }
 
 
-  resetNewResources(): void {
+  public resetNewResources(): void {
     this.newResources.length = 0;
     this.shownNewResources.next(this.newResources);
     this.getResources();
   }
 
-  deleteResource(resource: Resource): void {
+  public deleteResource(resource: Resource): void {
     if (!resource.id) {
       this.newResources = this.newResources.filter(_ => _ !== resource);
       this.shownNewResources.next(this.newResources);
@@ -135,41 +135,55 @@ export class StateService {
     }
   }
 
-  getResourceTypes(): BehaviorSubject<ResourceType[]> {
+  public getResourceTypes(): BehaviorSubject<ResourceType[]> {
     const resourceTypes: BehaviorSubject<ResourceType[]> = new BehaviorSubject<ResourceType[]>(this.resourceTypes);
     return (resourceTypes);
   }
 
-  getCloudTypes(): BehaviorSubject<CloudType[]> {
+  public getCloudTypes(): BehaviorSubject<CloudType[]> {
     const cloudTypes: BehaviorSubject<CloudType[]> = new BehaviorSubject<CloudType[]>(this.cloudTypes);
     return (cloudTypes);
   }
 
-  updateResource(resource: Resource): Observable<Resource> {
+  public updateResource(resource: Resource): Observable<Resource> {
     return this.resourceService.updateResource(resource);
   }
 
-  getLoggedInUser(): BehaviorSubject<AuthUser|null> {
+  public getLoggedInUser(): BehaviorSubject<AuthUser | null> {
     return this.currentUser;
   }
 
-  loginUser(user: string, password: string): Observable<any> {
+  public loginUser(user: string, password: string): Observable<any> {
     console.log('loginUser: ' + user);
     this.currentUser.next(null);
     sessionStorage.clear();
     return this.apiService.get('/user', {userName: user, password}).pipe(map(response => {
-        if (response.name) {
-          this.currentUser.next({userName: user, password});
-          sessionStorage.setItem('currentUser', user);
-          sessionStorage.setItem('currentPassword', password);
-        }
+      if (response.name) {
+        this.currentUser.next({userName: user, password});
+        sessionStorage.setItem('currentUser', user);
+        sessionStorage.setItem('currentPassword', password);
+      }
     }));
   }
-  logoutUser(): Observable<any> {
+
+  public logoutUser(): Observable<any> {
     console.log('logoutUser');
     this.currentUser.next(null);
     sessionStorage.clear();
-    return(of(true));
+    return (of(true));
+  }
+
+  private concatValueAnswers(values: Value[]): Value[] {
+    const reducedValues: Value[] = [];
+    values.forEach(
+      value => {
+        if (reducedValues.find(reducedValue => value.questionText === reducedValue.questionText)) {
+          reducedValues.find(reducedValue => value.questionText === reducedValue.questionText).appendAnswerText(', ' + value.answerText);
+        } else {
+          reducedValues.push(value);
+        }
+      });
+    return reducedValues;
   }
 
   private initializeTypes(): void {
