@@ -147,22 +147,25 @@ DROP MATERIALIZED VIEW IF EXISTS search_view CASCADE;
 CREATE MATERIALIZED VIEW search_view AS
     -- concat all fields, aggregate it over multiple resources, replace non-alphanumeric by space
 SELECT p.id,
-       to_tsvector(regexp_replace(
-               string_agg(CONCAT_WS(' ', p.agg, u.agg), ' '), '\W', ' ', 'g')) AS tsv
+       setweight(to_tsvector(COALESCE(string_agg(p.agg, ' '), '')), 'A') ||
+       setweight(to_tsvector(COALESCE(string_agg(qav.agg, ' '), '')), 'B') ||
+       setweight(to_tsvector(COALESCE(string_agg(u.agg, ' '), '')), 'C') ||
+       setweight(to_tsvector(COALESCE(string_agg(r.agg, ' '), '')), 'D') AS tsv
 FROM (SELECT p.id, string_agg(CONCAT_WS(' ', p.description, p.project_name), ' ') AS agg
       FROM project p
       GROUP BY p.id) AS p
-         LEFT JOIN
+         FULL OUTER JOIN
      (SELECT po.project_id, string_agg(CONCAT_WS(' ', u.username), ' ') AS agg
       FROM users u,
            project_owner po
       WHERE u.id = po.owner_id
       GROUP BY po.project_id) AS u ON p.id = u.project_id
-         LEFT JOIN
-     (SELECT r.project_id, string_agg(CONCAT_WS(' ', r.description, r.path, r.location), ' ') AS agg
+         FULL OUTER JOIN
+     (SELECT r.project_id,
+             regexp_replace(string_agg(CONCAT_WS(' ', r.description, r.path, r.location), ' '), '\W', ' ', 'g') AS agg
       FROM resource r
       GROUP BY r.project_id) AS r ON p.id = r.project_id
-         LEFT JOIN
+         FULL OUTER JOIN
      (SELECT qav.project_id, string_agg(CONCAT_WS(' ', qav.option_text, qav.answer), ' ') AS agg
       FROM question_answer_view qav
       GROUP BY qav.project_id) AS qav ON qav.project_id = p.id
