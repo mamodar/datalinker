@@ -49,7 +49,7 @@ CREATE TABLE "resource"
     "third_party"        BOOLEAN      NULL DEFAULT NULL,
     "path"               VARCHAR(255) NOT NULL,
     "location"           VARCHAR(255) NOT NULL,
-    "size"               REAL(24) NULL DEFAULT NULL,
+    "size"               REAL         NULL DEFAULT NULL,
     "updated_timestamp"  TIMESTAMP    NULL DEFAULT NULL,
     "created_by_user_id" BIGINT       NOT NULL,
     "project_id"         BIGINT       NOT NULL,
@@ -122,25 +122,52 @@ CREATE TABLE "rdmo_value"
 );
 
 
--- CREATE search
+-- Create RDMO question answer pairs
+DROP MATERIALIZED VIEW IF EXISTS question_answer_view CASCADE;
 
-DROP MATERIALIZED VIEW IF EXISTS search_view;
-DROP INDEX IF EXISTS tsv_idx;
+CREATE MATERIALIZED VIEW question_answer_view AS
+SELECT DISTINCT v.id              AS id,
+                p.id              AS project_id,
+                v.attribute       AS attribute,
+                q.verbose_name_de AS question_text,
+                v.text            AS answer,
+                v.unit            AS unit,
+                o.text            AS option_text
+FROM project p
+         LEFT JOIN
+     rdmo_value v ON p.rdmo_id = v.project
+         LEFT JOIN
+     rdmo_option o ON v.option = o.id
+         LEFT JOIN
+     rdmo_question q ON v.attribute = q.attribute;
+REFRESH MATERIALIZED VIEW question_answer_view;
+
+-- CREATE search
+DROP MATERIALIZED VIEW IF EXISTS search_view CASCADE;
 CREATE MATERIALIZED VIEW search_view AS
--- concat all fields, aggregate it over multiple resources, replace non-alphanumeric by space
+    -- concat all fields, aggregate it over multiple resources, replace non-alphanumeric by space
 SELECT p.id,
-       p.project_name,
        to_tsvector(regexp_replace(
-               string_agg(CONCAT_WS(' ', p.description, u.username, p.project_name, r.description, r.location, r.path),
-                          ' '), '\W', ' ', 'g')) AS tsv
-FROM resource r
-         FULL JOIN
-     project p ON r.project_id = p.id
-         FULL JOIN
-     project_owner po on p.id = po.project_id
-         FULL JOIN
-     users u ON u.id = po.owner_id
-GROUP BY p.id, p.project_name;
+               string_agg(CONCAT_WS(' ', p.agg, u.agg), ' '), '\W', ' ', 'g')) AS tsv
+FROM (SELECT p.id, string_agg(CONCAT_WS(' ', p.description, p.project_name), ' ') AS agg
+      FROM project p
+      GROUP BY p.id) AS p
+         LEFT JOIN
+     (SELECT po.project_id, string_agg(CONCAT_WS(' ', u.username), ' ') AS agg
+      FROM users u,
+           project_owner po
+      WHERE u.id = po.owner_id
+      GROUP BY po.project_id) AS u ON p.id = u.project_id
+         LEFT JOIN
+     (SELECT r.project_id, string_agg(CONCAT_WS(' ', r.description, r.path, r.location), ' ') AS agg
+      FROM resource r
+      GROUP BY r.project_id) AS r ON p.id = r.project_id
+         LEFT JOIN
+     (SELECT qav.project_id, string_agg(CONCAT_WS(' ', qav.option_text, qav.answer), ' ') AS agg
+      FROM question_answer_view qav
+      GROUP BY qav.project_id) AS qav ON qav.project_id = p.id
+GROUP BY p.id;
+CREATE INDEX weighted_tsv_idx ON search_view USING GIST (tsv);
 
 -- http://www.vinsguru.com/cloud-design-patterns-materialized-view-pattern-using-spring-boot-postgresql/
 
@@ -164,21 +191,6 @@ CREATE TRIGGER refresh_mat_view_after_po_insert
     FOR EACH STATEMENT
 EXECUTE PROCEDURE refresh_search_view();
 
--- Create RDMO question answer pairs
-DROP MATERIALIZED VIEW IF EXISTS question_answer_view;
-
-CREATE MATERIALIZED VIEW question_answer_view AS
-SELECT DISTINCT v.id        AS id,
-                v.project   AS project_id,
-                v.attribute AS attribute,
-                q.text_de   AS question_text,
-                v.text      AS answer,
-                o.text      AS option_text
-FROM rdmo_value v
-         LEFT JOIN
-     rdmo_option o ON v.option = o.id
-         LEFT JOIN
-     rdmo_question q ON v.attribute = q.attribute;
 
 -- If non root is running the database
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO mamodar;
@@ -187,5 +199,9 @@ GRANT INSERT ON ALL TABLES IN SCHEMA public TO mamodar;
 
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO mamodar;
 GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public to mamodar;
+
+GRANT ALL PRIVILEGES ON TABLE rdmo_question TO mamodar;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO mamodar;
+
 
 ALTER ROLE mamodar WITH LOGIN;

@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.springframework.stereotype.Component;
 
 /**
@@ -29,10 +27,9 @@ public class RdmoConverter {
   /**
    * A list of all attribute ids of rdmo which should be included in the value table of the datalinker
    */
-  //private final ArrayList<Long> ALLOWED_RDMO_ATTRIBUTES = new ArrayList<Long>(
-  //   Arrays.asList(6L, 158L, 206L));
-  private final List<Long> ALLOWED_RDMO_ATTRIBUTES = Stream.iterate(1L, n -> n + 1).limit(300)
-      .collect(Collectors.toList());
+  private final ArrayList<Long> ALLOWED_RDMO_ATTRIBUTES = new ArrayList<>(
+      Arrays.asList(2L, 6L, 9L, 250L, 253L, 254L));
+
   private RdmoConverter(RdmoOptionRepository rdmoOptionRepository, RdmoQuestionRepository rdmoQuestionRepository,
       RdmoValueRepository rdmoValueRepository, ProjectRepository projectRepository, UserRepository userRepository) {
     this.rdmoOptionRepository = rdmoOptionRepository;

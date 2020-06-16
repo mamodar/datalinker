@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * This component implements the API consumer for a RDMO instance.
+ * This low-level component implements the API consumer for a RDMO instance.
  *
  * @author Kyanoush Yahosseini
  */

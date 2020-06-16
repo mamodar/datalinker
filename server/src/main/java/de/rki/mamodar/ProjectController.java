@@ -137,8 +137,12 @@ public class ProjectController {
   List<ValueDTO> getValuesForOneProject(@PathVariable Long id) {
     log.info("GET: /projects/{id}/values");
     Project project = projectRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("project", id));
-    List<ValueDTO> valueDTOs = new ArrayList<>();
-    valueRepository.getByProject(project).forEach(value -> valueDTOs.add(new ValueDTO(value)));
+    ArrayList<ValueDTO> valueDTOs = new ArrayList<>();
+    valueRepository.getByProject(project, Sort.by(Direction.ASC, "attribute")).forEach(value -> {
+      if (value != null) {
+        valueDTOs.add(new ValueDTO(value));
+      }
+    });
     valueDTOs.removeIf(valueDTO -> valueDTO.getAnswerText().isBlank());
     return valueDTOs;
 

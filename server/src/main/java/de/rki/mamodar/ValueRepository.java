@@ -1,6 +1,7 @@
 package de.rki.mamodar;
 
-import java.util.List;
+import java.util.ArrayList;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 
@@ -14,9 +15,10 @@ public interface ValueRepository extends JpaRepository<Value, Long> {
   /**
    * Get values by their {@link Project}.
    *
-   * @param project the search project
+   * @param project     the search project
+   * @param projectName
    * @return a list of values
    */
-  List<Value> getByProject(@Param("project") Project project);
+  ArrayList<Value> getByProject(@Param("project") Project project, Sort projectName);
 
 }

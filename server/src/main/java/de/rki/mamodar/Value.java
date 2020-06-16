@@ -16,36 +16,21 @@ import javax.persistence.Table;
 @Table(name = "question_answer_view")
 public class Value {
 
-  /**
-   * The Id.
-   */
   @Id
-  Long id;
-  /**
-   * The Project.
-   */
+  private Long id;
   @ManyToOne(targetEntity = Project.class)
-  Project project;
-  /**
-   * The Attribute.
-   */
+  private Project project;
   @Column(name = "attribute")
-  Long attribute;
-  /**
-   * The Question text.
-   */
+  private Long attribute;
   @Column(name = "question_text")
-  String questionText;
-  /**
-   * The Answer.
-   */
+  private String questionText;
   @Column(name = "answer")
-  String answer;
-  /**
-   * The Option text.
-   */
+  private String answer;
+  @Column(name = "unit")
+  private String unit;
   @Column(name = "option_text")
-  String optionText;
+  private String optionText;
+
 
   /**
    * Gets id.
@@ -99,5 +84,14 @@ public class Value {
    */
   public String getOptionText() {
     return optionText;
+  }
+
+  /**
+   * Gets unit.
+   *
+   * @return the unit
+   */
+  public String getUnit() {
+    return unit;
   }
 }

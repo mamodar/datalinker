@@ -41,6 +41,10 @@ public class ValueDTO {
         this.answerText = "";
       }
     }
+    if (value.getUnit() != null) {
+      this.answerText = this.answerText.concat(value.getUnit());
+    }
+
   }
 
   /**
