@@ -28,7 +28,15 @@ public class RdmoConverter {
    * A list of all attribute ids of rdmo which should be included in the value table of the datalinker
    */
   private final ArrayList<Long> ALLOWED_RDMO_ATTRIBUTES = new ArrayList<>(
-      Arrays.asList(2L, 6L, 9L, 250L, 253L, 254L));
+      Arrays.asList(6L, // contact person
+          12L, // Organizational unit
+          138L, // License/ Terms of use
+          152L, // Storage location
+          173L, // Funding partner
+          221L, // Cooperation partner external
+          251L, // Title
+          269L, // Acronym
+          270L)); // Project type
 
   private RdmoConverter(RdmoOptionRepository rdmoOptionRepository, RdmoQuestionRepository rdmoQuestionRepository,
       RdmoValueRepository rdmoValueRepository, ProjectRepository projectRepository, UserRepository userRepository) {
@@ -50,7 +58,7 @@ public class RdmoConverter {
   }
 
   /**
-   * Delete and create therdmo options in the database.
+   * Delete and create the rdmo options in the database.
    *
    * @param rdmoOptions the array of rdmo options
    */
