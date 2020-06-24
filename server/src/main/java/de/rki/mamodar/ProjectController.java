@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -87,13 +88,24 @@ public class ProjectController {
    * @return a list of projects as DTOs
    */
   @GetMapping("/projects/search")
-  List<ProjectDTO> searchAllProjects(@RequestParam(name = "search") String search) {
+  List<ProjectDTO> searchAllProjects(@RequestParam(name = "search") String search,
+      @RequestParam(name = "filter", required = false) String filter) {
     log.info("GET: /projects?search " + ((UserDetails) authenticationFacade.getAuthentication().getPrincipal())
         .getUsername());
-    ArrayList<Project> foundProjects = (projectRepository.searchFTS(search).orElse(new ArrayList<>()));
+    ArrayList<Project> filterProjects = new ArrayList<>();
     ArrayList<ProjectDTO> foundProjectsDTO = new ArrayList<>();
-    foundProjects.forEach(project -> foundProjectsDTO.add(new ProjectDTO(project)));
+    ArrayList<Project> foundProjects = projectRepository.searchFTS(search).
+        orElse(new ArrayList<>(projectRepository.findAll()));
+    if (filter != null) {
+      ProjectSpecificationsBuilder builder = new ProjectSpecificationsBuilder();
 
+      builder.parse(filter);
+      Specification<Project> spec = builder.build();
+
+      filterProjects.addAll(projectRepository.findAll(spec));
+      foundProjects.retainAll(filterProjects);
+    }
+    foundProjects.forEach(project -> foundProjectsDTO.add(new ProjectDTO(project)));
     return foundProjectsDTO;
   }
 
@@ -138,7 +150,7 @@ public class ProjectController {
     log.info("GET: /projects/{id}/values");
     Project project = projectRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("project", id));
     ArrayList<ValueDTO> valueDTOs = new ArrayList<>();
-    valueRepository.getByProject(project, Sort.by(Direction.ASC, "attribute")).forEach(value -> {
+    valueRepository.getByProjectRdmoId(project.getRdmoId(), Sort.by(Direction.ASC, "attribute")).forEach(value -> {
       if (value != null) {
         valueDTOs.add(new ValueDTO(value));
       }

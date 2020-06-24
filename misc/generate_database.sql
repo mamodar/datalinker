@@ -22,6 +22,7 @@ CREATE TABLE "project"
     "description"        VARCHAR(255) NULL DEFAULT 'NULL::character varying',
     "project_name"       VARCHAR(255) NULL DEFAULT 'NULL::character varying',
     "rdmo_id"            BIGINT       NULL DEFAULT NULL,
+    "search_id"          BIGINT       NULL DEFAULT NULL,
     "updated_timestamp"  TIMESTAMP    NULL DEFAULT NULL,
     PRIMARY KEY ("id")
 )
@@ -62,15 +63,6 @@ CREATE TABLE "resource"
 ;
 
 
--- CREATE project_owner relationship
-CREATE TABLE "project_owner"
-(
-    "project_id" BIGINT NOT NULL,
-    "owner_id"   BIGINT NOT NULL,
-    CONSTRAINT "fk5iy9lk0uau6523pkp9ei9bk64" FOREIGN KEY ("project_id") REFERENCES "project" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION,
-    CONSTRAINT "fkqb39868ogh7w8fjc2b4fvddr1" FOREIGN KEY ("owner_id") REFERENCES "users" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
-)
-;
 -- CREATE RDMO Tables
 -- CREATE RDMO Options
 CREATE TABLE "rdmo_option"
@@ -120,14 +112,42 @@ CREATE TABLE "rdmo_value"
     "value_type"       VARCHAR(255) NULL DEFAULT NULL,
     PRIMARY KEY ("id")
 );
+-- CREATE relationship Tables
+-- CREATE project_owner relationship
+CREATE TABLE "project_owner"
+(
+    "project_id" BIGINT NOT NULL,
+    "owner_id"   BIGINT NOT NULL,
+    CONSTRAINT "fk5iy9lk0uau6523pkp9ei9bk64" FOREIGN KEY ("project_id") REFERENCES "project" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION,
+    CONSTRAINT "fkqb39868ogh7w8fjc2b4fvddr1" FOREIGN KEY ("owner_id") REFERENCES "users" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+;
+CREATE TABLE "project_resource"
+(
+    "project_id"  BIGINT NOT NULL,
+    "resource_id" BIGINT NOT NULL,
+    PRIMARY KEY ("project_id", "resource_id"),
+    CONSTRAINT "fkgvyjy4pwnuerf1ojtk71e4edo" FOREIGN KEY ("project_id") REFERENCES "public"."project" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION,
+    CONSTRAINT "fkqloe28wnxlwb5plj7msbnf2j3" FOREIGN KEY ("resource_id") REFERENCES "public"."resource" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+;
+
+CREATE TABLE "project_value"
+(
+    "project_id" BIGINT NOT NULL,
+    "value_id"   BIGINT NOT NULL,
+    PRIMARY KEY ("project_id", "value_id"),
+    CONSTRAINT "fko3yp0csvtfcd28oxpjb5rse0k" FOREIGN KEY ("project_id") REFERENCES "public"."project" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+;
 
 
 -- Create RDMO question answer pairs
-DROP MATERIALIZED VIEW IF EXISTS question_answer_view CASCADE;
-
+DROP TABLE IF EXISTS question_answer_view CASCADE;
 CREATE MATERIALIZED VIEW question_answer_view AS
 SELECT DISTINCT v.id              AS id,
                 p.id              AS project_id,
+                p.rdmo_id         AS project_rdmo_id,
                 v.attribute       AS attribute,
                 q.verbose_name_de AS question_text,
                 v.text            AS answer,
@@ -142,18 +162,19 @@ FROM project p
      rdmo_question q ON v.attribute = q.attribute;
 REFRESH MATERIALIZED VIEW question_answer_view;
 
--- CREATE search
+-- CREATE haystack
 DROP MATERIALIZED VIEW IF EXISTS search_view CASCADE;
 CREATE MATERIALIZED VIEW search_view AS
     -- concat all fields, aggregate it over multiple resources, replace non-alphanumeric by space
 SELECT p.id,
+       p.rdmo_id,
        setweight(to_tsvector(COALESCE(string_agg(p.agg, ' '), '')), 'A') ||
        setweight(to_tsvector(COALESCE(string_agg(qav.agg, ' '), '')), 'B') ||
        setweight(to_tsvector(COALESCE(string_agg(u.agg, ' '), '')), 'C') ||
        setweight(to_tsvector(COALESCE(string_agg(r.agg, ' '), '')), 'D') AS tsv
-FROM (SELECT p.id, string_agg(CONCAT_WS(' ', p.description, p.project_name), ' ') AS agg
+FROM (SELECT p.id, p.rdmo_id, string_agg(CONCAT_WS(' ', p.description, p.project_name), ' ') AS agg
       FROM project p
-      GROUP BY p.id) AS p
+      GROUP BY p.id, p.rdmo_id) AS p
          FULL OUTER JOIN
      (SELECT po.project_id, string_agg(CONCAT_WS(' ', u.username), ' ') AS agg
       FROM users u,
@@ -169,7 +190,7 @@ FROM (SELECT p.id, string_agg(CONCAT_WS(' ', p.description, p.project_name), ' '
      (SELECT qav.project_id, string_agg(CONCAT_WS(' ', qav.option_text, qav.answer), ' ') AS agg
       FROM question_answer_view qav
       GROUP BY qav.project_id) AS qav ON qav.project_id = p.id
-GROUP BY p.id;
+GROUP BY p.id, p.rdmo_id;
 CREATE INDEX weighted_tsv_idx ON search_view USING GIST (tsv);
 
 -- http://www.vinsguru.com/cloud-design-patterns-materialized-view-pattern-using-spring-boot-postgresql/
@@ -208,3 +229,10 @@ GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO mamodar;
 
 
 ALTER ROLE mamodar WITH LOGIN;
+
+
+SELECT *
+FROM project p
+         INNER JOIN project_value pv ON pv.project_id = p.id
+         INNER JOIN question_answer_view v ON v.project_id = p.id AND pv.value_id = v.id
+WHERE question_text LIKE 'Aladin'

@@ -1,9 +1,12 @@
 package de.rki.mamodar.rdmo;
 
+import de.rki.mamodar.HaystackRepository;
 import de.rki.mamodar.Project;
 import de.rki.mamodar.ProjectRepository;
+import de.rki.mamodar.ResourceRepository;
 import de.rki.mamodar.User;
 import de.rki.mamodar.UserRepository;
+import de.rki.mamodar.ValueRepository;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -19,11 +22,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class RdmoConverter {
 
+  private ValueRepository valueRepository;
   private RdmoQuestionRepository rdmoQuestionRepository;
   private RdmoOptionRepository rdmoOptionRepository;
   private RdmoValueRepository rdmoValueRepository;
   private ProjectRepository projectRepository;
   private UserRepository userRepository;
+  private ResourceRepository resourceRepository;
+  private HaystackRepository haystackRepository;
   /**
    * A list of all attribute ids of rdmo which should be included in the value table of the datalinker
    */
@@ -38,13 +44,23 @@ public class RdmoConverter {
           269L, // Acronym
           270L)); // Project type
 
-  private RdmoConverter(RdmoOptionRepository rdmoOptionRepository, RdmoQuestionRepository rdmoQuestionRepository,
-      RdmoValueRepository rdmoValueRepository, ProjectRepository projectRepository, UserRepository userRepository) {
+  private RdmoConverter(
+      RdmoOptionRepository rdmoOptionRepository,
+      RdmoQuestionRepository rdmoQuestionRepository,
+      RdmoValueRepository rdmoValueRepository,
+      ProjectRepository projectRepository,
+      UserRepository userRepository,
+      ValueRepository valueRepository,
+      ResourceRepository resourceRepository,
+      HaystackRepository haystackRepository) {
     this.rdmoOptionRepository = rdmoOptionRepository;
     this.rdmoQuestionRepository = rdmoQuestionRepository;
     this.rdmoValueRepository = rdmoValueRepository;
     this.projectRepository = projectRepository;
     this.userRepository = userRepository;
+    this.valueRepository = valueRepository;
+    this.resourceRepository = resourceRepository;
+    this.haystackRepository = haystackRepository;
   }
 
   /**
@@ -114,7 +130,8 @@ public class RdmoConverter {
   private List<Project> projectsToDAO(RdmoProjectDTO[] rdmoProjects) {
     List<RdmoProjectDTO> rdmoProjectDTOs = Arrays.asList(rdmoProjects);
     List<Project> projectDAOs = new ArrayList<>();
-    rdmoProjectDTOs.forEach(projectDTO -> projectDAOs.add(new Project(projectDTO)));
+    rdmoProjectDTOs.forEach(projectDTO -> projectDAOs.add(new Project(projectDTO, valueRepository, resourceRepository,
+        haystackRepository)));
     return projectDAOs;
   }
 
@@ -123,9 +140,13 @@ public class RdmoConverter {
     if (project.isPresent()) {
       project.get().update(updatedProject);
       updateUsersForPoject(project.get());
+      project.get().setValue(valueRepository.getByProjectRdmoId(project.get().getRdmoId()));
+      project.get().setHaystack(haystackRepository.findByRdmoId(project.get().getRdmoId()));
       projectRepository.save(project.get());
     } else {
       updateUsersForPoject(updatedProject);
+      project.get().setValue(valueRepository.getByProjectRdmoId(project.get().getRdmoId()));
+      project.get().setHaystack(haystackRepository.findByRdmoId(project.get().getRdmoId()));
       projectRepository.save(updatedProject);
     }
   }

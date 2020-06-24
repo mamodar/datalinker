@@ -18,13 +18,19 @@ public class RdmoOption {
   @Id
   @Column(name = "id", nullable = false)
   private Long rdmoId;
-
+  @Column
   private Integer optionset;
+  @Column
   private String uriPrefix;
+  @Column
   private String key;
+  @Column(length = 1000)
   private String text;
+  @Column
   private Boolean additionalInput;
+  @Column(length = 1000)
   private String textEn;
+  @Column(length = 1000)
   private String textDe;
 
   /**

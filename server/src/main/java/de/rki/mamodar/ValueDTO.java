@@ -28,7 +28,7 @@ public class ValueDTO {
    */
   public ValueDTO(Value value) {
     this.id = value.getId();
-    this.projectId = value.getProject().getId();
+    this.projectId = value.getProjectRdmoId();
     this.attribute = value.getAttribute();
     this.questionText = value.getQuestionText();
 

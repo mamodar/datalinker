@@ -12,13 +12,8 @@ import org.springframework.data.repository.query.Param;
  */
 public interface ValueRepository extends JpaRepository<Value, Long> {
 
-  /**
-   * Get values by their {@link Project}.
-   *
-   * @param project     the search project
-   * @param projectName
-   * @return a list of values
-   */
-  ArrayList<Value> getByProject(@Param("project") Project project, Sort projectName);
+  ArrayList<Value> getByProjectRdmoId(@Param("projectRdmoId") Long projectRdmoId);
+
+  ArrayList<Value> getByProjectRdmoId(@Param("projectRdmoId") Long projectRdmoId, Sort projectName);
 
 }

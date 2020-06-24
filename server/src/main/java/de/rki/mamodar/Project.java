@@ -5,13 +5,17 @@ import de.rki.mamodar.rdmo.RdmoProjectDTO;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -56,10 +60,21 @@ public class Project {
   private String description;
 
   //set fetch to eager as we always want all users for a project
-  @ManyToMany(fetch = FetchType.EAGER)
+  @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
   @Column(name = "owner")
   private List<User> owner;
 
+  @OneToMany(fetch = FetchType.LAZY)
+  @Column(name = "value")
+  private List<Value> value;
+
+  @OneToMany(fetch = FetchType.LAZY)
+  @Column(name = "resource")
+  private List<Resource> resource;
+
+  @OneToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "search_id")
+  private Haystack haystack;
 
   /**
    * Instantiates a new empty project.
@@ -70,7 +85,10 @@ public class Project {
   /**
    * Instantiates a  new project from a rdmo project dto.
    */
-  public Project(RdmoProjectDTO projectDTO) {
+  public Project(RdmoProjectDTO projectDTO,
+      ValueRepository valueRepository,
+      ResourceRepository resourceRepository,
+      HaystackRepository haystackRepository) {
     this.rdmoId = projectDTO.getId();
     this.projectName = projectDTO.getTitle();
     this.description = projectDTO.getDescription();
@@ -78,6 +96,12 @@ public class Project {
     this.updatedTimestamp = this.creationTimestamp;
     this.owner = new ArrayList<>();
     projectDTO.getOwners().forEach(owner -> this.owner.add(new User(owner)));
+    ArrayList<Value> value = valueRepository.getByProjectRdmoId(this.rdmoId);
+    this.value = new ArrayList<>(value);
+    List<Resource> resource = resourceRepository.getByProjectRdmoId(this.rdmoId);
+    this.resource = new ArrayList<>(resource);
+    this.haystack = haystackRepository.findByRdmoId(this.rdmoId);
+
   }
 
   /**
@@ -89,6 +113,18 @@ public class Project {
     this.projectName = project.getProjectName();
     this.description = project.getDescription();
     return this;
+  }
+
+  public List<Resource> getResource() {
+    return resource;
+  }
+
+  public List<Value> getValue() {
+    return value;
+  }
+
+  public void setValue(List<Value> value) {
+    this.value = value;
   }
 
   /**
@@ -189,6 +225,12 @@ public class Project {
     return owner;
   }
 
+  public Haystack getHaystack() {
+    return haystack;
+  }
 
+  public void setHaystack(Haystack haystack) {
+    this.haystack = haystack;
+  }
 }
 

@@ -3,8 +3,8 @@ package de.rki.mamodar;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import org.springframework.data.annotation.Immutable;
 
 /**
  * This DAO entity corresponds to the representation of a value in the database. Values are only part of a view (not a
@@ -13,13 +13,15 @@ import javax.persistence.Table;
  * @author Kyanoush Yahosseini
  */
 @Entity
+@Immutable
 @Table(name = "question_answer_view")
 public class Value {
 
   @Id
+  @Column(name = "id")
   private Long id;
-  @ManyToOne(targetEntity = Project.class)
-  private Project project;
+  @Column(name = "project_rdmo_id")
+  private long projectRdmoId;
   @Column(name = "attribute")
   private Long attribute;
   @Column(name = "question_text")
@@ -41,13 +43,8 @@ public class Value {
     return id;
   }
 
-  /**
-   * Gets project id.
-   *
-   * @return the project id
-   */
-  public Project getProject() {
-    return project;
+  public long getProjectRdmoId() {
+    return projectRdmoId;
   }
 
   /**
