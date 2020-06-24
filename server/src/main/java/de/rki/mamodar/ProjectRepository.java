@@ -3,14 +3,16 @@ package de.rki.mamodar;
 import java.util.ArrayList;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 /**
  * The project repository extending a JPA Repository.
+ *
  * @author Kyanoush Yahosseini
  */
-public interface ProjectRepository extends JpaRepository<Project, Long> {
+public interface ProjectRepository extends JpaRepository<Project, Long>, JpaSpecificationExecutor<Project> {
 
   /**
    * Search a project by rdmo id.

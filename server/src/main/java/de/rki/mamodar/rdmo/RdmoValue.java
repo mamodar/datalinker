@@ -18,14 +18,21 @@ public class RdmoValue {
   @Id
   @Column(name = "id", nullable = false)
   private Long rdmoId;
+  @Column
   private Integer setIndex;
+  @Column
   private Integer collectionIndex;
+  @Column(length = 1000)
   private String text;
+  @Column
   private String valueType;
+  @Column
   private String unit;
-
+  @Column
   private Long option;
+  @Column
   private Long project;
+  @Column
   private Long attribute;
 
   /**

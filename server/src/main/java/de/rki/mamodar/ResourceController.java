@@ -100,6 +100,8 @@ public class ResourceController {
 
     newResource.setProject(correspondingProject);
     repository.save(newResource);
+    correspondingProject.getResource().add(newResource);
+    projectRepository.save(correspondingProject);
     return new ResourceDTO(newResource);
   }
 
@@ -118,7 +120,6 @@ public class ResourceController {
         .orElseThrow(() -> new ObjectNotFoundException("resource", id));
     resource.update(updatedResource);
     resource.setUpdatedByUser(userRepository.getByDn(authenticationFacade.getLdapUser().getDn()));
-    ;
     resource.setUpdatedTimestamp(new Date());
     repository.save(resource);
     return new ResourceDTO(resource);

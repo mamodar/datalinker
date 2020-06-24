@@ -18,14 +18,23 @@ public class RdmoQuestion {
   @Id
   @Column(name = "id", nullable = false)
   private Long rdmoId;
+  @Column
   private String uriPrefix;
+  @Column
   private String keywords;
+  @Column(length = 1000)
   private String textEn;
+  @Column
   private String verboseNameEn;
+  @Column
   private String verboseNamePluralEn;
+  @Column(length = 1000)
   private String textDe;
+  @Column
   private String verboseNameDe;
+  @Column
   private String verboseNamePluralDe;
+  @Column
   private Long attribute;
 
   /**
