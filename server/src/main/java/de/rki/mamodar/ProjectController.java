@@ -88,20 +88,23 @@ public class ProjectController {
    * @return a list of projects as DTOs
    */
   @GetMapping("/projects/search")
-  List<ProjectDTO> searchAllProjects(@RequestParam(name = "search") String search,
+  List<ProjectDTO> searchAllProjects(@RequestParam(name = "search", required = false) String search,
       @RequestParam(name = "filter", required = false) String filter) {
     log.info("GET: /projects?search " + ((UserDetails) authenticationFacade.getAuthentication().getPrincipal())
         .getUsername());
     ArrayList<Project> filterProjects = new ArrayList<>();
     ArrayList<ProjectDTO> foundProjectsDTO = new ArrayList<>();
-    ArrayList<Project> foundProjects = projectRepository.searchFTS(search).
-        orElse(new ArrayList<>(projectRepository.findAll()));
+    ArrayList<Project> foundProjects;
+    if (search != null) {
+      foundProjects = new ArrayList<>(projectRepository.searchFTS(search).
+          orElse(new ArrayList<>()));
+    } else {
+      foundProjects = new ArrayList<>(projectRepository.findAll());
+    }
     if (filter != null) {
       ProjectSpecificationsBuilder builder = new ProjectSpecificationsBuilder();
-
       builder.parse(filter);
       Specification<Project> spec = builder.build();
-
       filterProjects.addAll(projectRepository.findAll(spec));
       foundProjects.retainAll(filterProjects);
     }
