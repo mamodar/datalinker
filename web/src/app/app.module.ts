@@ -37,17 +37,19 @@ import {MatTabsModule} from '@angular/material/tabs';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatIconModule} from '@angular/material/icon';
 import {MatPaginatorModule} from '@angular/material/paginator';
-import { ProjectTabComponent } from './project-tab/project-tab.component';
-import { SearchTabComponent } from './search-tab/search-tab.component';
+import {ProjectTabComponent} from './project-tab/project-tab.component';
+import {SearchTabComponent} from './search-tab/search-tab.component';
 import {MatChipsModule} from '@angular/material/chips';
-import { RouterHeaderComponent } from './router-header/router-header.component';
+import {RouterHeaderComponent} from './router-header/router-header.component';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
-import { ResourceDeleteDialogComponent } from './shared/resource-delete-button/resource-delete-dialog.component';
-import { LoginComponent } from './login/login.component';
+import {ResourceDeleteDialogComponent} from './shared/resource-delete-button/resource-delete-dialog.component';
+import {LoginComponent} from './login/login.component';
 import {LoginInterceptor} from './login.interceptor';
-import { ResourceManipulateDialogComponent } from './shared/resource-manipulate-dialog/resource-manipulate-dialog.component';
+import {ResourceManipulateDialogComponent} from './shared/resource-manipulate-dialog/resource-manipulate-dialog.component';
 import {ResourceManipulateButtonComponent} from './shared/resource-edit-button/resource-manipulate-button.component';
+import {SearchFilterComponent} from './search-filter/search-filter.component';
+import {SearchSearchComponent} from './search-search/search-search.component';
 
 @NgModule({
   declarations: [
@@ -65,7 +67,9 @@ import {ResourceManipulateButtonComponent} from './shared/resource-edit-button/r
     ResourceDeleteDialogComponent,
     ResourceManipulateButtonComponent,
     LoginComponent,
-    ResourceManipulateDialogComponent
+    ResourceManipulateDialogComponent,
+    SearchFilterComponent,
+    SearchSearchComponent
   ],
   imports: [
     BrowserModule,

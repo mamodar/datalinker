@@ -1,25 +1,28 @@
 .grid {
   display: grid;
   grid-template-columns: 100%;
-  grid-template-rows: 10% 4px 1fr;
-  grid-template-areas:
-    "searchView"
-    "dividerView"
-    "tableView";
+  grid-template-rows: 5% 5% .5ch 1fr;
+  grid-template-areas: "searchView" "filterView" "dividerView" "tableView";
 }
 
-.searchField{
+.searchField {
   grid-area: searchView;
-  margin:  8px 8px 0px 8px;
-  justify-self: center;
-  width: 25%;
+  text-align: center;
+  margin: .5ch;
 }
 
-.divider{
+.filterField {
+  grid-area: filterView;
+  text-align: center;
+  margin: .5ch;
+}
+
+.divider {
   grid-area: dividerView;
 }
 
-.projectList{
+.projectList {
   grid-area: tableView;
-  margin:  16px;
+  margin: .5ch;
 }
+

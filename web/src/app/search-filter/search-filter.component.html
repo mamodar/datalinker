@@ -1,0 +1,5 @@
+<mat-form-field *ngFor="let filterKey of filterKeys; let i = index">
+  <mat-label>{{filterKey}}</mat-label>
+  <input matInput [(ngModel)]=filterValues[i]>
+</mat-form-field>
+<button mat-raised-button color="primary" (click)="onApplyFilter()">Filter</button>

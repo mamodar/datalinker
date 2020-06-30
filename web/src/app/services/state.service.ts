@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable, of} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
 import {Resource} from '../models/resource';
 import {Project} from '../models/project';
 import {ProjectService} from './project.service';
@@ -81,9 +81,11 @@ export class StateService {
     return this.shownProjects;
   }
 
-  public searchProjects(terms: Observable<string>): Observable<Project[]> {
-    return terms.pipe(debounceTime(400), distinctUntilChanged(),
-      flatMap(term => this.projectService.searchProjects(term)));
+
+  public searchProjects(searchTerm: Observable<string>, filterTerm: Observable<string>): Observable<Project[]> {
+
+    return combineLatest(searchTerm, filterTerm).pipe(debounceTime(10000), distinctUntilChanged(),
+      flatMap(value => this.projectService.searchProjects(value[0], value[1])));
   }
 
   public setFilterByProject(selectedProject: Project | undefined): Observable<Resource[]> {
