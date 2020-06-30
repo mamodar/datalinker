@@ -43,6 +43,11 @@ public class Value {
     return id;
   }
 
+  /**
+   * Gets the corresponding project rdmo id.
+   *
+   * @return the project rdmo id
+   */
   public long getProjectRdmoId() {
     return projectRdmoId;
   }

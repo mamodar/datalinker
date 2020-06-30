@@ -6,6 +6,10 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import org.springframework.data.annotation.Immutable;
 
+/**
+ * This DAO entitiy corresponds to the concatination of all text fields of a project. It references a view, hence it is
+ * immutable.
+ */
 @Entity
 @Immutable
 @Table(name = "search_view")

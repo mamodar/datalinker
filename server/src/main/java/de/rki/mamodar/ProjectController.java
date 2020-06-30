@@ -85,6 +85,7 @@ public class ProjectController {
    * Searches in all projects for projects matching the  search parameter and converts them to {@link ProjectDTO}.
    *
    * @param search the search parameter
+   * @param filter the filter
    * @return a list of projects as DTOs
    */
   @GetMapping("/projects/search")
