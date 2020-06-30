@@ -7,10 +7,18 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import org.springframework.data.jpa.domain.Specification;
 
+/**
+ * A search specification for filtering projects.
+ */
 public class ProjectSpecification implements Specification<Project> {
 
   private SearchCriteria criteria;
 
+  /**
+   * Instantiates a new project specification.
+   *
+   * @param searchCriteria the search criteria
+   */
   public ProjectSpecification(SearchCriteria searchCriteria) {
     this.criteria = searchCriteria;
   }

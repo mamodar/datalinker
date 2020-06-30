@@ -12,8 +12,21 @@ import org.springframework.data.repository.query.Param;
  */
 public interface ValueRepository extends JpaRepository<Value, Long> {
 
+  /**
+   * Gets a list of all values for a project by its rdmo id.
+   *
+   * @param projectRdmoId the project rdmo id
+   * @return the by project rdmo id
+   */
   ArrayList<Value> getByProjectRdmoId(@Param("projectRdmoId") Long projectRdmoId);
 
+  /**
+   * Gets a list of all values for a project by its rdmo id sorted by projectName.
+   *
+   * @param projectRdmoId the project rdmo id
+   * @param projectName   the project name
+   * @return the by project rdmo id
+   */
   ArrayList<Value> getByProjectRdmoId(@Param("projectRdmoId") Long projectRdmoId, Sort projectName);
 
 }

@@ -19,5 +19,11 @@ public interface ResourceRepository extends JpaRepository<Resource, Long> {
    */
   List<Resource> getByProject(@Param("project") Project project);
 
+  /**
+   * Gets a list of resources by the rdmo id of their project.
+   *
+   * @param projectRdmoId the project rdmo id
+   * @return the by project rdmo id
+   */
   List<Resource> getByProjectRdmoId(@Param("rdmo_id") Long projectRdmoId);
 }

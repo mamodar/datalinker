@@ -84,6 +84,11 @@ public class Project {
 
   /**
    * Instantiates a  new project from a rdmo project dto.
+   *
+   * @param projectDTO         the project dto
+   * @param valueRepository    the value repository
+   * @param resourceRepository the resource repository
+   * @param haystackRepository the haystack repository
    */
   public Project(RdmoProjectDTO projectDTO,
       ValueRepository valueRepository,
@@ -107,6 +112,7 @@ public class Project {
   /**
    * Updates a project from a rdmo project dto
    *
+   * @param project the project
    * @return the udpated project
    */
   public Project update(Project project) {
@@ -115,14 +121,29 @@ public class Project {
     return this;
   }
 
+  /**
+   * Gets resource.
+   *
+   * @return the resource
+   */
   public List<Resource> getResource() {
     return resource;
   }
 
+  /**
+   * Gets value.
+   *
+   * @return the value
+   */
   public List<Value> getValue() {
     return value;
   }
 
+  /**
+   * Sets value.
+   *
+   * @param value the value
+   */
   public void setValue(List<Value> value) {
     this.value = value;
   }
@@ -225,10 +246,20 @@ public class Project {
     return owner;
   }
 
+  /**
+   * Gets haystack. A haystack is a concatination of all string fields of a project.
+   *
+   * @return the haystack
+   */
   public Haystack getHaystack() {
     return haystack;
   }
 
+  /**
+   * Sets haystack.  A haystack is a concatination of all string fields of a project.
+   *
+   * @param haystack the haystack
+   */
   public void setHaystack(Haystack haystack) {
     this.haystack = haystack;
   }
