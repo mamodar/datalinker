@@ -22,15 +22,21 @@ public class ProjectSpecificationsBuilder {
     if (params.size() == 0) {
       return null;
     }
-    ArrayList<Specification<Project>> result = new ArrayList<>();
+    Specification<Project> result;
+    result = null;
     for (SearchCriteria searchCriteria : params) {
-      result.add(Specification.where((new ProjectSpecification(searchCriteria))));
+      if (result == null) {
+        result = Specification.where((new ProjectSpecification(searchCriteria)));
+      } else {
+        result = result.and(new ProjectSpecification(searchCriteria));
+      }
     }
-    return result.get(0);
+    return result;
   }
 
   public void parse(String filter) {
-    Pattern pattern = Pattern.compile("(\\w+?)(:|<|>)(\\w+?),", Pattern.UNICODE_CHARACTER_CLASS);
+
+    Pattern pattern = Pattern.compile("([^:,]+?)(:)([^:,]+?),", Pattern.UNICODE_CHARACTER_CLASS);
     Matcher matcher = pattern.matcher(filter + ",");
     while (matcher.find()) {
       this.with(matcher.group(1), matcher.group(2), matcher.group(3));

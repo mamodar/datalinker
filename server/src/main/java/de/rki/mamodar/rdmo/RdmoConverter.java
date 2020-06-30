@@ -145,8 +145,8 @@ public class RdmoConverter {
       projectRepository.save(project.get());
     } else {
       updateUsersForPoject(updatedProject);
-      project.get().setValue(valueRepository.getByProjectRdmoId(project.get().getRdmoId()));
-      project.get().setHaystack(haystackRepository.findByRdmoId(project.get().getRdmoId()));
+      updatedProject.setValue(valueRepository.getByProjectRdmoId(updatedProject.getRdmoId()));
+      updatedProject.setHaystack(haystackRepository.findByRdmoId(updatedProject.getRdmoId()));
       projectRepository.save(updatedProject);
     }
   }

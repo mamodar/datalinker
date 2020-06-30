@@ -1,6 +1,6 @@
 package de.rki.mamodar;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -30,8 +30,8 @@ public interface ProjectRepository extends JpaRepository<Project, Long>, JpaSpec
    * @return An Optional List of Projects.
    */
   @Query(
-      value="SELECT * FROM project p WHERE p.id IN (SELECT id FROM search_view, plainto_tsquery(:query) AS q WHERE (tsv @@ q));",
+      value = "SELECT * FROM project p WHERE p.id IN (SELECT id FROM search_view, plainto_tsquery(:query) AS q WHERE (tsv @@ q));",
       nativeQuery = true)
-    Optional<ArrayList<Project>> searchFTS(@Param("query") String query);
+  Optional<List<Project>> searchFTS(@Param("query") String query);
 
 }
