@@ -32,11 +32,27 @@ export class ProjectService {
     return this.apiService.get('/projects/' + project.id + '/resources');
   }
 
-  searchProjects(query: string): Observable<Project[]> {
-    return this.apiService.get('/projects/search?search=' + query);
+  searchProjects(search?: string, filter?: string): Observable<Project[]> {
+    if (search && filter) {
+      return this.apiService.get('/projects/search?search=' + search + '&filter=' + filter);
+    }
+    if (search) {
+      return this.apiService.get('/projects/search?search=' + search);
+    }
+    if (filter) {
+      return this.apiService.get('/projects/search?filter=' + filter);
+    }
+    return this.getProjects();
+
+  }
+
+  filterProjects(query: string): Observable<Project[]> {
+    return this.apiService.get('/projects/search?filter=' + query);
   }
 
   getValuesOfProject(project: Project): Observable<Value[]> {
     return this.apiService.get('/projects/' + project.id + '/values');
   }
+
+
 }

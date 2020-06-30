@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {Project} from '../models/project';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {StateService} from '../services/state.service';
 
 @Component({
@@ -10,14 +10,34 @@ import {StateService} from '../services/state.service';
 })
 export class SearchTabComponent implements OnInit {
   projects$: Observable<Project[]>;
-  searchTerm$ = new BehaviorSubject<string>('');
+  @Input() searchTerm: string;
+  @Input() filterTerm: string;
+  searchTermSave: string;
+  filterTermSave: string;
+  private showFilter: boolean;
 
-  constructor(private stateService: StateService) { }
+  constructor(private stateService: StateService) {
+  }
 
   ngOnInit(): void {
-    this.projects$ = this.stateService.searchProjects(this.searchTerm$);
+    this.showFilter = false;
+    this.projects$ = this.stateService.getProjects();
   }
-  onKey($event) {
-    this.searchTerm$.next($event.target.value);
+
+  addSearchTerm($event: string): void {
+    console.log($event + ' ' + this.filterTermSave);
+    this.searchTermSave = $event;
+    this.projects$ = this.stateService.searchProjects(of($event), of(this.filterTermSave));
+  }
+
+  addFilterTerm($event: string): void {
+
+    this.filterTermSave = $event;
+    console.log(this.searchTermSave + ' ' + $event);
+    this.projects$ = this.stateService.searchProjects(of(this.searchTermSave), of($event));
+  }
+
+  toggleFilter(): void {
+    this.showFilter = !this.showFilter;
   }
 }
