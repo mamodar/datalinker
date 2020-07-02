@@ -50,6 +50,7 @@ import {ResourceManipulateDialogComponent} from './shared/resource-manipulate-di
 import {ResourceManipulateButtonComponent} from './shared/resource-edit-button/resource-manipulate-button.component';
 import {SearchFilterComponent} from './search-filter/search-filter.component';
 import {SearchSearchComponent} from './search-search/search-search.component';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
 @NgModule({
   declarations: [
@@ -94,7 +95,8 @@ import {SearchSearchComponent} from './search-search/search-search.component';
     MatPaginatorModule,
     MatChipsModule,
     MatProgressSpinnerModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    MatAutocompleteModule
   ],
   providers: [{ provide: HTTP_INTERCEPTORS, useClass: LoginInterceptor, multi: true }],
   bootstrap: [AppComponent]

@@ -24,6 +24,7 @@ export class ApiService {
   }
 
   get(path: string, user?: AuthUser): Observable<any> {
+    console.log(Date() + ' GET:' + path);
     let httpOptions = {};
     if (user) {
       httpOptions = {

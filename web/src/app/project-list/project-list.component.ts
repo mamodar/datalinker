@@ -26,7 +26,7 @@ export class ProjectListComponent implements OnInit {
   ngOnInit() {
     this.selectedProject$ = this.stateService.getSelectedProject();
     this.shownResources$ = this.stateService.getResources();
-    this.shownValues$ = this.stateService.getValues();
+    this.shownValues$ = this.stateService.getValuesForSelectedProject();
   }
 
   onSelect(project: Project): void {
@@ -34,11 +34,11 @@ export class ProjectListComponent implements OnInit {
     if (this.selectedProject$.getValue() === project) {
       this.stateService.setSelectedProject(undefined);
       this.shownResources$ = this.stateService.setFilterByProject(undefined);
-      this.shownValues$ = this.stateService.getValues();
+      this.shownValues$ = this.stateService.getValuesForSelectedProject();
     } else {
       this.stateService.setSelectedProject(project);
       this.shownResources$ = this.stateService.setFilterByProject(project);
-      this.shownValues$ = this.stateService.getValues();
+      this.shownValues$ = this.stateService.getValuesForSelectedProject();
     }
 
   }
