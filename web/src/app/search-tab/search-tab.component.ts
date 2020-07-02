@@ -25,7 +25,6 @@ export class SearchTabComponent implements OnInit {
   }
 
   addSearchTerm($event: string): void {
-    console.log($event + ' ' + this.filterTermSave);
     this.searchTermSave = $event;
     this.projects$ = this.stateService.searchProjects(of($event), of(this.filterTermSave));
   }
@@ -33,7 +32,6 @@ export class SearchTabComponent implements OnInit {
   addFilterTerm($event: string): void {
 
     this.filterTermSave = $event;
-    console.log(this.searchTermSave + ' ' + $event);
     this.projects$ = this.stateService.searchProjects(of(this.searchTermSave), of($event));
   }
 

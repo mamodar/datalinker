@@ -66,7 +66,7 @@ export class StateService {
     return this.shownResources;
   }
 
-  public getValues(): Observable<Value[]> {
+  public getValuesForSelectedProject(): Observable<Value[]> {
     if (this.filterResourcesByProject.getValue()) {
       this.projectService.getValuesOfProject(this.filterResourcesByProject.getValue())
       .subscribe(values => this.shownValues.next(this.concatValueAnswers(values.map(value => new Value(value)))));
@@ -200,4 +200,11 @@ export class StateService {
     this.cloudTypes.push(new CloudType(1));
     this.cloudTypes.push(new CloudType(2));
   }
+
+  public getValues(): Observable<Value[]> {
+
+    return this.apiService.get('/values').pipe(
+      map((values: Value[]) => values.map((value: Value) => new Value(value))));
+  }
+
 }
