@@ -1,6 +1,12 @@
 package de.rki.mamodar.rdmo;
 
 import de.rki.mamodar.MamodarApplication;
+import de.rki.mamodar.database.rdmo.RdmoQuestion;
+import de.rki.mamodar.database.rdmo.RdmoValue;
+import de.rki.mamodar.dto.RdmoOptionDTO;
+import de.rki.mamodar.dto.RdmoProjectDTO;
+import de.rki.mamodar.dto.RdmoQuestionDTO;
+import de.rki.mamodar.dto.RdmoValueDTO;
 import java.util.Collections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +52,7 @@ public class RdmoApiConsumer {
   }
 
   /**
-   * Requests all rdmo projects into {@link de.rki.mamodar.rdmo.RdmoProjectDTO}.
+   * Requests all rdmo projects into {@link RdmoProjectDTO}.
    *
    * @return the raw rdmo projects as an array
    */
@@ -63,7 +69,7 @@ public class RdmoApiConsumer {
   }
 
   /**
-   * Requests all rdmo values into {@link de.rki.mamodar.rdmo.RdmoValue}.
+   * Requests all rdmo values into {@link RdmoValue}.
    *
    * @return the raw rdmo values as an array
    */
@@ -81,7 +87,7 @@ public class RdmoApiConsumer {
   }
 
   /**
-   * Requests all rdmo options into {@link de.rki.mamodar.rdmo.RdmoOptionDTO}.
+   * Requests all rdmo options into {@link RdmoOptionDTO}.
    *
    * @return the raw rdmo options as an array
    */
@@ -99,7 +105,7 @@ public class RdmoApiConsumer {
 
 
   /**
-   * Requests all rdmo questions into {@link de.rki.mamodar.rdmo.RdmoQuestion}.
+   * Requests all rdmo questions into {@link RdmoQuestion}.
    *
    * @return the raw rdmo questions as an array
    */
