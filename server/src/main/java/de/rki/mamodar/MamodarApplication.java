@@ -1,5 +1,6 @@
 package de.rki.mamodar;
 
+
 import de.rki.mamodar.rdmo.RdmoApiConsumer;
 import de.rki.mamodar.rdmo.RdmoConverter;
 import java.util.Date;
@@ -76,4 +77,5 @@ public class MamodarApplication {
       log.warn("Failed to reach rdmo:" + clientException.toString());
     }
   }
+
 }

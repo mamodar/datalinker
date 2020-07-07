@@ -46,12 +46,13 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {ResourceDeleteDialogComponent} from './shared/resource-delete-button/resource-delete-dialog.component';
 import {LoginComponent} from './login/login.component';
 import {LoginInterceptor} from './login.interceptor';
+import {ResourceManipulateDialogComponent} from './shared/resource-manipulate-dialog/resource-manipulate-dialog.component';
 import {ResourceManipulateButtonComponent} from './shared/resource-edit-button/resource-manipulate-button.component';
 import {SearchFilterComponent} from './search-filter/search-filter.component';
+import {SearchSearchComponent} from './search-search/search-search.component';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
-import {PublishTabComponent, ProjectPublishDialogComponent} from './publish-tab/publish-tab.component';
+import {ProjectPublishDialogComponent, PublishTabComponent} from './publish-tab/publish-tab.component';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
-import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -69,7 +70,9 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
     ResourceDeleteDialogComponent,
     ResourceManipulateButtonComponent,
     LoginComponent,
+    ResourceManipulateDialogComponent,
     SearchFilterComponent,
+    SearchSearchComponent,
     PublishTabComponent,
     ProjectPublishDialogComponent
   ],
@@ -98,8 +101,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
     MatProgressSpinnerModule,
     MatSlideToggleModule,
     MatAutocompleteModule,
-    MatProgressBarModule,
-    MatSnackBarModule
+    MatProgressBarModule
   ],
   providers: [{ provide: HTTP_INTERCEPTORS, useClass: LoginInterceptor, multi: true }],
   bootstrap: [AppComponent]

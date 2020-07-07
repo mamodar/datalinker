@@ -14,7 +14,7 @@ export class SearchTabComponent implements OnInit {
   @Input() filterTerm: string;
   searchTermSave: string;
   filterTermSave: string;
-  private showFilter: boolean;
+  public showFilter: boolean;
 
   constructor(private stateService: StateService) {
   }
