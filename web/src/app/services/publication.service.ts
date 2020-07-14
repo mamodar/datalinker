@@ -19,12 +19,18 @@ export class PublicationService {
   constructor(private apiService: ApiService) {
   }
 
-  publishEdoc(edocTransfer: EdocTransfer): Observable<any> {
+  createItemDspace(edocTransfer: EdocTransfer): Observable<any> {
+    return this.apiService.post('/dspace/publications/items', edocTransfer);
+  }
+
+  uploadBitstreamDspace(uuid: string, edocTransfer: EdocTransfer): Observable<any> {
+    console.log('uploadBitstreamDspace' + uuid + edocTransfer.title);
+    console.log('uploadBitstreamDspace' + uuid + edocTransfer.file.name);
     // this creates a 'multipart/form-data' request
     const formData: FormData = new FormData();
     formData.append('file', edocTransfer.file, edocTransfer.file.name);
     // add the 'application/json' header, otherwise its 'application/octet-stream' and can't be processed by the backend
-    formData.append('item', new Blob([JSON.stringify(edocTransfer)], {type: 'application/json'}));
-    return this.apiService.postWithProgress('/publication/edoc', formData);
+    formData.append('item', uuid);
+    return this.apiService.postWithProgress('/dspace/publications/bitstreams', formData);
   }
 }

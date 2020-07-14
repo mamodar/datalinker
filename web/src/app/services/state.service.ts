@@ -3,7 +3,7 @@ import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
 import {Resource} from '../models/resource';
 import {Project} from '../models/project';
 import {ProjectService} from './project.service';
-import {debounceTime, distinctUntilChanged, flatMap, map} from 'rxjs/operators';
+import {concatMap, debounceTime, distinctUntilChanged, flatMap, map} from 'rxjs/operators';
 import {ResourceService} from './resource.service';
 import {ResourceType} from '../models/resourceType';
 import {AuthUser} from '../models/authUser';
@@ -12,6 +12,7 @@ import {CloudType} from '../models/cloudType';
 import {ResourcePath} from '../models/resourcePath';
 import {Value} from '../models/value';
 import {PublicationService} from './publication.service';
+import {EdocTransfer} from '../models/edocTransfer';
 
 
 /**
@@ -68,7 +69,7 @@ export class StateService {
     return this.shownResources;
   }
 
-  public getValuesForSelectedProject(): Observable<Value[]> {
+  public getValuesForSelectedProject(): BehaviorSubject<Value[]> {
     if (this.filterResourcesByProject.getValue()) {
       this.projectService.getValuesOfProject(this.filterResourcesByProject.getValue())
       .subscribe(values => this.shownValues.next(this.concatValueAnswers(values.map(value => new Value(value)))));
@@ -190,11 +191,15 @@ export class StateService {
       });
     return reducedValues;
   }
-  publishToExternalService(type: string, transferObject: any): Observable<any> {
+
+  publishToExternalService(type: string, transferObject: EdocTransfer | any): Observable<any> {
     switch (type) {
       case 'edoc':
-        return this.publicationService.publishEdoc(transferObject);
-        break;
+        console.log('publishToExternalService' + transferObject.title, transferObject.file.name);
+
+        return this.publicationService.createItemDspace(transferObject).pipe(
+          concatMap(value => this.publicationService.uploadBitstreamDspace(value, transferObject)));
+
     }
   }
 

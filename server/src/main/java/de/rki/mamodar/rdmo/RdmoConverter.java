@@ -45,11 +45,13 @@ public class RdmoConverter {
    */
   private final ArrayList<Long> ALLOWED_RDMO_ATTRIBUTES = new ArrayList<>(
       Arrays.asList(6L, // contact person
+          9L, // Principal investigator
           12L, // Organizational unit
           138L, // License/ Terms of use
           152L, // Storage location
           173L, // Funding partner
           221L, // Cooperation partner external
+          250L, // Keyword
           251L, // Title
           269L, // Acronym
           270L)); // Project type

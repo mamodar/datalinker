@@ -1,0 +1,61 @@
+<form #publishForm='ngForm'>
+  <p>
+    <mat-form-field class="full-width">
+      <mat-label>Projekt</mat-label>
+      <input [(ngModel)]="data.title" matInput name="title" required>
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field class="full-width">
+      <mat-label>Beschreibung</mat-label>
+      <input [(ngModel)]="data.description" matInput name="description" required>
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field *ngFor="let author of data.authors;let index = index;" class=quarter-width>
+      <mat-label>Autor</mat-label>
+      <input [(ngModel)]="data.authors[index]" matInput [ngModelOptions]="{standalone: true, updateOn: 'blur'}"><br>
+    </mat-form-field>
+    <button class="button" color="primary" mat-mini-fab (click)="addAuthor()">+</button>
+  </p>
+  <p>
+    <mat-form-field *ngFor="let keyword of data.keywords;let index = index;" class=quarter-width>
+      <mat-label>Schlagwort</mat-label>
+      <input [(ngModel)]="data.keywords[index]" matInput [ngModelOptions]="{standalone: true, updateOn: 'blur'}"><br>
+    </mat-form-field>
+    <button class="button" color="primary" mat-mini-fab (click)="addKeyword()">+</button>
+  </p>
+  <p>
+    <mat-form-field class=half-width>
+      <mat-label>Lizenz</mat-label>
+      <input [(ngModel)]="data.license" matInput name="license" required></mat-form-field>
+  </p>
+  <p>
+    <mat-form-field appearance="fill" class="quarter-width">
+      <mat-label>Ausgabedatum</mat-label>
+      <input matInput [matDatepicker]="datepicker" disabled [(ngModel)]="data.issueDate" name="issueDate">
+      <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+      <mat-datepicker #datepicker disabled="false"></mat-datepicker>
+    </mat-form-field>
+
+  </p>
+
+  <div class=quarter-width>
+    <button (click)="fileInput.click()" mat-raised-button type="button">Datei auswählen</button>
+    <div class="mat-caption">(max. 50MB)</div>
+    <input #fileInput (change)="uploadFile($event.target.files)" hidden id="file" required type="file"><br>
+    <div *ngIf="data.file" class="mat-caption">
+      Dateiname: {{data.file.name}} Größe: {{((data.file.size / 1024 / 1024) | number)}} MB
+    </div>
+  </div>
+  <div mat-dialog-actions>
+    <button [mat-dialog-close]="{send: false , resource: data}" class="button" color="primary" mat-raised-button>
+      Abbrechen
+    </button>
+    <button [disabled]="publishForm.form.invalid || !this.data.file || (data.file.size > 50*1024*1024)"
+            [mat-dialog-close]="{send: true , resource: data}" class="button"
+            color="warn" mat-raised-button>
+      Exportieren
+    </button>
+  </div>
+</form>

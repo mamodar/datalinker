@@ -3,7 +3,6 @@
     <app-project-list [projects$]="this.projects$" class="colleft"></app-project-list>
   </div>
   <mat-divider class="divider"></mat-divider>
-
   <div class="buttons">
     <mat-form-field class="selector">
       <mat-label>Repositorium</mat-label>
@@ -11,8 +10,6 @@
         <mat-option value="edoc">eDoc</mat-option>
       </mat-select>
     </mat-form-field>
-    <button (click)="openExportDialog()" [disabled]="exportPossible()" color="primary" mat-raised-button>Export</button>
-    <mat-progress-bar *ngIf="progress && progress<=100" [value]=progress mode="determinate"></mat-progress-bar>
-    <mat-progress-bar *ngIf="progress > 100" [value]=100 color="accent" mode="determinate"></mat-progress-bar>
+    <app-publish-procedure-button [repo]=selectedRepo></app-publish-procedure-button>
   </div>
 </div>

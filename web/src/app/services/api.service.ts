@@ -56,6 +56,7 @@ export class ApiService {
   }
 
   postWithProgress(path: string, body: any = {}): Observable<any> {
+    console.log(Date() + ' POST:' + path + 'body:' + JSON.stringify(body));
     const req = new HttpRequest('POST', environment.appUrl + path, body, {
       reportProgress: true
     });

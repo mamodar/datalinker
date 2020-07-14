@@ -1,5 +1,6 @@
 package de.rki.mamodar.api;
 
+import com.google.gson.Gson;
 import de.rki.mamodar.MamodarApplication;
 import de.rki.mamodar.dspace.DspaceApiConsumer;
 import de.rki.mamodar.dspace.MetadataDTO;
@@ -29,7 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class PublicationController {
 
   private static final Logger log = LoggerFactory.getLogger(MamodarApplication.class);
-
+  private final Gson gson = new Gson();
   /**
    * The autowired {@link DspaceApiConsumer}.
    */
@@ -46,13 +47,14 @@ public class PublicationController {
    */
   @PostMapping(value = "dspace/publications/items")
   HttpEntity<String> createPublication(@RequestBody MetadataDTO metadata) {
+    log.info("dspace/publications/items" + metadata.toString());
     this.dspaceApiConsumer.auth();
     HttpEntity<String> response = this.dspaceApiConsumer.createItem();
     Pattern pattern = Pattern.compile("uuid\":\"([\\w-]*)");
     Matcher matcher = pattern.matcher(response.getBody());
     matcher.find();
     this.dspaceApiConsumer.addMetadata(matcher.group(1), metadata.toDspaceMetadataList());
-    return new HttpEntity<>(matcher.group(1));
+    return new HttpEntity<>(gson.toJson(matcher.group(1)));
   }
 
   /**
@@ -69,6 +71,7 @@ public class PublicationController {
   HttpEntity<String> createPublication(
       @RequestParam(value = "item") String uuid,
       @RequestPart(value = "file") MultipartFile file) throws IOException {
+    log.info("dspace/publications/bitstreams");
     this.dspaceApiConsumer.auth();
     return this.dspaceApiConsumer.addBitstream(uuid, file);
   }
