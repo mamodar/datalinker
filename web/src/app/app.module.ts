@@ -37,7 +37,7 @@ import {MatTabsModule} from '@angular/material/tabs';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatIconModule} from '@angular/material/icon';
 import {MatPaginatorModule} from '@angular/material/paginator';
-import {ProjectTabComponent} from './project-tab/project-tab.component';
+import {ProjectTabComponent} from './home/project-tab/project-tab.component';
 import {SearchTabComponent} from './search-tab/search-tab.component';
 import {MatChipsModule} from '@angular/material/chips';
 import {RouterHeaderComponent} from './router-header/router-header.component';
@@ -51,8 +51,14 @@ import {ResourceManipulateButtonComponent} from './shared/resource-edit-button/r
 import {SearchFilterComponent} from './search-filter/search-filter.component';
 import {SearchSearchComponent} from './search-search/search-search.component';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
-import {ProjectPublishDialogComponent, PublishTabComponent} from './publish-tab/publish-tab.component';
+import {PublishTabComponent} from './home/publish-tab/publish-tab.component';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {PublishProgressBarComponent} from './publish-progress-bar/publish-progress-bar.component';
+import {PublishProcedureButtonComponent} from './publish-procedure-button/publish-procedure-button.component';
+import {PublishProjectDialogComponent} from './publish-project-dialog/publish-project-dialog.component';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatNativeDateModule} from '@angular/material/core';
 
 @NgModule({
   declarations: [
@@ -74,7 +80,9 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
     SearchFilterComponent,
     SearchSearchComponent,
     PublishTabComponent,
-    ProjectPublishDialogComponent
+    PublishProgressBarComponent,
+    PublishProcedureButtonComponent,
+    PublishProjectDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -101,9 +109,12 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
     MatProgressSpinnerModule,
     MatSlideToggleModule,
     MatAutocompleteModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatSnackBarModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
-  providers: [{ provide: HTTP_INTERCEPTORS, useClass: LoginInterceptor, multi: true }],
+  providers: [{provide: HTTP_INTERCEPTORS, useClass: LoginInterceptor, multi: true}, MatDatepickerModule],
   bootstrap: [AppComponent]
 })
 export class AppModule {

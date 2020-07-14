@@ -1,0 +1,5 @@
+<mat-progress-bar *ngIf="progressBarType === 'start'" mode="indeterminate"></mat-progress-bar>
+<mat-progress-bar *ngIf="progressBarType === 'upload'" [value]="progress/2" mode="determinate"></mat-progress-bar>
+<mat-progress-bar *ngIf="progressBarType === 'server'" [value]=50 [bufferValue]="50" mode="buffer"></mat-progress-bar>
+<mat-progress-bar *ngIf="progressBarType === 'finished'" [value]=100 color="accent"
+                  mode="determinate"></mat-progress-bar>

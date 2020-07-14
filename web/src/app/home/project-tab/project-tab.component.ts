@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Observable} from 'rxjs';
-import {Project} from '../models/project';
-import {StateService} from '../services/state.service';
+import {Project} from '../../models/project';
+import {StateService} from '../../services/state.service';
 
 /**
  * The main component for the project navigation tab.
@@ -20,7 +20,6 @@ export class ProjectTabComponent implements OnInit {
 
   ngOnInit(): void {
     this.projects$ = this.stateService.getProjects();
-
   }
 
 }

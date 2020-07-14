@@ -16,8 +16,10 @@ public class MetadataDTO {
   private String title;
   private String abstractText;
   private ArrayList<String> authors;
+  private ArrayList<String> keywords;
   private String description;
   private String issueDate;
+  private String license;
 
 
   /**
@@ -36,11 +38,17 @@ public class MetadataDTO {
     if (authors != null) {
       authors.forEach(author -> dspaceMetadata.add(new DspaceMetadataDTO("dc.contributor.author", author)));
     }
+    if (keywords != null) {
+      keywords.forEach(keyword -> dspaceMetadata.add(new DspaceMetadataDTO("dc.subject", keyword)));
+    }
     if (description != null) {
       dspaceMetadata.add(new DspaceMetadataDTO("dc.description", description));
     }
     if (issueDate != null) {
       dspaceMetadata.add(new DspaceMetadataDTO("dc.date.issued", LocalDate.parse(issueDate).toString()));
+    }
+    if (license != null) {
+      dspaceMetadata.add(new DspaceMetadataDTO("dc.rights", license));
     }
     return dspaceMetadata;
   }
@@ -88,5 +96,13 @@ public class MetadataDTO {
    */
   public String getIssueDate() {
     return issueDate;
+  }
+
+  public ArrayList<String> getKeywords() {
+    return keywords;
+  }
+
+  public String getLicense() {
+    return license;
   }
 }
