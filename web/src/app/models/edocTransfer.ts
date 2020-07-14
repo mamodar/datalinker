@@ -36,8 +36,7 @@ export class EdocTransfer {
           this.license = value.answerText;
           break;
         case 'schlagwort':
-          value.answerText.split(',').forEach(keyword => this.keywords.push(keyword));
-          this.keywords.filter(keyword => keyword.length > 0);
+          this.keywords.push(value.answerText);
           break;
       }
     }
