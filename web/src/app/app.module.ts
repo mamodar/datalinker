@@ -6,18 +6,17 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {AppRoutingModule} from './app-routing.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
-import {HomeComponent} from './home/home.component';
+import {HomeComponent} from './components/misc/home/home.component';
 
-import {ProjectListComponent} from './project-list/project-list.component';
+import {ProjectListComponent} from './components/shared/project-list/project-list.component';
 
-import {ResourceListComponent} from './resource-list/resource-list.component';
+import {ResourceListComponent} from './components/shared/resource-list/resource-list.component';
 
 
-import {NewResourceAddButtonComponent} from './new-resource-add/new-resource-add-button.component';
-import {NewResourceListComponent} from './new-resource-list/new-resource-list.component';
-import {NewResourceAttachButtonComponent} from './new-resource-attach-button/new-resource-attach-button.component';
+import {NewResourceListComponent} from './components/new-resource-tab/new-resource-list/new-resource-list.component';
+import {NewResourceAttachComponent} from './components/new-resource-tab/new-resource-attach/new-resource-attach.component';
 
-import {ResourceDeleteButtonComponent} from './shared/resource-delete-button/resource-delete-button.component';
+import {ResourceDeleteButtonComponent} from './components/shared/resource-list/resource-delete-button/resource-delete-button.component';
 
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatGridListModule} from '@angular/material/grid-list';
@@ -37,28 +36,29 @@ import {MatTabsModule} from '@angular/material/tabs';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatIconModule} from '@angular/material/icon';
 import {MatPaginatorModule} from '@angular/material/paginator';
-import {ProjectTabComponent} from './home/project-tab/project-tab.component';
-import {SearchTabComponent} from './search-tab/search-tab.component';
+import {NewResourceTabComponent} from './components/new-resource-tab/new-resource-tab.component';
+import {SearchTabComponent} from './components/search-tab/search-tab.component';
 import {MatChipsModule} from '@angular/material/chips';
-import {RouterHeaderComponent} from './router-header/router-header.component';
+import {RouterHeaderComponent} from './components/misc/router-header/router-header.component';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
-import {ResourceDeleteDialogComponent} from './shared/resource-delete-button/resource-delete-dialog.component';
-import {LoginComponent} from './login/login.component';
-import {LoginInterceptor} from './login.interceptor';
-import {ResourceManipulateDialogComponent} from './shared/resource-manipulate-dialog/resource-manipulate-dialog.component';
-import {ResourceManipulateButtonComponent} from './shared/resource-edit-button/resource-manipulate-button.component';
-import {SearchFilterComponent} from './search-filter/search-filter.component';
-import {SearchSearchComponent} from './search-search/search-search.component';
+import {ResourceDeleteDialogComponent} from './components/shared/resource-list/resource-delete-button/resource-delete-dialog.component';
+import {LoginComponent} from './components/misc/login/login.component';
+import {LoginInterceptor} from './services/login.interceptor';
+import {ResourceManipulateDialogComponent} from './components/shared/resource-list/resource-manipulate-dialog/resource-manipulate-dialog.component';
+import {ResourceManipulateButtonComponent} from './components/shared/resource-list/resource-edit-button/resource-manipulate-button.component';
+import {SearchFilterComponent} from './components/search-tab/search-filter/search-filter.component';
+import {SearchSearchComponent} from './components/search-tab/search-search/search-search.component';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
-import {PublishTabComponent} from './home/publish-tab/publish-tab.component';
+import {PublishTabComponent} from './components/publish-tab/publish-tab.component';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
-import {PublishProgressBarComponent} from './publish-progress-bar/publish-progress-bar.component';
-import {PublishProcedureButtonComponent} from './publish-procedure-button/publish-procedure-button.component';
-import {PublishProjectDialogComponent} from './publish-project-dialog/publish-project-dialog.component';
+import {PublishProgressBarComponent} from './components/publish-tab/publish-progress-bar/publish-progress-bar.component';
+import {PublishProcedureComponent} from './components/publish-tab/publish-procedure/publish-procedure.component';
+import {PublishProjectDialogComponent} from './components/publish-tab/publish-project-dialog/publish-project-dialog.component';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
+import {NewResourceAddComponent} from './components/new-resource-tab/new-resource-add/new-resource-add.component';
 
 @NgModule({
   declarations: [
@@ -66,11 +66,11 @@ import {MatNativeDateModule} from '@angular/material/core';
     HomeComponent,
     ProjectListComponent,
     ResourceListComponent,
-    NewResourceAddButtonComponent,
+    NewResourceAddComponent,
     NewResourceListComponent,
-    NewResourceAttachButtonComponent,
+    NewResourceAttachComponent,
     ResourceDeleteButtonComponent,
-    ProjectTabComponent,
+    NewResourceTabComponent,
     SearchTabComponent,
     RouterHeaderComponent,
     ResourceDeleteDialogComponent,
@@ -81,8 +81,9 @@ import {MatNativeDateModule} from '@angular/material/core';
     SearchSearchComponent,
     PublishTabComponent,
     PublishProgressBarComponent,
-    PublishProcedureButtonComponent,
-    PublishProjectDialogComponent
+    PublishProcedureComponent,
+    PublishProjectDialogComponent,
+    NewResourceAddComponent
   ],
   imports: [
     BrowserModule,

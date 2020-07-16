@@ -1,0 +1,19 @@
+<div class="grid">
+
+  <div class="interaction">
+    <mat-form-field class="selector">
+      <mat-label>Repositorium</mat-label>
+      <mat-select [(ngModel)]="selectedRepo" matNativeControl required>
+        <mat-option value="edoc">eDoc</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <app-publish-procedure class="button" [repo]=selectedRepo></app-publish-procedure>
+  </div>
+
+  <mat-divider class="divider"></mat-divider>
+
+  <div class="main">
+    <app-project-list [projects$]="this.projects$" class="projectList"></app-project-list>
+  </div>
+
+</div>

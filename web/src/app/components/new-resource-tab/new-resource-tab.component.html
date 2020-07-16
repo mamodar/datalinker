@@ -1,0 +1,18 @@
+<div class="grid">
+
+  <div class="interaction">
+    <div mat-dialog-actions>
+      <app-new-resource-add></app-new-resource-add>
+      <app-new-resource-attach></app-new-resource-attach>
+    </div>
+  </div>
+
+  <mat-divider class="divider"></mat-divider>
+
+  <div class="main">
+    <app-project-list [projects$]="this.projects$" class="colleft"></app-project-list>
+    <app-new-resource-list class="colright"></app-new-resource-list>
+  </div>
+
+</div>
+

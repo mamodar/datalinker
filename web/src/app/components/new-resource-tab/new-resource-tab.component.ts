@@ -1,0 +1,26 @@
+import {Component, OnInit} from '@angular/core';
+import {Observable} from 'rxjs';
+import {Project} from '../../models/project';
+import {StateService} from '../../services/state.service';
+
+/**
+ * The main component for the project navigation tab.
+ * @author Kyanoush Yahosseini
+ */
+
+@Component({
+  selector: 'app-new-resource-tab',
+  templateUrl: './new-resource-tab.component.html',
+  styleUrls: ['./new-resource-tab.component.css']
+})
+export class NewResourceTabComponent implements OnInit {
+  projects$: Observable<Project[]>;
+
+  constructor(private stateService: StateService) {
+  }
+
+  ngOnInit(): void {
+    this.projects$ = this.stateService.getProjects();
+  }
+
+}

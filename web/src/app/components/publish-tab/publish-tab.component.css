@@ -1,0 +1,32 @@
+.grid {
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: 10% .5em 1fr;
+  grid-template-areas:
+    "interactionSection"
+    "dividerSection"
+    "mainSection";
+}
+
+.interaction {
+  grid-area: interactionSection;
+  justify-self: center;
+}
+
+.divider {
+  grid-area: dividerSection;
+}
+
+.main {
+  display: flex;
+  grid-area: mainSection;
+  margin: 1em;
+}
+
+.projectList {
+  flex-basis: 100%;
+}
+
+mat-progress-spinner {
+  margin-bottom: 8px;
+}
