@@ -6,10 +6,12 @@ DROP TABLE IF EXISTS "users" CASCADE;
 DROP TABLE if EXISTS "resource" CASCADE;
 DROP TABLE if EXISTS "relationship" CASCADE;
 DROP TABLE IF EXISTS "project_owner" CASCADE;
+DROP TABLE IF EXISTS "project_value" CASCADE;
 
 DROP TABLE if EXISTS "rdmo_option" CASCADE;
 DROP TABLE if EXISTS "rdmo_question" CASCADE;
 DROP TABLE if EXISTS "rdmo_value" CASCADE;
+DROP TABLE if EXISTS "project_resource" CASCADE;
 
 DROP SEQUENCE if exists hibernate_sequence;
 CREATE SEQUENCE hibernate_sequence START 1;
@@ -122,6 +124,7 @@ CREATE TABLE "project_owner"
     CONSTRAINT "fkqb39868ogh7w8fjc2b4fvddr1" FOREIGN KEY ("owner_id") REFERENCES "users" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 ;
+
 CREATE TABLE "project_resource"
 (
     "project_id"  BIGINT NOT NULL,
@@ -143,7 +146,7 @@ CREATE TABLE "project_value"
 
 
 -- Create RDMO question answer pairs
-DROP TABLE IF EXISTS question_answer_view CASCADE;
+DROP MATERIALIZED VIEW IF EXISTS question_answer_view CASCADE;
 CREATE MATERIALIZED VIEW question_answer_view AS
 SELECT DISTINCT v.id              AS id,
                 p.id              AS project_id,
@@ -230,9 +233,3 @@ GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO mamodar;
 
 ALTER ROLE mamodar WITH LOGIN;
 
-
-SELECT *
-FROM project p
-         INNER JOIN project_value pv ON pv.project_id = p.id
-         INNER JOIN question_answer_view v ON v.project_id = p.id AND pv.value_id = v.id
-WHERE question_text LIKE 'Aladin'

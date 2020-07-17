@@ -88,7 +88,7 @@ Connect to your server and login into postgres `sudo -u postgres psql postgres`,
 5. open the copied *application.properties* in a text editor  
    5.1. set `spring.datasource.username` and `spring.datasource.password` to the mamodar user created in psql  
    5.2. set `rdmo.url` and `rdmo.token` to the URL of your RDMO instance and add the correct [token](https://rdmo.readthedocs.io/en/latest/administration/api.html)  
-6. start the backend as `nohup java -jar server-0.0.3-SNAPSHOT.jar  -Dspring.config.location=/application.properties > log 2> err &`   
+6. start the backend as `nohup java -jar server-0.0.3-SNAPSHOT.jar  -Dspring.config.location=/application.properties  -Xms512m -Xmx2g -d64 > log 2> err &`   
    6.1. make sure the user *datalinker*  is running the process  
    
 ## RDMO

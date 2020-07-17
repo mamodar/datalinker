@@ -50,11 +50,11 @@ public class RdmoConverter {
           138L, // License/ Terms of use
           152L, // Storage location
           173L, // Funding partner
-          221L, // Cooperation partner external
+          221L, // Cooperation partner internalq
           250L, // Keyword
-          251L, // Title
           269L, // Acronym
-          270L)); // Project type
+          270L,// Project type
+          292L));// Title
 
   private RdmoConverter(
       RdmoOptionRepository rdmoOptionRepository,

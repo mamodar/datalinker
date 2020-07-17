@@ -1,5 +1,5 @@
 /**
- * This class represents a value as received by the API calls.
+ * This class represents a value as received by the API calls. Here projectId and questionText represent the Key and answerText the value.
  * @author Kyanoush Yahosseini
  */
 export class Value {

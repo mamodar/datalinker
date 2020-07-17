@@ -87,7 +87,7 @@ public class ProjectController {
    */
   @GetMapping("/projects")
   List<ProjectDTO> getAllProjects() {
-    log.info("GET: /projects/rdmo " + authenticationFacade.getLdapUser().getDn());
+    log.info("GET: /projects " + authenticationFacade.getLdapUser().getDn());
     ArrayList<ProjectDTO> allProjects = new ArrayList<>();
     projectRepository.findAll(Sort.by(Direction.ASC, "projectName")).
         forEach(project -> allProjects.add(new ProjectDTO(project)));

@@ -8,5 +8,5 @@
   <app-search-filter (filterString)=addFilterTerm($event) class=filter *ngIf="showFilter"></app-search-filter>
 
   <mat-divider class="divider"></mat-divider>
-  <app-project-list [projects$]="this.projects$" class="main"></app-project-list>
+  <app-project-list-paginate [projects$]="this.projects$" class="main"></app-project-list-paginate>
 </div>

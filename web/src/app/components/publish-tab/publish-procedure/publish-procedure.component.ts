@@ -14,6 +14,12 @@ import {MatSnackBar} from '@angular/material/snack-bar';
   templateUrl: './publish-procedure.component.html',
   styleUrls: ['./publish-procedure.component.css']
 })
+
+/**
+ * The  component contains the logic necessary for publishing  a file and metadata to an external service.
+ *
+ * @author Kyanoush Yahosseini
+ */
 export class PublishProcedureComponent implements OnInit {
   public progressBarType: string;
   private selectedProject$: BehaviorSubject<Project>;

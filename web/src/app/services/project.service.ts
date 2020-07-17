@@ -24,15 +24,12 @@ export class ProjectService {
     return this.apiService.get('/projects');
   }
 
-  getProject(project: Project): Observable<Project> {
-    return this.apiService.get('/projects/' + project.id);
-  }
-
   getResourcesOfProject(project: Project): Observable<Resource[]> {
     return this.apiService.get('/projects/' + project.id + '/resources');
   }
 
   searchProjects(search?: string, filter?: string): Observable<Project[]> {
+
     if (search && filter) {
       return this.apiService.get('/projects/search?search=' + search + '&filter=' + filter);
     }
@@ -42,14 +39,9 @@ export class ProjectService {
     if (filter) {
       return this.apiService.get('/projects/search?filter=' + filter);
     }
-    return this.getProjects();
+    return this.apiService.get('/projects/search');
 
   }
-
-  filterProjects(query: string): Observable<Project[]> {
-    return this.apiService.get('/projects/search?filter=' + query);
-  }
-
   getValuesOfProject(project: Project): Observable<Value[]> {
     return this.apiService.get('/projects/' + project.id + '/values');
   }

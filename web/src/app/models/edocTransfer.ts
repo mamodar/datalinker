@@ -16,7 +16,6 @@ export class EdocTransfer {
   file: File;
 
   public fromProject(project: Project, values: Value[]): EdocTransfer {
-    console.log(JSON.stringify(values));
     for (const value of values) {
       switch (value.questionText.toLocaleLowerCase()) {
         case 'titel':

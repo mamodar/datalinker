@@ -29,7 +29,6 @@ export class LoginComponent {
     this.stateService.loginUser(this.login, this.password).
     pipe(catchError(err => {
       this.passwordCorrect = false;
-      console.warn(err);
       return of(err);
     })).
     subscribe(_ => {
