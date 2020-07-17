@@ -8,7 +8,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 import {HomeComponent} from './components/misc/home/home.component';
 
-import {ProjectListComponent} from './components/shared/project-list/project-list.component';
+import {ProjectListComponent} from './components/shared/project-list-paginate/project-list/project-list.component';
 
 import {ResourceListComponent} from './components/shared/resource-list/resource-list.component';
 
@@ -59,6 +59,8 @@ import {PublishProjectDialogComponent} from './components/publish-tab/publish-pr
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
 import {NewResourceAddComponent} from './components/new-resource-tab/new-resource-add/new-resource-add.component';
+import {PaginatorComponent} from './components/shared/project-list-paginate/paginator/paginator.component';
+import {ProjectListPaginateComponent} from './components/shared/project-list-paginate/project-list-paginate.component';
 
 @NgModule({
   declarations: [
@@ -83,7 +85,9 @@ import {NewResourceAddComponent} from './components/new-resource-tab/new-resourc
     PublishProgressBarComponent,
     PublishProcedureComponent,
     PublishProjectDialogComponent,
-    NewResourceAddComponent
+    NewResourceAddComponent,
+    PaginatorComponent,
+    ProjectListPaginateComponent
   ],
   imports: [
     BrowserModule,

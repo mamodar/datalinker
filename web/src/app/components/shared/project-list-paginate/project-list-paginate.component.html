@@ -1,0 +1,2 @@
+<app-project-list [projects$]="this.projectsPaginated$" class="colleft"></app-project-list>
+<app-paginator (projectEmitter)="paginatorChanged($event)" [projects$]="this.projects$"></app-paginator>

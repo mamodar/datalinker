@@ -7,6 +7,11 @@ import {EdocTransfer} from '../../../models/edocTransfer';
   templateUrl: './publish-project-dialog.component.html',
   styleUrls: ['./publish-project-dialog.component.css']
 })
+/**
+ * This dialog collects  the metadata for publishing a file to an external service.
+ * @author Kyanoush Yahosseini
+ */
+
 export class PublishProjectDialogComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: EdocTransfer,
@@ -14,7 +19,6 @@ export class PublishProjectDialogComponent {
   }
 
   uploadFile(files: FileList): void {
-    console.warn('uploadFile' + JSON.stringify(files.item(0)));
     this.data.file = files.item(0);
   }
 

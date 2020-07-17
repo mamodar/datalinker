@@ -8,6 +8,10 @@ import {map} from 'rxjs/operators';
   templateUrl: './search-filter.component.html',
   styleUrls: ['./search-filter.component.css']
 })
+/**
+ * This component allows to filter projects depending on their metadata fields.
+ * @author Kyanoush Yahosseini
+ */
 export class SearchFilterComponent implements OnInit {
   filterValues: string[] = ['', '', '', '', '', '', '', '', ''];
   filterKeys: string[] = [
@@ -30,14 +34,13 @@ export class SearchFilterComponent implements OnInit {
         stringBuilder = stringBuilder + this.filterKeys[index] + ':' + value + ',';
       }
     });
-
     this.filterString.emit(stringBuilder);
   }
 
   suggestionsForKey(filterKey: string, filterValue: string): string[] {
     const suggestions: string[] = [];
 
-    this.allValues.filter(value => value.questionText === filterKey).forEach(value => suggestions.push(value.answerText));
+    this.allValues.filter(value => value.questionText.includes(filterKey)).forEach(value => suggestions.push(value.answerText));
 
     if (filterValue === '') {
       return [...new Set(suggestions)];

@@ -1,12 +1,12 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Project} from '../../../models/project';
+import {Project} from '../../../../models/project';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {StateService} from '../../../services/state.service';
-import {Resource} from '../../../models/resource';
-import {Value} from '../../../models/value';
+import {StateService} from '../../../../services/state.service';
+import {Resource} from '../../../../models/resource';
+import {Value} from '../../../../models/value';
 
 /**
- * This component shows all projects as an expansion panel.
+ * This component shows projects as an expansion panel.
  *
  * @author Kyanoush Yahosseini
  */

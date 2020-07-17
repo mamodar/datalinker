@@ -1,38 +1,53 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Project} from '../../models/project';
-import {Observable, of} from 'rxjs';
+import {BehaviorSubject, of, Subscription} from 'rxjs';
 import {StateService} from '../../services/state.service';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-search-tab',
   templateUrl: './search-tab.component.html',
   styleUrls: ['./search-tab.component.css']
 })
+/**
+ * The main component for the search navigation tab.
+ * @author Kyanoush Yahosseini
+ */
 export class SearchTabComponent implements OnInit {
-  projects$: Observable<Project[]>;
+  projects$: BehaviorSubject<Project[]> = new BehaviorSubject<Project[]>(null);
   @Input() searchTerm: string;
   @Input() filterTerm: string;
   searchTermSave: string;
   filterTermSave: string;
   public showFilter: boolean;
-
+  sub: Subscription;
   constructor(private stateService: StateService) {
   }
 
   ngOnInit(): void {
     this.showFilter = false;
-    this.projects$ = this.stateService.getProjects();
+    this.sub = this.stateService.getProjects().pipe(map(value => this.projects$.next(value))).subscribe();
   }
 
   addSearchTerm($event: string): void {
     this.searchTermSave = $event;
-    this.projects$ = this.stateService.searchProjects(of($event), of(this.filterTermSave));
+    if (this.sub) {
+      this.sub.unsubscribe();
+    }
+
+    this.sub = this.stateService.searchProjects(of($event), of(this.filterTermSave)).pipe(
+      map(value => this.projects$.next(value))).subscribe();
+
   }
 
   addFilterTerm($event: string): void {
 
     this.filterTermSave = $event;
-    this.projects$ = this.stateService.searchProjects(of(this.searchTermSave), of($event));
+    if (this.sub) {
+      this.sub.unsubscribe();
+    }
+    this.sub = this.stateService.searchProjects(of(this.searchTermSave), of($event)).pipe(
+      map(value => this.projects$.next(value))).subscribe();
   }
 
   toggleFilter(): void {
