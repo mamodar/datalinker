@@ -34,7 +34,7 @@ export class LoginComponent {
     subscribe(_ => {
       this.showSpinner = false;
       if ((this.stateService.getLoggedInUser().getValue() !== null) && (this.stateService.getLoggedInUser().getValue().userName !== null)) {
-        this.router.navigate(['/projects'], {queryParams: this.route.snapshot.queryParams});
+        this.router.navigate(['/search'], {queryParams: this.route.snapshot.queryParams});
       }
     });
 

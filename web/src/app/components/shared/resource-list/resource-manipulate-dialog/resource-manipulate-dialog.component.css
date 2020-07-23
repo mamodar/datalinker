@@ -1,18 +1,15 @@
-.mat-radio-button {
-  margin-left: 1em;
-  margin-bottom: 2em;
-}
-.mat-slide-toggle {
-  margin-left: 1em;
+.full-width {
+  width: 100%
 }
 
-.pathinput {
-  width: 100%;
-}
-.descriptioninput {
-  width: 100%;
+.half-width {
+  width: 50%;
 }
 
-div {
-  margin-top: .5em;
+.quarter-width {
+  width: 23%;
+}
+
+.radio {
+  margin-left: 1em;
 }

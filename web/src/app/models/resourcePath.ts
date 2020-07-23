@@ -1,5 +1,4 @@
 import {ResourceType} from './resourceType';
-import {CloudType} from './cloudType';
 
 /**
  * This class represents the a resource path.
@@ -20,12 +19,6 @@ export class ResourcePath {
           filter(_ => _ !== 'S:').join('/');
         return this;
         break;
-      case 'CLOUD':
-        const ct = new CloudType(viewValue);
-        this.viewValue = ct.viewValue;
-        this.value = ct.value;
-        return this;
-        break;
       default:
         this.viewValue = viewValue;
         this.value = viewValue;
@@ -41,12 +34,6 @@ export class ResourcePath {
           split('/').
           filter(_ => _.length > 1).
           filter(_ => _ !== 'rki.local').join('\\');
-        return this;
-        break;
-      case 'CLOUD':
-        const ct = new CloudType(value);
-        this.value = ct.value;
-        this.viewValue = ct.viewValue;
         return this;
         break;
       default:

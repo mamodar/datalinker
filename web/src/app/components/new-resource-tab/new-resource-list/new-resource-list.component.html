@@ -1,8 +1,7 @@
 <mat-accordion>
   <mat-expansion-panel *ngFor="let resource of newResources$ | async" hideToggle >
     <mat-expansion-panel-header>
-      <mat-panel-title> Typ: {{resource.location?.viewValue}}
-        {{resource.location?.pathDescriptor}} {{resource.path.viewValue}}</mat-panel-title>
+      <mat-panel-title>{{resource.path.viewValue}}</mat-panel-title>
       <mat-panel-description> Neuer Pfad</mat-panel-description>
       <ng-template matExpansionPanelContent>
         <mat-list dense>

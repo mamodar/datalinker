@@ -34,7 +34,6 @@ export class ResourceManipulateDialogComponent implements OnInit {
 
   ngOnInit() {
     this.resourceTypes$ = this.stateService.getResourceTypes();
-    this.cloudTypes$ = this.stateService.getCloudTypes();
     if (!this.data.path) {this.data.path = new ResourcePath(); }
     this.activatedRoute.queryParamMap.pipe( take(1), map(
       // creates an object from aromatically selecting a location

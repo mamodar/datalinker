@@ -33,6 +33,8 @@ export class NewResourceAddComponent implements OnInit {
     this.newResource = new Resource();
     this.newResource.location = new ResourceType(null);
     const dialogConfig = new MatDialogConfig();
+    dialogConfig.minWidth = '50%';
+    dialogConfig.maxWidth = '50%';
     dialogConfig.disableClose = true;
     dialogConfig.data = this.newResource;
     // https://material.angular.io/components/dialog/overview

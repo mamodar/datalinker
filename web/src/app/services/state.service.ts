@@ -8,7 +8,6 @@ import {ResourceService} from './resource.service';
 import {ResourceType} from '../models/resourceType';
 import {AuthUser} from '../models/authUser';
 import {ApiService} from './api.service';
-import {CloudType} from '../models/cloudType';
 import {ResourcePath} from '../models/resourcePath';
 import {Value} from '../models/value';
 import {PublicationService} from './publication.service';
@@ -50,7 +49,6 @@ export class StateService {
   private newResources = new Array<Resource>();
   private shownNewResources = new BehaviorSubject<Resource[]>(null);
   private resourceTypes: ResourceType[];
-  private cloudTypes: CloudType[];
 
   public getResources(): BehaviorSubject<Resource[]> {
     if (this.filterResourcesByProject.getValue()) {
@@ -145,11 +143,6 @@ export class StateService {
     return (resourceTypes);
   }
 
-  public getCloudTypes(): BehaviorSubject<CloudType[]> {
-    const cloudTypes: BehaviorSubject<CloudType[]> = new BehaviorSubject<CloudType[]>(this.cloudTypes);
-    return (cloudTypes);
-  }
-
   public updateResource(resource: Resource): Observable<Resource> {
     return this.resourceService.updateResource(resource);
   }
@@ -205,15 +198,10 @@ export class StateService {
 
   private initializeTypes(): void {
     this.resourceTypes = [];
-    this.resourceTypes.push(new ResourceType(0));
-    this.resourceTypes.push(new ResourceType(2));
-    this.resourceTypes.push(new ResourceType(3));
-    this.resourceTypes.push(new ResourceType(4));
-    this.resourceTypes.push(new ResourceType(6));
-    this.cloudTypes = [];
-    this.cloudTypes.push(new CloudType(0));
-    this.cloudTypes.push(new CloudType(1));
-    this.cloudTypes.push(new CloudType(2));
+    this.resourceTypes.push(new ResourceType('SAN'));
+    this.resourceTypes.push(new ResourceType('OPENBIS'));
+    this.resourceTypes.push(new ResourceType('GIT'));
+    this.resourceTypes.push(new ResourceType('DOI'));
   }
 
   public getValues(): Observable<Value[]> {

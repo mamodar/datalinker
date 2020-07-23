@@ -30,8 +30,10 @@ export class NewResourceListComponent implements OnInit {
 
   onSelect(resource: Resource) {
     const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
     dialogConfig.data = resource;
+    dialogConfig.disableClose = true;
+    dialogConfig.minWidth = '50%';
+    dialogConfig.maxWidth = '50%';
     const modalDialog = this.matDialog.open(ResourceManipulateDialogComponent, dialogConfig);
 
   }
