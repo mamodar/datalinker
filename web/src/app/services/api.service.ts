@@ -19,7 +19,8 @@ export class ApiService {
   constructor(private http: HttpClient) {
   }
 
-  private static formatErrors(error: any) {
+  private formatErrors(error: any) {
+    console.warn('Something bad happened; please try again later.');
     return throwError(error);
   }
 
@@ -36,7 +37,7 @@ export class ApiService {
       return this.http.get(environment.appUrl + path, httpOptions);
     }
     return this.http.get(environment.appUrl + path, httpOptions)
-    .pipe(catchError(ApiService.formatErrors));
+    .pipe(catchError(this.formatErrors));
   }
 
   put(path: string, body: any = {}): Observable<any> {
@@ -44,7 +45,7 @@ export class ApiService {
     return this.http.put(
       environment.appUrl + path,
       body
-    ).pipe(catchError(ApiService.formatErrors));
+    ).pipe(catchError(this.formatErrors));
   }
 
   post(path: string, body: any = {}): Observable<any> {
@@ -52,7 +53,7 @@ export class ApiService {
 
     return this.http.post(
       environment.appUrl + path,
-      body).pipe(catchError(ApiService.formatErrors));
+      body).pipe(catchError(this.formatErrors));
   }
 
   postWithProgress(path: string, body: any = {}): Observable<any> {
@@ -60,7 +61,7 @@ export class ApiService {
     const req = new HttpRequest('POST', environment.appUrl + path, body, {
       reportProgress: true
     });
-    return this.http.request(req).pipe(catchError(ApiService.formatErrors)
+    return this.http.request(req).pipe(catchError(this.formatErrors)
     );
   }
 
@@ -68,6 +69,6 @@ export class ApiService {
     console.log(Date() + ' DELETE:' + path);
     return this.http.delete(
       environment.appUrl + path
-    ).pipe(catchError(ApiService.formatErrors));
+    ).pipe(catchError(this.formatErrors));
   }
 }

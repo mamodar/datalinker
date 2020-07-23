@@ -22,9 +22,8 @@ public class ResourceDTO {
   private String createdTimestamp;
   private String updatedTimestamp;
   private Float size;
-  private Boolean isPersonal;
+  private Boolean isPersonal = true;
   private Boolean isArchived = false;
-  private Boolean isThirdParty = false;
   private String description;
   private Long projectId;
 
@@ -45,7 +44,6 @@ public class ResourceDTO {
     this.location = resource.getResourceType().name();
     this.path = resource.getPath();
     this.isArchived = resource.getArchived();
-    this.isThirdParty = resource.getThirdParty();
     this.isPersonal = resource.getPersonal();
     this.size = resource.getSize();
     this.createdTimestamp = resource.getCreationTimestamp().toString();
@@ -227,23 +225,6 @@ public class ResourceDTO {
     isArchived = archived;
   }
 
-  /**
-   * Gets third party.
-   *
-   * @return the third party
-   */
-  public Boolean getThirdParty() {
-    return isThirdParty;
-  }
-
-  /**
-   * Sets third party.
-   *
-   * @param thirdParty the third party
-   */
-  public void setThirdParty(Boolean thirdParty) {
-    isThirdParty = thirdParty;
-  }
 
   /**
    * Gets description.

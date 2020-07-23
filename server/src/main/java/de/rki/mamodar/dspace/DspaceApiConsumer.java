@@ -64,10 +64,13 @@ public class DspaceApiConsumer {
     body.add("email", env.getProperty("dspace.user"));
     body.add("password", env.getProperty("dspace.password"));
     HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
+
     ResponseEntity<String> response = new RestTemplate().
         exchange(env.getProperty("dspace.url") + "/login", HttpMethod.POST, request, String.class);
     this.sessionId = response.getHeaders().get("Set-Cookie").get(0);
     return response;
+
+
   }
 
 
@@ -76,7 +79,7 @@ public class DspaceApiConsumer {
    *
    * @return the http entity
    */
-  public HttpEntity<String> createItem() {
+  public ResponseEntity<String> createItem() {
     HttpHeaders headers = createBasicHeaders();
     headers.add("Cookie", this.sessionId);
 

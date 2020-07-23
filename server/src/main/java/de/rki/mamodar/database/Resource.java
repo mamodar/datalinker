@@ -59,13 +59,10 @@ public class Resource {
   private Float size;
 
   @Column(name = "personal")
-  private Boolean isPersonal = true;
+  private Boolean isPersonal;
 
   @Column(name = "archived")
-  private Boolean isArchived = false;
-
-  @Column(name = "third_party")
-  private Boolean isThirdParty = false;
+  private Boolean isArchived;
 
 
   @Column(name = "description")
@@ -100,7 +97,6 @@ public class Resource {
     this.description = resourceDTO.getDescription();
     this.isArchived = resourceDTO.getArchived();
     this.isPersonal = resourceDTO.getPersonal();
-    this.isThirdParty = resourceDTO.getThirdParty();
     this.size = resourceDTO.getSize();
 
   }
@@ -119,7 +115,6 @@ public class Resource {
     this.description = resourceDTO.getDescription() != null ? resourceDTO.getDescription() : this.description;
     this.isArchived = resourceDTO.getArchived() != null ? resourceDTO.getArchived() : this.isArchived;
     this.isPersonal = resourceDTO.getPersonal() != null ? resourceDTO.getPersonal() : this.isPersonal;
-    this.isThirdParty = resourceDTO.getThirdParty() != null ? resourceDTO.getThirdParty() : this.isThirdParty;
     this.size = resourceDTO.getSize() != null ? resourceDTO.getSize() : this.size;
   }
 
@@ -295,23 +290,6 @@ public class Resource {
     isArchived = archived;
   }
 
-  /**
-   * Gets third party.
-   *
-   * @return the third party
-   */
-  public Boolean getThirdParty() {
-    return isThirdParty;
-  }
-
-  /**
-   * Sets third party.
-   *
-   * @param thirdParty the third party
-   */
-  public void setThirdParty(Boolean thirdParty) {
-    isThirdParty = thirdParty;
-  }
 
   /**
    * Gets description.

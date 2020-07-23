@@ -78,10 +78,15 @@ export class PublishProcedureComponent implements OnInit {
   private sendToPublishInExternal(edocTransfer: EdocTransfer): void {
     edocTransfer.authors.filter(value => value !== '');
     this.progressBarType = 'start';
-    this.stateService.publishToExternalService('edoc', edocTransfer).pipe().subscribe(event => {
-      this.progressBarType = 'upload';
-      this.waitForResponse(event);
-    });
+    this.stateService.publishToExternalService('edoc', edocTransfer).subscribe(
+      event => {
+        this.progressBarType = 'upload';
+        this.waitForResponse(event);
+      },
+      error => {
+        this.openSnackBar('Fehler!');
+        this.progressBarType = 'error';
+      });
   }
 
   private reactToFinishedUpload(event: HttpResponse<any>) {
@@ -95,7 +100,7 @@ export class PublishProcedureComponent implements OnInit {
 
   private openSnackBar(message): void {
     this.snackBar.open(message, null, {
-      duration: 3000,
+      duration: 6000,
       horizontalPosition: 'center',
       verticalPosition: 'top',
     });

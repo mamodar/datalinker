@@ -10,13 +10,15 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -46,15 +48,24 @@ public class PublicationController {
    * @return the ID (a uuid) of the created item
    */
   @PostMapping(value = "dspace/publications/items")
-  HttpEntity<String> createPublication(@RequestBody MetadataDTO metadata) {
+  ResponseEntity<String> createPublication(@RequestBody MetadataDTO metadata) {
     log.info("dspace/publications/items" + metadata.toString());
-    this.dspaceApiConsumer.auth();
-    HttpEntity<String> response = this.dspaceApiConsumer.createItem();
-    Pattern pattern = Pattern.compile("uuid\":\"([\\w-]*)");
-    Matcher matcher = pattern.matcher(response.getBody());
-    matcher.find();
-    this.dspaceApiConsumer.addMetadata(matcher.group(1), metadata.toDspaceMetadataList());
-    return new HttpEntity<>(gson.toJson(matcher.group(1)));
+    try {
+      this.dspaceApiConsumer.auth();
+      ResponseEntity<String> response = this.dspaceApiConsumer.createItem();
+      Pattern pattern = Pattern.compile("uuid\":\"([\\w-]*)");
+      Matcher matcher = pattern.matcher(response.getBody());
+      matcher.find();
+      this.dspaceApiConsumer.addMetadata(matcher.group(1), metadata.toDspaceMetadataList());
+      return new ResponseEntity<>(gson.toJson(matcher.group(1)), HttpStatus.OK);
+
+    } catch (HttpStatusCodeException e) {
+      log.warn("dspace error " + e.getStatusCode() + " " + e.getResponseBodyAsString() + " " + e.getResponseHeaders()
+          .toString());
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+
   }
 
   /**
@@ -68,12 +79,18 @@ public class PublicationController {
    */
   @PostMapping(value = "dspace/publications/bitstreams",
       consumes = {"multipart/form-data"})
-  HttpEntity<String> createPublication(
+  ResponseEntity<String> createPublication(
       @RequestParam(value = "item") String uuid,
       @RequestPart(value = "file") MultipartFile file) throws IOException {
     log.info("dspace/publications/bitstreams");
-    this.dspaceApiConsumer.auth();
-    return this.dspaceApiConsumer.addBitstream(uuid, file);
+    try {
+      this.dspaceApiConsumer.auth();
+      return this.dspaceApiConsumer.addBitstream(uuid, file);
+    } catch (HttpStatusCodeException e) {
+      log.warn("dspace error " + e.getStatusCode() + " " + e.getResponseBodyAsString() + " " + e.getResponseHeaders()
+          .toString());
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
 }
