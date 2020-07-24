@@ -4,7 +4,6 @@ import {Resource} from '../../../models/resource';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
 import {Router} from '@angular/router';
-import {CloudType} from '../../../models/cloudType';
 
 /**
  * This component shows all resources of a project as a table.
@@ -38,6 +37,8 @@ export class ResourceListComponent implements OnDestroy, OnInit {
         this.dataSource.data = resourceArray;
         this.dataSource.paginator = this.paginator;
         this.dataSource.filter = '';
+        this.dataSource.filterPredicate = (data, filter) =>
+          JSON.stringify(data).trim().toLocaleLowerCase().includes(filter.trim().toLocaleLowerCase());
       });
     if (this.router.url === '/projects') {
       this.displayedColumns = ['path', 'location', 'action'];
@@ -53,11 +54,7 @@ export class ResourceListComponent implements OnDestroy, OnInit {
   }
 
   search($event): void {
-    this.dataSource.filter = ($event.target as HTMLInputElement).value.trim().toLowerCase();
-  }
-
-  newCloudValue(path: string): string {
-    return new CloudType(path).viewValue;
+    this.dataSource.filter = ($event.target as HTMLInputElement).value;
   }
 
 }

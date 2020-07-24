@@ -12,3 +12,8 @@
   margin-top: -1em;
   margin-bottom: -1em;
 }
+
+.email {
+  margin-left: .5em;
+  text-decoration: none;
+}

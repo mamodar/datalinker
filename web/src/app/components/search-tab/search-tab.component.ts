@@ -26,7 +26,7 @@ export class SearchTabComponent implements OnInit {
 
   ngOnInit(): void {
     this.showFilter = false;
-    this.sub = this.stateService.getProjects().pipe(map(value => this.projects$.next(value))).subscribe();
+    this.sub = this.stateService.searchProjects(of(null), of(null)).pipe(map(value => this.projects$.next(value))).subscribe();
   }
 
   addSearchTerm($event: string): void {
