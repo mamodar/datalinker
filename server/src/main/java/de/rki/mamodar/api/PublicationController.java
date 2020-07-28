@@ -1,9 +1,11 @@
 package de.rki.mamodar.api;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.rki.mamodar.MamodarApplication;
 import de.rki.mamodar.dspace.DspaceApiConsumer;
 import de.rki.mamodar.dspace.MetadataDTO;
+import de.rki.mamodar.zenodo.ZenodoApiConsumer;
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,12 +34,14 @@ import org.springframework.web.multipart.MultipartFile;
 public class PublicationController {
 
   private static final Logger log = LoggerFactory.getLogger(MamodarApplication.class);
-  private final Gson gson = new Gson();
   /**
    * The autowired {@link DspaceApiConsumer}.
    */
   @Autowired
   DspaceApiConsumer dspaceApiConsumer;
+
+  @Autowired
+  ZenodoApiConsumer zenodoApiConsumer;
 
   /**
    * Create a item on a dspace instance. Authorize with the dspace server. Attach provided metadata as {@link
@@ -48,7 +52,7 @@ public class PublicationController {
    * @return the ID (a uuid) of the created item
    */
   @PostMapping(value = "dspace/publications/items")
-  ResponseEntity<String> createPublication(@RequestBody MetadataDTO metadata) {
+  ResponseEntity<String> createPublication(@RequestBody MetadataDTO metadata) throws JsonProcessingException {
     log.info("dspace/publications/items" + metadata.toString());
     try {
       this.dspaceApiConsumer.auth();
@@ -57,15 +61,13 @@ public class PublicationController {
       Matcher matcher = pattern.matcher(response.getBody());
       matcher.find();
       this.dspaceApiConsumer.addMetadata(matcher.group(1), metadata.toDspaceMetadataList());
-      return new ResponseEntity<>(gson.toJson(matcher.group(1)), HttpStatus.OK);
+      return new ResponseEntity<>(new ObjectMapper().writeValueAsString(matcher.group(1)), HttpStatus.OK);
 
     } catch (HttpStatusCodeException e) {
       log.warn("dspace error " + e.getStatusCode() + " " + e.getResponseBodyAsString() + " " + e.getResponseHeaders()
           .toString());
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
-
   }
 
   /**
@@ -92,5 +94,51 @@ public class PublicationController {
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+
+  @PostMapping(value = "zenodo/publications/items")
+  ResponseEntity<String> createZenodoPublication(@RequestBody MetadataDTO metadata) throws JsonProcessingException {
+    log.info("zenodo/publications/items" + metadata.toString());
+    try {
+      ResponseEntity<String> response = this.zenodoApiConsumer.createItem(metadata);
+      Long itemId = getItemId(response);
+      return new ResponseEntity<>(itemId.toString(), HttpStatus.OK);
+    } catch (HttpStatusCodeException e) {
+      log.warn("zenodo error " + e.getStatusCode() + " " + e.getResponseBodyAsString() + " " + e.getResponseHeaders()
+          .toString());
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @PostMapping(value = "zenodo/publications/bitstreams",
+      consumes = {"multipart/form-data"})
+  ResponseEntity<String> addZenodoBitstream(@RequestParam(value = "item") String itemId,
+      @RequestPart(value = "file") MultipartFile file) throws IOException {
+    log.info("zenodo/publications/bitstreams");
+    try {
+      String uuid = getBucketUuid(this.zenodoApiConsumer.getItem(Long.parseLong(itemId)));
+      this.zenodoApiConsumer.addFile(uuid, file);
+      return this.zenodoApiConsumer.publishItem(Long.parseLong(itemId));
+    } catch (HttpStatusCodeException e) {
+      log.warn("zenodo error " + e.getStatusCode() + " " + e.getResponseBodyAsString() + " " + e.getResponseHeaders()
+          .toString());
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  private String getBucketUuid(ResponseEntity<String> response) {
+    Pattern pattern = Pattern.compile("bucket\":\"([\\w-:/.]*)");
+    Matcher matcher = pattern.matcher(response.getBody());
+    matcher.find();
+    String[] url = matcher.group(1).split("/");
+    return url[url.length - 1];
+  }
+
+  private Long getItemId(ResponseEntity<String> response) {
+    Pattern pattern = Pattern.compile("\"id\":([0-9]*)");
+    Matcher matcher = pattern.matcher(response.getBody());
+    matcher.find();
+    return Long.parseLong(matcher.group(1));
+  }
+
 
 }

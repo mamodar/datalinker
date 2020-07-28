@@ -1,6 +1,7 @@
 package de.rki.mamodar.dspace;
 
 
+import de.rki.mamodar.zenodo.ZenodoMetdatataDTO;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -21,6 +22,8 @@ public class MetadataDTO {
   private String issueDate;
   private String license;
 
+  private String uploadType;
+  private String accessRight;
 
   /**
    * Converts the metadata dto to a list of {@link DspaceMetadataDTO}
@@ -51,6 +54,33 @@ public class MetadataDTO {
       dspaceMetadata.add(new DspaceMetadataDTO("dc.rights", license));
     }
     return dspaceMetadata;
+  }
+
+  public ZenodoMetdatataDTO toZenodoMetadataList() {
+    ZenodoMetdatataDTO zenodoMetdatata = new ZenodoMetdatataDTO();
+    ArrayList<ZenodoMetdatataDTO> metadata = new ArrayList<>();
+    if (title != null) {
+      zenodoMetdatata.setTitle(title);
+    }
+    if (abstractText != null) {
+      zenodoMetdatata.setDescription(abstractText);
+    }
+    if (authors != null) {
+      authors.forEach(author -> zenodoMetdatata.addCreator(author));
+    }
+    if (keywords != null) {
+      keywords.forEach(keyword -> zenodoMetdatata.getKeywords().add(keyword));
+    }
+    if (description != null) {
+      zenodoMetdatata.setDescription(description);
+    }
+    if (issueDate != null) {
+      zenodoMetdatata.setPublicationDate(LocalDate.parse(issueDate).toString());
+    }
+    //TODO KY wire correct license
+    metadata.add(zenodoMetdatata);
+    return zenodoMetdatata;
+
   }
 
   /**

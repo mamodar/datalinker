@@ -1,6 +1,7 @@
 package de.rki.mamodar.dspace;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.ArrayList;
 import org.springframework.core.env.Environment;
@@ -26,7 +27,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class DspaceApiConsumer {
 
 
-  private final Gson gson = new Gson();
   private final Environment env;
 
 
@@ -98,12 +98,13 @@ public class DspaceApiConsumer {
    * @param metadata the metadata
    * @return the response entity
    */
-  public ResponseEntity<String> addMetadata(String uuid, ArrayList<DspaceMetadataDTO> metadata) {
+  public ResponseEntity<String> addMetadata(String uuid, ArrayList<DspaceMetadataDTO> metadata)
+      throws JsonProcessingException {
 
     HttpHeaders headers = createBasicHeaders();
     headers.add("Cookie", this.sessionId);
 
-    HttpEntity<String> request = new HttpEntity<>(gson.toJson(metadata), headers);
+    HttpEntity<String> request = new HttpEntity<>(new ObjectMapper().writeValueAsString(metadata), headers);
 
     ResponseEntity<String> response = new RestTemplate().
         exchange(env.getProperty("dspace.url") + "/items/" + uuid + "/metadata",
@@ -125,6 +126,7 @@ public class DspaceApiConsumer {
     HttpHeaders headers = createBasicHeaders();
     headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
     headers.add("Cookie", this.sessionId);
+    //TODO KY: next two lines needed?
     MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
     body.add("file", file.getBytes());
     HttpEntity<byte[]> request = new HttpEntity<>(file.getBytes(), headers);
