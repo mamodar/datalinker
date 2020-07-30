@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
-import {EdocTransfer} from '../../../models/edocTransfer';
+import {PublicationDTO} from '../../../models/publicationDTO';
 import {HttpEventType, HttpResponse} from '@angular/common/http';
 import {PublishProjectDialogComponent} from '../publish-project-dialog/publish-project-dialog.component';
 import {StateService} from '../../../services/state.service';
@@ -33,8 +33,8 @@ export class PublishProcedureComponent implements OnInit {
     this.selectedValues$ = this.stateService.getValuesForSelectedProject();
   }
 
-  // tslint:disable-next-line:no-input-rename
-  @Input('repo') selectedRepo: string;
+
+  @Input() selectedRepo: string;
 
   ngOnInit(): void {
   }
@@ -49,12 +49,12 @@ export class PublishProcedureComponent implements OnInit {
     dialogConfig.disableClose = true;
     dialogConfig.minWidth = '50%';
     dialogConfig.maxWidth = '50%';
-    const edocTransfer = new EdocTransfer().fromProject(this.selectedProject$.getValue(), this.selectedValues$.getValue());
-    dialogConfig.data = edocTransfer;
+    const publicationDTO = new PublicationDTO().fromProject(this.selectedProject$.getValue(), this.selectedValues$.getValue());
+    dialogConfig.data = publicationDTO;
     const modalDialog = this.matDialog.open(PublishProjectDialogComponent, dialogConfig);
     modalDialog.afterClosed().subscribe(_ => {
       if (_.send) {
-        this.sendToPublishInExternal(edocTransfer);
+        this.sendToPublishInExternal(publicationDTO);
       }
     });
 
@@ -75,15 +75,16 @@ export class PublishProcedureComponent implements OnInit {
     }
   }
 
-  private sendToPublishInExternal(edocTransfer: EdocTransfer): void {
-    edocTransfer.authors.filter(value => value !== '');
+  private sendToPublishInExternal(publicationDTO: PublicationDTO): void {
+    publicationDTO.authors.filter(value => value !== '');
     this.progressBarType = 'start';
-    this.stateService.publishToExternalService('edoc', edocTransfer).subscribe(
+    this.stateService.publishToExternalService(this.selectedRepo, publicationDTO).subscribe(
       event => {
         this.progressBarType = 'upload';
         this.waitForResponse(event);
       },
       error => {
+        console.warn(JSON.stringify(error));
         this.openSnackBar('Fehler!');
         this.progressBarType = 'error';
       });
@@ -91,7 +92,8 @@ export class PublishProcedureComponent implements OnInit {
 
   private reactToFinishedUpload(event: HttpResponse<any>) {
     this.progressBarType = 'finished';
-    if (event.status === 200) {
+    console.log(event.status);
+    if ((event.status >= 200) && (event.status < 300)) {
       this.openSnackBar('Erfolg!');
     } else {
       this.openSnackBar('Fehler!');

@@ -51,7 +51,7 @@ public class PublicationController {
    * @param metadata the metadata
    * @return the ID (a uuid) of the created item
    */
-  @PostMapping(value = "dspace/publications/items")
+  @PostMapping(value = "publications/items/dspace")
   ResponseEntity<String> createPublication(@RequestBody MetadataDTO metadata) throws JsonProcessingException {
     log.info("dspace/publications/items" + metadata.toString());
     try {
@@ -59,7 +59,6 @@ public class PublicationController {
       ResponseEntity<String> response = this.dspaceApiConsumer.createItem();
       Pattern pattern = Pattern.compile("uuid\":\"([\\w-]*)");
       Matcher matcher = pattern.matcher(response.getBody());
-      matcher.find();
       this.dspaceApiConsumer.addMetadata(matcher.group(1), metadata.toDspaceMetadataList());
       return new ResponseEntity<>(new ObjectMapper().writeValueAsString(matcher.group(1)), HttpStatus.OK);
 
@@ -68,6 +67,7 @@ public class PublicationController {
           .toString());
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
   }
 
   /**
@@ -79,7 +79,7 @@ public class PublicationController {
    * @return the http entity
    * @throws IOException if the bitstream can not be read
    */
-  @PostMapping(value = "dspace/publications/bitstreams",
+  @PostMapping(value = "publications/bitstreams/dspace",
       consumes = {"multipart/form-data"})
   ResponseEntity<String> createPublication(
       @RequestParam(value = "item") String uuid,
@@ -95,7 +95,7 @@ public class PublicationController {
     }
   }
 
-  @PostMapping(value = "zenodo/publications/items")
+  @PostMapping(value = "publications/items/zenodo")
   ResponseEntity<String> createZenodoPublication(@RequestBody MetadataDTO metadata) throws JsonProcessingException {
     log.info("zenodo/publications/items" + metadata.toString());
     try {
@@ -109,7 +109,7 @@ public class PublicationController {
     }
   }
 
-  @PostMapping(value = "zenodo/publications/bitstreams",
+  @PostMapping(value = "publications/bitstreams/zenodo",
       consumes = {"multipart/form-data"})
   ResponseEntity<String> addZenodoBitstream(@RequestParam(value = "item") String itemId,
       @RequestPart(value = "file") MultipartFile file) throws IOException {
@@ -117,7 +117,8 @@ public class PublicationController {
     try {
       String uuid = getBucketUuid(this.zenodoApiConsumer.getItem(Long.parseLong(itemId)));
       this.zenodoApiConsumer.addFile(uuid, file);
-      return this.zenodoApiConsumer.publishItem(Long.parseLong(itemId));
+      this.zenodoApiConsumer.publishItem(Long.parseLong(itemId));
+      return new ResponseEntity<>(itemId, HttpStatus.OK);
     } catch (HttpStatusCodeException e) {
       log.warn("zenodo error " + e.getStatusCode() + " " + e.getResponseBodyAsString() + " " + e.getResponseHeaders()
           .toString());
@@ -128,7 +129,6 @@ public class PublicationController {
   private String getBucketUuid(ResponseEntity<String> response) {
     Pattern pattern = Pattern.compile("bucket\":\"([\\w-:/.]*)");
     Matcher matcher = pattern.matcher(response.getBody());
-    matcher.find();
     String[] url = matcher.group(1).split("/");
     return url[url.length - 1];
   }
@@ -136,7 +136,6 @@ public class PublicationController {
   private Long getItemId(ResponseEntity<String> response) {
     Pattern pattern = Pattern.compile("\"id\":([0-9]*)");
     Matcher matcher = pattern.matcher(response.getBody());
-    matcher.find();
     return Long.parseLong(matcher.group(1));
   }
 

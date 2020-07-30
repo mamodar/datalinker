@@ -5,7 +5,7 @@
 import {Project} from './project';
 import {Value} from './value';
 
-export class EdocTransfer {
+export class PublicationDTO {
   title: string;
   abstract: string;
   authors: string[] = [];
@@ -15,7 +15,7 @@ export class EdocTransfer {
   keywords: string[] = [];
   file: File;
 
-  public fromProject(project: Project, values: Value[]): EdocTransfer {
+  public fromProject(project: Project, values: Value[]): PublicationDTO {
     for (const value of values) {
       switch (value.questionText.toLocaleLowerCase()) {
         case 'titel':

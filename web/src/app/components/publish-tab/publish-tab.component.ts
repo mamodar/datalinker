@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {StateService} from '../../services/state.service';
 import {Observable} from 'rxjs';
 import {Project} from '../../models/project';
@@ -16,6 +16,7 @@ import {Project} from '../../models/project';
 export class PublishTabComponent implements OnInit {
   projects$: Observable<Project[]>;
   selectedRepo: string;
+  @Output() selectedRepoEmitter: EventEmitter<string> = new EventEmitter<string>();
 
   constructor(private stateService: StateService) {
   }
@@ -24,5 +25,9 @@ export class PublishTabComponent implements OnInit {
     this.projects$ = this.stateService.getProjects();
   }
 
+  emitSelectedRepo() {
+    console.log(this.selectedRepo);
+    this.selectedRepoEmitter.emit(this.selectedRepo);
+  }
 }
 

@@ -1,6 +1,6 @@
 import {ChangeDetectorRef, Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
-import {EdocTransfer} from '../../../models/edocTransfer';
+import {PublicationDTO} from '../../../models/publicationDTO';
 
 @Component({
   selector: 'app-publish-project-dialog',
@@ -14,7 +14,7 @@ import {EdocTransfer} from '../../../models/edocTransfer';
 
 export class PublishProjectDialogComponent {
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: EdocTransfer,
+    @Inject(MAT_DIALOG_DATA) public data: PublicationDTO,
     private ref: ChangeDetectorRef) {
   }
 

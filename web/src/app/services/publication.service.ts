@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {ApiService} from './api.service';
-import {EdocTransfer} from '../models/edocTransfer';
+import {PublicationDTO} from '../models/publicationDTO';
 import {StateService} from './state.service';
 import {Observable} from 'rxjs';
 
@@ -19,18 +19,34 @@ export class PublicationService {
   constructor(private apiService: ApiService) {
   }
 
-  createItemDspace(edocTransfer: EdocTransfer): Observable<any> {
-    return this.apiService.post('/dspace/publications/items', edocTransfer);
+  createItemDspace(publicationDTO: PublicationDTO): Observable<any> {
+    return this.apiService.post('/publications/items/dspace', publicationDTO);
   }
 
-  uploadBitstreamDspace(uuid: string, edocTransfer: EdocTransfer): Observable<any> {
-    console.log('uploadBitstreamDspace' + uuid + edocTransfer.title);
-    console.log('uploadBitstreamDspace' + uuid + edocTransfer.file.name);
+  uploadBitstreamDspace(uuid: string, publicationDTO: PublicationDTO): Observable<any> {
+    console.log('uploadBitstreamDspace' + uuid + publicationDTO.title);
+    console.log('uploadBitstreamDspace' + uuid + publicationDTO.file.name);
     // this creates a 'multipart/form-data' request
     const formData: FormData = new FormData();
-    formData.append('file', edocTransfer.file, edocTransfer.file.name);
+    formData.append('file', publicationDTO.file, publicationDTO.file.name);
     // add the 'application/json' header, otherwise its 'application/octet-stream' and can't be processed by the backend
     formData.append('item', uuid);
-    return this.apiService.postWithProgress('/dspace/publications/bitstreams', formData);
+    return this.apiService.postWithProgress('/publications/bitstreams/dspace', formData);
+  }
+
+
+  createItemZenodo(publicationDTO: PublicationDTO): Observable<any> {
+    return this.apiService.post('/publications/items/zenodo', publicationDTO);
+  }
+
+  uploadBitstreamZenodo(uuid: string, publicationDTO: PublicationDTO): Observable<any> {
+    console.log('uploadBitstreamDspace' + uuid + publicationDTO.title);
+    console.log('uploadBitstreamDspace' + uuid + publicationDTO.file.name);
+    // this creates a 'multipart/form-data' request
+    const formData: FormData = new FormData();
+    formData.append('file', publicationDTO.file, publicationDTO.file.name);
+    // add the 'application/json' header, otherwise its 'application/octet-stream' and can't be processed by the backend
+    formData.append('item', uuid);
+    return this.apiService.postWithProgress('/publications/bitstreams/zenodo', formData);
   }
 }
