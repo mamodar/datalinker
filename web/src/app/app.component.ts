@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+
 /**
  * This component is the application root. It contains the header and footer.
  * @author Kyanoush Yahosseini
@@ -9,6 +10,6 @@ import {Component} from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'MaMoDaR';
+  title = 'DataLinker';
 
 }

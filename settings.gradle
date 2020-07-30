@@ -1,4 +1,4 @@
-rootProject.name = 'mamodar'
+rootProject.name = 'datalinker'
 
 include 'server', 'web'
 

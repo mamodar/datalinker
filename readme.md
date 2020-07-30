@@ -1,4 +1,4 @@
-# MaMoDaR - Management Molekularer Daten im Research Data Life Cycle
+# DataLinker in MaMoDaR - Management Molekularer Daten im Research Data Life Cycle
 
 For more information check our [official website](https://www.rki.de/DE/Content/Institut/OrgEinheiten/MF/MF4/MaMoDaR.html)
 
@@ -22,9 +22,9 @@ Here we describe how to build this project on *Microsoft Windows* using *Visual 
 3. Go into the `\bin` subdirectory (`cd bin`)
 4. Create a data directory (`mkdir data`)
 5. Start PostgreSQL `pg_ctl.exe start -D "C:\[USERPATH]\bin\pgsql\data"`
-6. Create the *mamodar* database `createdb.exe mamodar`
-7. (optional) Create the user *mamodaruser*
-8. (optional) Use `misc/generate_database.sql` to generate all tables and views in the *mamodar* database (`psql -U postgres -d mamodar -a -f misc/generate_database.sql`)
+6. Create the *datalinker* database `createdb.exe datalinker`
+7. Create the user *datalinker*
+8.  Use `misc/generate_database.sql` to generate all tables and views in the *datalinker* database (`psql -U postgres -d datalinker -a -f misc/generate_database.sql`)
 
 ### Set-Up
 
@@ -34,9 +34,9 @@ Here we describe how to build this project on *Microsoft Windows* using *Visual 
    2.1 *npm* (eg2.vscode-npm-script)  
 3. Update `server\application.properties`   
    3.1. Fill in `spring.datasource.username` and `spring.datasource.password` using the PostgreSQL data  
-   3.2. Update `rdmo.token` and `rdmo.url` to point to a previously setup RDMO server
+   3.2. Update `rdmo.token` and `rdmo.url` to point to a previous setup RDMO server
 4. In *Source Control* (third icon on the left bar)  
-   4.1. Clone repository: https://github.com/cuehs/mamodar.git  
+   4.1. Clone repository: https://github.com/mamodar/datalinker  
    4.2. Select a  local folder to clone code to (no server!)  
    4.3. Open folder in Visual Studio Code  
 5. Go to *Terminal*, Run task: `npm: build -web`  
@@ -57,7 +57,7 @@ Here we describe how to build this project on *Microsoft Windows* using *Visual 
 
 ## How to run
 
-Here we describe how to run *MaMoDaR* on an *Ubuntu 18.04 LTS* server. 
+Here we describe how to run the *DataLinker* on an *Ubuntu 18.04 LTS* server. 
 
 ### Prerequisites 
 For the DataLinker we need an *apache server*, a *JRE*, and a *postgreSQL database*.  
@@ -67,10 +67,10 @@ For the required packages of RDMO see the [RDMO documentation](https://rdmo.read
 
 ### Configure PostgreSQL database
 Connect to your server and login into postgres `sudo -u postgres psql postgres`, in postgres:  
-1. create the mamodar database `CREATE DATABASE mamodar;`
-2. connect to the mamodar database `\connect mamodar`
-3. create a mamodar postgres user `CREATE ROLE mamodar;`
-4. set a password for the mamodar user `\password mamodar`
+1. create the datalinker database `CREATE DATABASE datalinker;`
+2. connect to the datalinker database `\connect datalinker`
+3. create a datalinker postgres user `CREATE ROLE datalinker;`
+4. set a password for the datalinker user `\password datalinker`
 5. create all tables, views, and functions by calling the content of the file `misc\generate_database.sql`.
 6. quit postgres `\q`
 
@@ -82,12 +82,14 @@ Connect to your server and login into postgres `sudo -u postgres psql postgres`,
 
 ### Build and start DataLinker backend
 1. create a non-sudo user *datalinker* on the server `sudo adduser datalinker --home /srv/datalinker`
-2. build the backend `gradle mamodar:server bootJar`
+2. build the backend `gradle datalinker:server bootJar`
 3. copy the jar from `server/build/libs` to the home directory of the *datalinker* user
 4. copy `server/application.properties` to the home directory of the *datalinker* user 
 5. open the copied *application.properties* in a text editor  
-   5.1. set `spring.datasource.username` and `spring.datasource.password` to the mamodar user created in psql  
+   5.1. set `spring.datasource.username` and `spring.datasource.password` to the datalinker user created in psql  
    5.2. set `rdmo.url` and `rdmo.token` to the URL of your RDMO instance and add the correct [token](https://rdmo.readthedocs.io/en/latest/administration/api.html)  
+   5.3. set `dspace.url`, `dspace.collection`, `dspace.user` and `dspace.password` to the correct values of your [dspace/edoc instance](https://wiki.lyrasis.org/display/DSDOC6x/REST+API). 
+   5.3. set `zenodo.url` and `zenodo.access_token` to the correct values of [zenodo](https://developers.zenodo.org/#rest-api). 
 6. start the backend as `nohup java -jar server-0.0.3-SNAPSHOT.jar  -Dspring.config.location=/application.properties  -Xms512m -Xmx2g -d64 > log 2> err &`   
    6.1. make sure the user *datalinker*  is running the process  
    

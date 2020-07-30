@@ -1,5 +1,5 @@
--- CREATE DATABASE mamodar;
--- \connect mamodar
+-- CREATE DATABASE for the datalinker;
+-- \connect datalinker
 -- DROPS ALL TABLES
 DROP TABLE IF EXISTS "project" CASCADE;
 DROP TABLE IF EXISTS "users" CASCADE;
@@ -220,16 +220,16 @@ EXECUTE PROCEDURE refresh_search_view();
 
 
 -- If non root is running the database
-GRANT SELECT ON ALL TABLES IN SCHEMA public TO mamodar;
-GRANT UPDATE ON ALL TABLES IN SCHEMA public TO mamodar;
-GRANT INSERT ON ALL TABLES IN SCHEMA public TO mamodar;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO datalinker;
+GRANT UPDATE ON ALL TABLES IN SCHEMA public TO datalinker;
+GRANT INSERT ON ALL TABLES IN SCHEMA public TO datalinker;
 
-GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO mamodar;
-GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public to mamodar;
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO datalinker;
+GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public to datalinker;
 
-GRANT ALL PRIVILEGES ON TABLE rdmo_question TO mamodar;
-GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO mamodar;
+GRANT ALL PRIVILEGES ON TABLE rdmo_question TO datalinker;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO datalinker;
 
 
-ALTER ROLE mamodar WITH LOGIN;
+ALTER ROLE datalinker WITH LOGIN;
 
