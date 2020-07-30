@@ -83,8 +83,8 @@ public class ZenodoMetdatataDTO {
     return creators;
   }
 
-  public void addCreator(String author) {
-    creators.add(new Author(author, "rki"));
+  public void addCreator(String author, String affiliation) {
+    creators.add(new Author(author, affiliation));
   }
 
 

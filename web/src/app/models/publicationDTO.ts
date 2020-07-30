@@ -4,11 +4,12 @@
  */
 import {Project} from './project';
 import {Value} from './value';
+import {Author} from './author';
 
 export class PublicationDTO {
   title: string;
   abstract: string;
-  authors: string[] = [];
+  authors: Author[] = [];
   description: string;
   issueDate: string;
   license: string;
@@ -22,7 +23,7 @@ export class PublicationDTO {
           this.title = value.answerText;
           break;
         case 'kontaktperson':
-          this.authors.push(value.answerText);
+          this.authors.push(new Author(value.answerText, 'Robert-Koch-Institut'));
           break;
         case 'beschreibung':
           this.description = value.answerText;
@@ -50,7 +51,7 @@ export class PublicationDTO {
       this.description = project.description;
     }
     if (this.authors.length === 0) {
-      project.owner.forEach(value => this.authors.push(value));
+      project.owner.forEach(value => this.authors.push(new Author(value, 'Robert-Koch-Institut')));
     }
     if (!this.issueDate) {
       const date = new Date();

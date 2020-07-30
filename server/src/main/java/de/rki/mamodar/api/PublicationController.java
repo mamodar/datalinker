@@ -7,8 +7,6 @@ import de.rki.mamodar.dspace.DspaceApiConsumer;
 import de.rki.mamodar.dspace.MetadataDTO;
 import de.rki.mamodar.zenodo.ZenodoApiConsumer;
 import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,10 +55,9 @@ public class PublicationController {
     try {
       this.dspaceApiConsumer.auth();
       ResponseEntity<String> response = this.dspaceApiConsumer.createItem();
-      Pattern pattern = Pattern.compile("uuid\":\"([\\w-]*)");
-      Matcher matcher = pattern.matcher(response.getBody());
-      this.dspaceApiConsumer.addMetadata(matcher.group(1), metadata.toDspaceMetadataList());
-      return new ResponseEntity<>(new ObjectMapper().writeValueAsString(matcher.group(1)), HttpStatus.OK);
+      String itemUUID = this.dspaceApiConsumer.getItemId(response);
+      this.dspaceApiConsumer.addMetadata(itemUUID, metadata.toDspaceMetadataList());
+      return new ResponseEntity<>(new ObjectMapper().writeValueAsString(itemUUID), HttpStatus.OK);
 
     } catch (HttpStatusCodeException e) {
       log.warn("dspace error " + e.getStatusCode() + " " + e.getResponseBodyAsString() + " " + e.getResponseHeaders()
@@ -100,7 +97,7 @@ public class PublicationController {
     log.info("zenodo/publications/items" + metadata.toString());
     try {
       ResponseEntity<String> response = this.zenodoApiConsumer.createItem(metadata);
-      Long itemId = getItemId(response);
+      Long itemId = this.zenodoApiConsumer.getItemId(response);
       return new ResponseEntity<>(itemId.toString(), HttpStatus.OK);
     } catch (HttpStatusCodeException e) {
       log.warn("zenodo error " + e.getStatusCode() + " " + e.getResponseBodyAsString() + " " + e.getResponseHeaders()
@@ -115,7 +112,7 @@ public class PublicationController {
       @RequestPart(value = "file") MultipartFile file) throws IOException {
     log.info("zenodo/publications/bitstreams");
     try {
-      String uuid = getBucketUuid(this.zenodoApiConsumer.getItem(Long.parseLong(itemId)));
+      String uuid = zenodoApiConsumer.getBucketUuid(this.zenodoApiConsumer.getItem(Long.parseLong(itemId)));
       this.zenodoApiConsumer.addFile(uuid, file);
       this.zenodoApiConsumer.publishItem(Long.parseLong(itemId));
       return new ResponseEntity<>(itemId, HttpStatus.OK);
@@ -125,19 +122,5 @@ public class PublicationController {
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
-
-  private String getBucketUuid(ResponseEntity<String> response) {
-    Pattern pattern = Pattern.compile("bucket\":\"([\\w-:/.]*)");
-    Matcher matcher = pattern.matcher(response.getBody());
-    String[] url = matcher.group(1).split("/");
-    return url[url.length - 1];
-  }
-
-  private Long getItemId(ResponseEntity<String> response) {
-    Pattern pattern = Pattern.compile("\"id\":([0-9]*)");
-    Matcher matcher = pattern.matcher(response.getBody());
-    return Long.parseLong(matcher.group(1));
-  }
-
 
 }

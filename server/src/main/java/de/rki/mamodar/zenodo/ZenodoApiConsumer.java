@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.rki.mamodar.MamodarApplication;
 import de.rki.mamodar.dspace.MetadataDTO;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
@@ -77,5 +79,20 @@ public class ZenodoApiConsumer {
         .exchange(createBasicUri("/deposit/depositions/" + id.toString()).toUriString(), HttpMethod.GET, request,
             String.class);
     return response;
+  }
+
+  public String getBucketUuid(ResponseEntity<String> response) {
+    Pattern pattern = Pattern.compile("bucket\":\"([\\w-:/.]*)");
+    Matcher matcher = pattern.matcher(response.getBody());
+    matcher.find();
+    String[] url = matcher.group(1).split("/");
+    return url[url.length - 1];
+  }
+
+  public Long getItemId(ResponseEntity<String> response) {
+    Pattern pattern = Pattern.compile("\"id\":([0-9]*)");
+    Matcher matcher = pattern.matcher(response.getBody());
+    matcher.find();
+    return Long.parseLong(matcher.group(1));
   }
 }

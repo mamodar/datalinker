@@ -13,10 +13,19 @@
   </p>
   <p>
     <mat-form-field *ngFor="let author of data.authors;let index = index;" class=quarter-width>
-      <mat-label>Autor</mat-label>
-      <input [(ngModel)]="data.authors[index]" matInput [ngModelOptions]="{standalone: true, updateOn: 'blur'}"><br>
+      <mat-label>Autor {{index + 1}}</mat-label>
+      <input [(ngModel)]="data.authors[index].name" matInput
+             [ngModelOptions]="{standalone: true, updateOn: 'blur'}"><br>
     </mat-form-field>
     <button class="button" color="primary" mat-mini-fab (click)="addAuthor()">+</button>
+  </p>
+  <p>
+    <mat-form-field *ngFor="let author of data.authors;let index = index;" class=quarter-width>
+      <mat-label>Zugehörigkeit {{index + 1}}</mat-label>
+      <input [(ngModel)]="data.authors[index].affiliation" matInput
+             [ngModelOptions]="{standalone: true, updateOn: 'blur'}"><br>
+    </mat-form-field>
+
   </p>
   <p>
     <mat-form-field *ngFor="let keyword of data.keywords;let index = index;" class=quarter-width>

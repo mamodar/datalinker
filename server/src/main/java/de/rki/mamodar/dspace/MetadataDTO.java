@@ -16,7 +16,7 @@ public class MetadataDTO {
 
   private String title;
   private String abstractText;
-  private ArrayList<String> authors;
+  private ArrayList<Author> authors;
   private ArrayList<String> keywords;
   private String description;
   private String issueDate;
@@ -39,7 +39,7 @@ public class MetadataDTO {
       dspaceMetadata.add(new DspaceMetadataDTO("", abstractText));
     }
     if (authors != null) {
-      authors.forEach(author -> dspaceMetadata.add(new DspaceMetadataDTO("dc.contributor.author", author)));
+      authors.forEach(author -> dspaceMetadata.add(new DspaceMetadataDTO("dc.contributor.author", author.name)));
     }
     if (keywords != null) {
       keywords.forEach(keyword -> dspaceMetadata.add(new DspaceMetadataDTO("dc.subject", keyword)));
@@ -66,7 +66,7 @@ public class MetadataDTO {
       zenodoMetdatata.setDescription(abstractText);
     }
     if (authors != null) {
-      authors.forEach(author -> zenodoMetdatata.addCreator(author));
+      authors.forEach(author -> zenodoMetdatata.addCreator(author.name, author.affiliation));
     }
     if (keywords != null) {
       keywords.forEach(keyword -> zenodoMetdatata.getKeywords().add(keyword));
@@ -78,7 +78,6 @@ public class MetadataDTO {
       zenodoMetdatata.setPublicationDate(LocalDate.parse(issueDate).toString());
     }
     //TODO KY wire correct license
-    metadata.add(zenodoMetdatata);
     return zenodoMetdatata;
 
   }
@@ -106,7 +105,7 @@ public class MetadataDTO {
    *
    * @return the authors
    */
-  public ArrayList<String> getAuthors() {
+  public ArrayList<Author> getAuthors() {
     return authors;
   }
 
@@ -134,5 +133,22 @@ public class MetadataDTO {
 
   public String getLicense() {
     return license;
+  }
+
+  private static class Author {
+
+    String name;
+    String affiliation;
+
+    public Author() {
+    }
+
+    public String getName() {
+      return name;
+    }
+
+    public String getAffiliation() {
+      return affiliation;
+    }
   }
 }
