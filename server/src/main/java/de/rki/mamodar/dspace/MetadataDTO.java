@@ -1,6 +1,7 @@
 package de.rki.mamodar.dspace;
 
 
+import de.rki.mamodar.zenodo.ZenodoMetdatataDTO;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -15,12 +16,14 @@ public class MetadataDTO {
 
   private String title;
   private String abstractText;
-  private ArrayList<String> authors;
+  private ArrayList<Author> authors;
   private ArrayList<String> keywords;
   private String description;
   private String issueDate;
   private String license;
 
+  private String uploadType;
+  private String accessRight;
 
   /**
    * Converts the metadata dto to a list of {@link DspaceMetadataDTO}
@@ -36,7 +39,7 @@ public class MetadataDTO {
       dspaceMetadata.add(new DspaceMetadataDTO("", abstractText));
     }
     if (authors != null) {
-      authors.forEach(author -> dspaceMetadata.add(new DspaceMetadataDTO("dc.contributor.author", author)));
+      authors.forEach(author -> dspaceMetadata.add(new DspaceMetadataDTO("dc.contributor.author", author.name)));
     }
     if (keywords != null) {
       keywords.forEach(keyword -> dspaceMetadata.add(new DspaceMetadataDTO("dc.subject", keyword)));
@@ -51,6 +54,32 @@ public class MetadataDTO {
       dspaceMetadata.add(new DspaceMetadataDTO("dc.rights", license));
     }
     return dspaceMetadata;
+  }
+
+  public ZenodoMetdatataDTO toZenodoMetadataList() {
+    ZenodoMetdatataDTO zenodoMetdatata = new ZenodoMetdatataDTO();
+    ArrayList<ZenodoMetdatataDTO> metadata = new ArrayList<>();
+    if (title != null) {
+      zenodoMetdatata.setTitle(title);
+    }
+    if (abstractText != null) {
+      zenodoMetdatata.setDescription(abstractText);
+    }
+    if (authors != null) {
+      authors.forEach(author -> zenodoMetdatata.addCreator(author.name, author.affiliation));
+    }
+    if (keywords != null) {
+      keywords.forEach(keyword -> zenodoMetdatata.getKeywords().add(keyword));
+    }
+    if (description != null) {
+      zenodoMetdatata.setDescription(description);
+    }
+    if (issueDate != null) {
+      zenodoMetdatata.setPublicationDate(LocalDate.parse(issueDate).toString());
+    }
+    //TODO KY wire correct license
+    return zenodoMetdatata;
+
   }
 
   /**
@@ -76,7 +105,7 @@ public class MetadataDTO {
    *
    * @return the authors
    */
-  public ArrayList<String> getAuthors() {
+  public ArrayList<Author> getAuthors() {
     return authors;
   }
 
@@ -104,5 +133,22 @@ public class MetadataDTO {
 
   public String getLicense() {
     return license;
+  }
+
+  private static class Author {
+
+    String name;
+    String affiliation;
+
+    public Author() {
+    }
+
+    public String getName() {
+      return name;
+    }
+
+    public String getAffiliation() {
+      return affiliation;
+    }
   }
 }

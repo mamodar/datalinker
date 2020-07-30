@@ -3,11 +3,12 @@
   <div class="interaction">
     <mat-form-field class="selector">
       <mat-label>Repositorium</mat-label>
-      <mat-select [(ngModel)]="selectedRepo" matNativeControl required>
+      <mat-select [(ngModel)]="selectedRepo" matNativeControl (ngModelChange)="emitSelectedRepo()" required>
         <mat-option value="edoc">eDoc</mat-option>
+        <mat-option value="zenodo">zenodo</mat-option>
       </mat-select>
     </mat-form-field>
-    <app-publish-procedure class="button" [repo]=selectedRepo></app-publish-procedure>
+    <app-publish-procedure class="button" [selectedRepo]=selectedRepo></app-publish-procedure>
   </div>
 
   <mat-divider class="divider"></mat-divider>

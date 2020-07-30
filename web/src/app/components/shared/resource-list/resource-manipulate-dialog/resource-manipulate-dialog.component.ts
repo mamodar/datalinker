@@ -7,7 +7,6 @@ import {map, take} from 'rxjs/operators';
 import {ResourceType} from '../../../../models/resourceType';
 import {Observable} from 'rxjs';
 import {NewResourceAddComponent} from '../../../new-resource-tab/new-resource-add/new-resource-add.component';
-import {CloudType} from '../../../../models/cloudType';
 import {ResourcePath} from '../../../../models/resourcePath';
 
 /**
@@ -23,7 +22,6 @@ import {ResourcePath} from '../../../../models/resourcePath';
 export class ResourceManipulateDialogComponent implements OnInit {
   resourceTypes$: Observable<ResourceType[]>;
   dataBackup: Resource;
-  cloudTypes$: Observable<CloudType[]>;
   constructor(
     public dialogRef: MatDialogRef<NewResourceAddComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Resource,

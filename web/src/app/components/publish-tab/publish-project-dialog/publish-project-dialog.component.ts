@@ -1,6 +1,7 @@
 import {ChangeDetectorRef, Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
-import {EdocTransfer} from '../../../models/edocTransfer';
+import {PublicationDTO} from '../../../models/publicationDTO';
+import {Author} from '../../../models/author';
 
 @Component({
   selector: 'app-publish-project-dialog',
@@ -14,7 +15,7 @@ import {EdocTransfer} from '../../../models/edocTransfer';
 
 export class PublishProjectDialogComponent {
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: EdocTransfer,
+    @Inject(MAT_DIALOG_DATA) public data: PublicationDTO,
     private ref: ChangeDetectorRef) {
   }
 
@@ -23,7 +24,7 @@ export class PublishProjectDialogComponent {
   }
 
   addAuthor(): void {
-    this.data.authors = [...this.data.authors, ''];
+    this.data.authors = [...this.data.authors, new Author(null, null)];
     this.ref.detectChanges();
 
   }

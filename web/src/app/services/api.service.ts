@@ -21,6 +21,7 @@ export class ApiService {
 
   private formatErrors(error: any) {
     console.warn('Something bad happened; please try again later.');
+    console.warn(JSON.stringify(error));
     return throwError(error);
   }
 

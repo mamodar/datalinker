@@ -11,7 +11,7 @@ import {ApiService} from './api.service';
 import {ResourcePath} from '../models/resourcePath';
 import {Value} from '../models/value';
 import {PublicationService} from './publication.service';
-import {EdocTransfer} from '../models/edocTransfer';
+import {PublicationDTO} from '../models/publicationDTO';
 
 
 /**
@@ -185,14 +185,18 @@ export class StateService {
     return reducedValues;
   }
 
-  publishToExternalService(type: string, transferObject: EdocTransfer | any): Observable<any> {
+  publishToExternalService(type: string, transferObject: PublicationDTO): Observable<any> {
     switch (type) {
       case 'edoc':
         console.log('publishToExternalService' + transferObject.title, transferObject.file.name);
-
         return this.publicationService.createItemDspace(transferObject).pipe(
           concatMap(value => this.publicationService.uploadBitstreamDspace(value, transferObject)));
-
+        break;
+      case 'zenodo':
+        console.log('publishToExternalService' + transferObject.title, transferObject.file.name);
+        return this.publicationService.createItemZenodo(transferObject).pipe(
+          concatMap(value => this.publicationService.uploadBitstreamZenodo(value, transferObject)));
+        break;
     }
   }
 
