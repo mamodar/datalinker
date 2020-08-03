@@ -10,6 +10,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -128,9 +129,6 @@ public class DspaceApiConsumer {
     HttpHeaders headers = createBasicHeaders();
     headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
     headers.add("Cookie", this.sessionId);
-    //TODO KY: next two lines needed?
-    MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-    body.add("file", file.getBytes());
     HttpEntity<byte[]> request = new HttpEntity<>(file.getBytes(), headers);
     ResponseEntity<String> response = new RestTemplate().
         exchange(env.getProperty("dspace.url") + "/items/" + uuid + "/bitstreams?name=" + file.getOriginalFilename(),
@@ -140,6 +138,13 @@ public class DspaceApiConsumer {
 
   }
 
+  public ResponseEntity<String> addBitstreams(String uuid, MultipartFile[] files) throws IOException {
+    ResponseEntity<String> response = new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+    for (MultipartFile file : files) {
+      response = addBitstream(uuid, file);
+    }
+    return response;
+  }
 
   public String getItemId(ResponseEntity<String> response) {
     Pattern pattern = Pattern.compile("uuid\":\"([\\w-]*)");

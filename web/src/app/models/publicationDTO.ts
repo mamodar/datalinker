@@ -14,7 +14,7 @@ export class PublicationDTO {
   issueDate: string;
   license: string;
   keywords: string[] = [];
-  file: File;
+  files: File[] = [];
 
   public fromProject(project: Project, values: Value[]): PublicationDTO {
     for (const value of values) {

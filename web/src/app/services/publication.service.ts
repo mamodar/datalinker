@@ -25,10 +25,10 @@ export class PublicationService {
 
   uploadBitstreamDspace(uuid: string, publicationDTO: PublicationDTO): Observable<any> {
     console.log('uploadBitstreamDspace' + uuid + publicationDTO.title);
-    console.log('uploadBitstreamDspace' + uuid + publicationDTO.file.name);
+    console.log('uploadBitstreamDspace' + uuid + publicationDTO.files.forEach(value => value.name));
     // this creates a 'multipart/form-data' request
     const formData: FormData = new FormData();
-    formData.append('file', publicationDTO.file, publicationDTO.file.name);
+    publicationDTO.files.forEach(value => formData.append('file', value, value.name));
     // add the 'application/json' header, otherwise its 'application/octet-stream' and can't be processed by the backend
     formData.append('item', uuid);
     return this.apiService.postWithProgress('/publications/bitstreams/dspace', formData);
@@ -41,10 +41,12 @@ export class PublicationService {
 
   uploadBitstreamZenodo(uuid: string, publicationDTO: PublicationDTO): Observable<any> {
     console.log('uploadBitstreamDspace' + uuid + publicationDTO.title);
-    console.log('uploadBitstreamDspace' + uuid + publicationDTO.file.name);
+    console.log('uploadBitstreamDspace' + uuid + publicationDTO.files.forEach(value => value.name));
     // this creates a 'multipart/form-data' request
     const formData: FormData = new FormData();
-    formData.append('file', publicationDTO.file, publicationDTO.file.name);
+
+    publicationDTO.files.forEach(value => formData.append('file', value, value.name));
+
     // add the 'application/json' header, otherwise its 'application/octet-stream' and can't be processed by the backend
     formData.append('item', uuid);
     return this.apiService.postWithProgress('/publications/bitstreams/zenodo', formData);

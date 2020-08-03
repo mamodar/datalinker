@@ -20,7 +20,10 @@ export class PublishProjectDialogComponent {
   }
 
   uploadFile(files: FileList): void {
-    this.data.file = files.item(0);
+
+    for (let i = 0; i < files.length; i++) {
+      this.data.files.push(files.item(i));
+    }
   }
 
   addAuthor(): void {
@@ -34,4 +37,12 @@ export class PublishProjectDialogComponent {
     this.ref.detectChanges();
 
   }
+
+  fileSize(file: File[]): number {
+    if (file) {
+      return file.reduce((previousValue, currentValue) => previousValue + currentValue.size, 0) / 1024 / 1024;
+    }
+    return 0;
+  }
+
 }

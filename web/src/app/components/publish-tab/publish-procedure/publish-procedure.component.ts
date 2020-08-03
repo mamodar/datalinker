@@ -76,7 +76,7 @@ export class PublishProcedureComponent implements OnInit {
   }
 
   private sendToPublishInExternal(publicationDTO: PublicationDTO): void {
-    publicationDTO.authors.filter(value => value !== '');
+    publicationDTO.authors.filter(value => value.name !== '');
     this.progressBarType = 'start';
     this.stateService.publishToExternalService(this.selectedRepo, publicationDTO).subscribe(
       event => {

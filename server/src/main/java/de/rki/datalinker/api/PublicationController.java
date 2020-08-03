@@ -72,8 +72,8 @@ public class PublicationController {
    * Create a bitstream (a file) for an item on a dspace instance. Authorize with the dspace server. Calls the API of
    * the dspace server once to upload the file.
    *
-   * @param uuid the uuid of the item
-   * @param file the file
+   * @param uuid  the uuid of the item
+   * @param files the files
    * @return the http entity
    * @throws IOException if the bitstream can not be read
    */
@@ -81,11 +81,11 @@ public class PublicationController {
       consumes = {"multipart/form-data"})
   ResponseEntity<String> createPublication(
       @RequestParam(value = "item") String uuid,
-      @RequestPart(value = "file") MultipartFile file) throws IOException {
+      @RequestPart(value = "file") MultipartFile[] files) throws IOException {
     log.info("dspace/publications/bitstreams");
     try {
       this.dspaceApiConsumer.auth();
-      return this.dspaceApiConsumer.addBitstream(uuid, file);
+      return this.dspaceApiConsumer.addBitstreams(uuid, files);
     } catch (HttpStatusCodeException e) {
       log.warn("dspace error " + e.getStatusCode() + " " + e.getResponseBodyAsString() + " " + e.getResponseHeaders()
           .toString());
@@ -110,11 +110,11 @@ public class PublicationController {
   @PostMapping(value = "publications/bitstreams/zenodo",
       consumes = {"multipart/form-data"})
   ResponseEntity<String> addZenodoBitstream(@RequestParam(value = "item") String itemId,
-      @RequestPart(value = "file") MultipartFile file) throws IOException {
+      @RequestPart(value = "file") MultipartFile[] files) throws IOException {
     log.info("zenodo/publications/bitstreams");
     try {
       String uuid = zenodoApiConsumer.getBucketUuid(this.zenodoApiConsumer.getItem(Long.parseLong(itemId)));
-      this.zenodoApiConsumer.addFile(uuid, file);
+      this.zenodoApiConsumer.addFiles(uuid, files);
       this.zenodoApiConsumer.publishItem(Long.parseLong(itemId));
       return new ResponseEntity<>(itemId, HttpStatus.OK);
     } catch (HttpStatusCodeException e) {
