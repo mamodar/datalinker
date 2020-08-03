@@ -52,7 +52,7 @@
   <div class=half-width>
     <button (click)="fileInput.click()" mat-raised-button type="button">Datei(en) auswählen</button>
     <div class="mat-caption">(max. 50MB)</div>
-    <input #fileInput (change)="uploadFile($event.target.files)" multiple hidden id="file" required type="file"><br>
+    <input #fileInput (change)="uploadFile($event.target)" multiple hidden id="file" required type="file"><br>
     <div *ngIf="data.files" class="mat-caption">
       Anzahl: {{data.files.length}} Größe: {{fileSize(data.files)|number}}MB
     </div>

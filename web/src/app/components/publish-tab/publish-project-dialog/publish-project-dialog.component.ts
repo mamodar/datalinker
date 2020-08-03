@@ -19,8 +19,8 @@ export class PublishProjectDialogComponent {
     private ref: ChangeDetectorRef) {
   }
 
-  uploadFile(files: FileList): void {
-
+  uploadFile(filesEvent: Event): void {
+    const files: FileList = filesEvent[0];
     for (let i = 0; i < files.length; i++) {
       this.data.files.push(files.item(i));
     }
