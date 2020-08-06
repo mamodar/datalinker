@@ -218,6 +218,13 @@ CREATE TRIGGER refresh_mat_view_after_po_insert
     FOR EACH STATEMENT
 EXECUTE PROCEDURE refresh_search_view();
 
+DROP TRIGGER IF EXISTS refresh_mat_view_after_rdmo_update ON rdmo_value;
+CREATE TRIGGER refresh_mat_view_after_rdmo_update
+    AFTER INSERT OR DELETE OR UPDATE OR TRUNCATE
+    ON rdmo_value
+    FOR EACH STATEMENT
+EXECUTE PROCEDURE refresh_search_view();
+
 
 -- If non root is running the database
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO datalinker;
@@ -229,7 +236,7 @@ GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public to datalinker;
 
 GRANT ALL PRIVILEGES ON TABLE rdmo_question TO datalinker;
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO datalinker;
-
+GRANT ALL PRIVILEGES ON TABLE rdmo_option TO datalinker;
 
 ALTER ROLE datalinker WITH LOGIN;
 
