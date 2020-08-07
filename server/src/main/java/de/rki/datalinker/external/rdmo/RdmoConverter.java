@@ -44,7 +44,7 @@ public class RdmoConverter {
    * A list of all attribute ids of rdmo which should be included in the value table of the datalinker
    */
   private final ArrayList<Long> ALLOWED_RDMO_ATTRIBUTES = new ArrayList<>(
-      Arrays.asList(6L, // contact person
+      Arrays.asList(
           9L, // Principal investigator
           12L, // Organizational unit
           138L, // License/ Terms of use
@@ -54,7 +54,8 @@ public class RdmoConverter {
           250L, // Keyword
           269L, // Acronym
           270L,// Project type
-          292L));// Title
+          292L, // contact person
+          311L));// Title
 
   private RdmoConverter(
       RdmoOptionRepository rdmoOptionRepository,

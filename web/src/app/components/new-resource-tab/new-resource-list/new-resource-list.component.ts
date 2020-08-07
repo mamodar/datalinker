@@ -4,6 +4,7 @@ import {Observable} from 'rxjs';
 import {Resource} from '../../../models/resource';
 import {MatTable} from '@angular/material/table';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
+// tslint:disable-next-line:max-line-length
 import {ResourceManipulateDialogComponent} from '../../shared/resource-list/resource-manipulate-dialog/resource-manipulate-dialog.component';
 
 /**
@@ -18,8 +19,8 @@ import {ResourceManipulateDialogComponent} from '../../shared/resource-list/reso
 })
 export class NewResourceListComponent implements OnInit {
 
-  @ViewChild('table', { static: false }) table: MatTable<any>;
-
+  @ViewChild('table', {static: false}) table: MatTable<any>;
+  displayedColumns = ['path', 'location', 'description', 'license', 'action'];
   constructor(private stateService: StateService, public matDialog: MatDialog) {
   }
 
@@ -37,5 +38,6 @@ export class NewResourceListComponent implements OnInit {
     const modalDialog = this.matDialog.open(ResourceManipulateDialogComponent, dialogConfig);
 
   }
+
 }
 

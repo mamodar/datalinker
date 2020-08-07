@@ -17,3 +17,11 @@
   margin-left: .5em;
   text-decoration: none;
 }
+
+mat-panel-description.title {
+  flex: 0 1 60% !important;
+}
+
+mat-panel-description.description {
+  flex: 0 1 40% !important;
+}

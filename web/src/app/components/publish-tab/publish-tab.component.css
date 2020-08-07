@@ -18,14 +18,11 @@
 }
 
 .main {
-  display: flex;
   grid-area: mainSection;
   margin: 1em;
+  width: auto;
 }
 
-.projectList {
-  flex-basis: 100%;
-}
 
 mat-progress-spinner {
   margin-bottom: 8px;

@@ -1,4 +1,5 @@
 <form #publishForm='ngForm'>
+<mat-dialog-content>
   <p>
     <mat-form-field class="full-width">
       <mat-label>Projekt</mat-label>
@@ -57,14 +58,17 @@
       Anzahl: {{data.files.length}} Größe: {{fileSize(data.files)|number}}MB
     </div>
   </div>
+</mat-dialog-content>
   <div mat-dialog-actions>
-    <button [mat-dialog-close]="{send: false , resource: data}" class="button" color="primary" mat-raised-button>
-      Abbrechen
-    </button>
-    <button [disabled]="publishForm.form.invalid || !this.data.files || (fileSize(data.files) > 50)"
-            [mat-dialog-close]="{send: true , resource: data}" class="button"
-            color="warn" mat-raised-button>
+    <button
+      [disabled]="publishForm.form.invalid || !this.data.files || !this.data.files.length > 0 || (fileSize(data.files) > 50)"
+      [mat-dialog-close]="{send: true , resource: data}" class="button"
+      color="primary" mat-raised-button>
       Exportieren
     </button>
+    <button [mat-dialog-close]="{send: false , resource: data}" class="button" color="warn" mat-raised-button>
+      Abbrechen
+    </button>
+
   </div>
 </form>

@@ -1,4 +1,17 @@
+.toolbar {
+  height: 3%;
+  max-height: 3%;
+  margin: -.5em -.5em 0em -.5em;
+}
+
+.spacer {
+  flex: 0 1 2em;
+}
+
 .logo {
-  width: 5% !important;
   height: auto;
+  width: auto;
+  max-width: 3.5em;
+  max-height: 3.5em;
+  margin: .5em .5em .25em .25em;
 }

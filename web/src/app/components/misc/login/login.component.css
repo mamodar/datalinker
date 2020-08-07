@@ -1,0 +1,13 @@
+.grid {
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: 1fr;
+  grid-template-areas:
+    "mainSection";
+}
+
+.main {
+  display: flex;
+  grid-area: mainSection;
+  margin: 1em;
+}

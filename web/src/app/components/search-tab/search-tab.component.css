@@ -12,6 +12,7 @@
 .search {
   grid-area: interactionPermanentSection;
   text-align: center;
+  margin-bottom: -.55em;
 }
 
 .filter {
@@ -25,7 +26,12 @@
 
 .main {
   grid-area: mainSection;
-  width: 100%;
+  width: auto;
   margin: 1em;
+}
+
+.icon {
+  font-size: 1.5em;
+  margin-bottom: .25em;
 }
 

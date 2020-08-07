@@ -1,7 +1,8 @@
 <nav mat-tab-nav-bar>
-  <a mat-tab-link [routerLink]="['/search']" routerLinkActive="active">Suchen</a>
-  <a mat-tab-link [routerLink]="['/projects']" routerLinkActive="active">Verknüpfen</a>
-  <a mat-tab-link [routerLink]="['/publish']" routerLinkActive="active">Veröffentlichen</a>
-  <a mat-tab-link [routerLink]="['/logout']" routerLinkActive="active">Logout</a>
+  <a mat-tab-link [routerLink]="['/search']" routerLinkActive #search=routerLinkActive [active]="search.isActive">Projektsuche</a>
+  <a mat-tab-link [routerLink]="['/projects']" routerLinkActive #projects=routerLinkActive [active]="projects.isActive">Meine
+    Projekte</a>
+  <a mat-tab-link [routerLink]="['/publish']" routerLinkActive #publish=routerLinkActive [active]="publish.isActive">Veröffentlichung</a>
+  <a mat-tab-link [routerLink]="['/logout']" routerLinkActive #logout=routerLinkActive [active]="logout.isActive">Benutzer</a>
 </nav>
 <router-outlet></router-outlet>

@@ -47,8 +47,10 @@ export class PublishProcedureComponent implements OnInit {
     this.progressBarType = 'hidden';
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
-    dialogConfig.minWidth = '50%';
-    dialogConfig.maxWidth = '50%';
+    dialogConfig.minWidth = '70%';
+    dialogConfig.maxWidth = '100%';
+    dialogConfig.minHeight = '70%';
+    dialogConfig.maxHeight = '100%';
     const publicationDTO = new PublicationDTO().fromProject(this.selectedProject$.getValue(), this.selectedValues$.getValue());
     dialogConfig.data = publicationDTO;
     const modalDialog = this.matDialog.open(PublishProjectDialogComponent, dialogConfig);

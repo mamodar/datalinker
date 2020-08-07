@@ -61,6 +61,7 @@ import {MatNativeDateModule} from '@angular/material/core';
 import {NewResourceAddComponent} from './components/new-resource-tab/new-resource-add/new-resource-add.component';
 import {PaginatorComponent} from './components/shared/project-list-paginate/paginator/paginator.component';
 import {ProjectListPaginateComponent} from './components/shared/project-list-paginate/project-list-paginate.component';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -117,7 +118,8 @@ import {ProjectListPaginateComponent} from './components/shared/project-list-pag
     MatProgressBarModule,
     MatSnackBarModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatTooltipModule
   ],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: LoginInterceptor, multi: true}, MatDatepickerModule],
   bootstrap: [AppComponent]

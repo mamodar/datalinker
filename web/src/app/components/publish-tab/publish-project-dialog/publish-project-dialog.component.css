@@ -4,8 +4,10 @@
 
 .half-width {
   width: 50%;
+  margin-left: .5em;
 }
 
 .quarter-width {
   width: 23%;
+  margin-left: .5em;
 }
