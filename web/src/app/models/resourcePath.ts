@@ -10,13 +10,10 @@ export class ResourcePath {
   viewValue: string;
 
   public updateFromViewValue(viewValue: string, resourceType: ResourceType): ResourcePath {
-    switch (resourceType.value) {
+    switch (resourceType.value.split('_')[0]) {
       case 'SAN':
         this.viewValue = viewValue;
-        this.value = '//rki.local/' + viewValue.
-          split('\\').
-          filter(_ => _.length > 1).
-          filter(_ => _ !== 'S:').join('/');
+        this.value = '//rki.local/' + viewValue.split('\\').filter(_ => _.length > 1).filter(_ => _ !== 'S:').join('/');
         return this;
         break;
       default:
@@ -27,13 +24,10 @@ export class ResourcePath {
   }
 
   public updateFromValue(value: string, resourceType: ResourceType): ResourcePath {
-    switch (resourceType.value) {
+    switch (resourceType.value.split('_')[0]) {
       case 'SAN':
         this.value = value;
-        this.viewValue = 'S:\\' + value.
-          split('/').
-          filter(_ => _.length > 1).
-          filter(_ => _ !== 'rki.local').join('\\');
+        this.viewValue = 'S:\\' + value.split('/').filter(_ => _.length > 1).filter(_ => _ !== 'rki.local').join('\\');
         return this;
         break;
       default:

@@ -11,18 +11,23 @@ export class ResourceType {
 
   constructor(value: string | number) {
     switch (value) {
-
-      case 'SAN': case 'san-0': case 0:
-        return { value: 'SAN', viewValue: 'WissData S:', pathDescriptor: 'Pfad:'};
-      case 'OPENBIS': case 'openbis-2': case 2:
-        return  { value: 'OPENBIS', viewValue: 'OpenBIS', pathDescriptor: 'ID:'};
-      case 'GIT': case 'git-3': case 3:
-        return { value: 'GIT', viewValue: 'Git Repositorium', pathDescriptor: 'URL:'};
-      case 'DOI': case 'doi-4': case 4:
-        return { value: 'DOI', viewValue: 'DOI Referenz', pathDescriptor: 'DOI:'};
+      case 'SAN_OU':
+        return {value: 'SAN_OU', viewValue: 'Gruppenlaufwerk (S:\\OE)', pathDescriptor: 'Pfad:'};
+      case 'SAN_PROJECT':
+        return {value: 'SAN_PROJECT', viewValue: 'Projektlaufwerk (S:\\Projekte)', pathDescriptor: 'Pfad:'};
+      case 'SAN_DATA':
+        return {value: 'SAN_DATA', viewValue: 'WissDaten (S:\\Wissdaten)', pathDescriptor: 'Pfad:'};
+      case 'OPENBIS':
+        return {value: 'OPENBIS', viewValue: 'OpenBIS', pathDescriptor: 'ID:'};
+      case 'GIT':
+        return {value: 'GIT', viewValue: 'Git Repositorium', pathDescriptor: 'URL:'};
+      case 'DOI':
+        return {value: 'DOI', viewValue: 'DOI Referenz', pathDescriptor: 'DOI:'};
+      case 'DMS':
+        return {value: 'DMS', viewValue: 'DMS/VBS', pathDescriptor: 'Adresse:'};
       default:
-        return({ value: null, viewValue: null, pathDescriptor: null});
+        return ({value: null, viewValue: null, pathDescriptor: null});
 
     }
-}
+  }
 }

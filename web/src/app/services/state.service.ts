@@ -47,7 +47,7 @@ export class StateService {
   private filterResourcesByProject = new BehaviorSubject<Project>(undefined);
   private currentUser = new BehaviorSubject<AuthUser>(null);
   private newResources = new Array<Resource>();
-  private shownNewResources = new BehaviorSubject<Resource[]>(null);
+  private shownNewResources = new BehaviorSubject<Resource[]>([]);
   private resourceTypes: ResourceType[];
 
   public getResources(): BehaviorSubject<Resource[]> {
@@ -202,10 +202,13 @@ export class StateService {
 
   private initializeTypes(): void {
     this.resourceTypes = [];
-    this.resourceTypes.push(new ResourceType('SAN'));
+    this.resourceTypes.push(new ResourceType('SAN_OU'));
+    this.resourceTypes.push(new ResourceType('SAN_PROJECT'));
+    this.resourceTypes.push(new ResourceType('SAN_DATA'));
     this.resourceTypes.push(new ResourceType('OPENBIS'));
     this.resourceTypes.push(new ResourceType('GIT'));
     this.resourceTypes.push(new ResourceType('DOI'));
+    this.resourceTypes.push(new ResourceType('DMS'));
   }
 
   public getValues(): Observable<Value[]> {

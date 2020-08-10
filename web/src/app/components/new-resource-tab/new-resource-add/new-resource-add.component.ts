@@ -37,6 +37,8 @@ export class NewResourceAddComponent implements OnInit {
   openAddNew(): void {
     this.newResource = new Resource();
     this.newResource.location = new ResourceType(null);
+    this.newResource.license = 'Namensnennung 3.0 (CC BY 3.0)';
+    this.newResource.type = 'Ordner';
     const dialogConfig = new MatDialogConfig();
     dialogConfig.minWidth = '50%';
     dialogConfig.maxWidth = '50%';
