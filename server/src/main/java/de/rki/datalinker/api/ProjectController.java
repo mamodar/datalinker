@@ -112,7 +112,8 @@ public class ProjectController {
     ArrayList<ProjectDTO> foundProjectsDTO = new ArrayList<>();
     ArrayList<Project> foundProjects;
     if (search != null) {
-      foundProjects = new ArrayList<>(projectRepository.searchFTS(search).
+      // :* enables prefix matching
+      foundProjects = new ArrayList<>(projectRepository.searchFTS(search + ":*").
           orElse(new ArrayList<>()));
     } else {
       foundProjects = new ArrayList<>(projectRepository.findAll());

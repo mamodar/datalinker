@@ -7,7 +7,7 @@
         </mat-panel-title>
         <mat-panel-description class="description">
           Ansprechpartner:<a
-          href='mailto:{{project.owner}}@rki.de?subject=Anfrage zum Projekt "{{project.projectName}}"'
+          href='mailto:{{project.owner.join("@rki.de; ")}}@rki.de?subject=Anfrage zum Projekt "{{project.projectName}}"'
           class="email"> {{project.owner}}</a>
         </mat-panel-description>
         <mat-checkbox [disabled]="true" [checked]="this.selectedProject$.getValue() === project"></mat-checkbox>
