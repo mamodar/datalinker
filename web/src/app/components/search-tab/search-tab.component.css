@@ -1,12 +1,11 @@
 .grid {
   display: grid;
-  grid-template-columns: 100%;
-  grid-template-rows: 5% 5% .5em 1fr;
+  grid-template-columns: 15% 1fr;
+  grid-template-rows: 10% .5em 1fr;
   grid-template-areas:
-    "interactionPermanentSection"
-    "interactionOptionalSection"
-    "dividerSection"
-    "mainSection";
+    "interactionPermanentSection interactionPermanentSection"
+    "dividerSection dividerSection"
+    "filterSection mainSection";
 }
 
 .search {
@@ -16,7 +15,7 @@
 }
 
 .filter {
-  grid-area: interactionOptionalSection;
+  grid-area: filterSection;
   text-align: center;
 }
 

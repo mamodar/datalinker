@@ -1,11 +1,11 @@
 <div class="grid">
   <div class="search">
     <app-search-search (searchString)=addSearchTerm($event)></app-search-search>
-    <button mat-mini-fab color="primary" (click)="toggleFilter()">
+    <!--button mat-mini-fab color="primary" (click)="toggleFilter()">
       <mat-icon class="icon">+</mat-icon>
-    </button>
+    </button-->
   </div>
-  <app-search-filter (filterString)=addFilterTerm($event) class=filter *ngIf="showFilter"></app-search-filter>
+  <app-search-filter (filterString)=addFilterTerm($event) class=filter></app-search-filter>
 
   <mat-divider class="divider"></mat-divider>
   <app-project-list-paginate [projects$]="this.projects$" class="main"></app-project-list-paginate>

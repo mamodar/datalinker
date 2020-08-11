@@ -33,6 +33,12 @@ public class Value {
   @Column(name = "option_text")
   private String optionText;
 
+  @Column(name = "order")
+  private Integer order;
+  @Column(name = "is_filter")
+  private Boolean isFilter;
+  @Column(name = "is_collection")
+  private Boolean isCollection;
 
   /**
    * Gets id.
@@ -95,5 +101,17 @@ public class Value {
    */
   public String getUnit() {
     return unit;
+  }
+
+  public Integer getOrder() {
+    return order;
+  }
+
+  public Boolean getFilter() {
+    return isFilter;
+  }
+
+  public Boolean getCollection() {
+    return isCollection;
   }
 }

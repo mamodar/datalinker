@@ -7,6 +7,7 @@ DROP TABLE if EXISTS "resource" CASCADE;
 DROP TABLE if EXISTS "relationship" CASCADE;
 DROP TABLE IF EXISTS "project_owner" CASCADE;
 DROP TABLE IF EXISTS "project_value" CASCADE;
+DROP TABLE IF EXISTS "rdmo_datalinker_connection" CASCADE;
 
 DROP TABLE if EXISTS "rdmo_option" CASCADE;
 DROP TABLE if EXISTS "rdmo_question" CASCADE;
@@ -145,6 +146,29 @@ CREATE TABLE "project_value"
 )
 ;
 
+CREATE TABLE "rdmo_datalinker_connection"
+(
+    "attribute"     BIGINT NOT NULL,
+    "order"         INTEGER,
+    "is_filter"     BOOLEAN,
+    "is_collection" BOOLEAN,
+    PRIMARY KEY ("attribute")
+);
+
+INSERT INTO rdmo_datalinker_connection
+VALUES (311, 1, FALSE, NULL),
+       (9, 2, FALSE, NULL),
+       (12, 3, TRUE, NULL),
+       (292, 4, FALSE, NULL),
+       (269, 5, FALSE, NULL),
+       (250, 6, FALSE, NULL),
+       (270, 7, TRUE, NULL),
+       (173, 8, TRUE, NULL),
+       (221, 9, FALSE, NULL),
+       (274, 10, TRUE, NULL),
+       (152, 11, FALSE, NULL),
+       (138, 12, FALSE, NULL);
+
 
 -- Create RDMO question answer pairs
 DROP MATERIALIZED VIEW IF EXISTS question_answer_view CASCADE;
@@ -156,14 +180,19 @@ SELECT DISTINCT v.id              AS id,
                 q.verbose_name_de AS question_text,
                 v.text            AS answer,
                 v.unit            AS unit,
-                o.text            AS option_text
+                o.text            AS option_text,
+                rdc.order         AS order,
+                rdc.is_filter     AS is_filter,
+                rdc.is_collection AS is_collection
 FROM project p
          LEFT JOIN
      rdmo_value v ON p.rdmo_id = v.project
          LEFT JOIN
      rdmo_option o ON v.option = o.id
          LEFT JOIN
-     rdmo_question q ON v.attribute = q.attribute;
+     rdmo_question q ON v.attribute = q.attribute
+         LEFT JOIN
+     rdmo_datalinker_connection rdc on q.attribute = rdc.attribute;
 REFRESH MATERIALIZED VIEW question_answer_view;
 
 -- CREATE haystack

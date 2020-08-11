@@ -169,7 +169,7 @@ public class ProjectController {
     log.info("GET: /projects/{id}/values");
     Project project = projectRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("project", id));
     ArrayList<ValueDTO> valueDTOs = new ArrayList<>();
-    valueRepository.getByProjectRdmoId(project.getRdmoId(), Sort.by(Direction.ASC, "attribute")).forEach(value -> {
+    valueRepository.getByProjectRdmoId(project.getRdmoId(), Sort.by(Direction.ASC, "order")).forEach(value -> {
       if (value != null) {
         valueDTOs.add(new ValueDTO(value));
       }

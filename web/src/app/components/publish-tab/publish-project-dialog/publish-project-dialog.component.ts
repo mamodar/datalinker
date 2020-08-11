@@ -46,4 +46,14 @@ export class PublishProjectDialogComponent {
     return 0;
   }
 
+  removeAuthor(): void {
+    this.data.authors = this.data.authors.slice(0, this.data.authors.length - 1);
+    this.ref.detectChanges();
+
+  }
+
+  removeKeyword() {
+    this.data.keywords = this.data.keywords.slice(0, this.data.keywords.length - 1);
+    this.ref.detectChanges();
+  }
 }

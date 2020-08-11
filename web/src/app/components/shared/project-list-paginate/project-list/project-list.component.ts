@@ -18,7 +18,8 @@ import {Value} from '../../../../models/value';
 })
 export class ProjectListComponent implements OnInit {
   public shownValues$: Observable<Value[]>;
-  constructor(private stateService: StateService) { }
+  constructor(public stateService: StateService) {
+  }
   @Input() projects$: Observable<Project[]>;
   selectedProject$: BehaviorSubject<Project>;
   public shownResources$: Observable<Resource[]>;
