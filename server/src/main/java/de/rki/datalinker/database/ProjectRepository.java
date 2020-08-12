@@ -24,7 +24,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long>, JpaSpec
   Optional<Project> findByRdmoId(@Param("rdmo_id") long rdmoId);
 
   /**
-   * Search projects by a query parameter.
+   * Search projects by a query parameter (full text search).
    *
    * @param query the query
    * @return An Optional List of Projects.

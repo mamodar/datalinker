@@ -329,18 +329,38 @@ public class Resource {
     this.project = project;
   }
 
+  /**
+   * Gets license.
+   *
+   * @return the license
+   */
   public String getLicense() {
     return license;
   }
 
+  /**
+   * Sets license.
+   *
+   * @param license the license
+   */
   public void setLicense(String license) {
     this.license = license;
   }
 
+  /**
+   * Gets the type of a resource.
+   *
+   * @return the type
+   */
   public String getType() {
     return type;
   }
 
+  /**
+   * Sets the type of a resource.
+   *
+   * @param type the type
+   */
   public void setType(String type) {
     this.type = type;
   }

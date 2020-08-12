@@ -7,7 +7,7 @@ import de.rki.datalinker.database.Resource;
 
 /**
  * This class provides a DTO for sending {@link Resource}s as part of {@link ProjectController} or {@link
- * ResourceController}.
+ * ResourceController}*.
  *
  * @author Kyanoush Yahosseini
  */
@@ -266,18 +266,38 @@ public class ResourceDTO {
     this.projectId = projectId;
   }
 
+  /**
+   * Gets license.
+   *
+   * @return the license
+   */
   public String getLicense() {
     return license;
   }
 
+  /**
+   * Sets license.
+   *
+   * @param license the license
+   */
   public void setLicense(String license) {
     this.license = license;
   }
 
+  /**
+   * Gets the type of a resource.
+   *
+   * @return the type
+   */
   public String getType() {
     return type;
   }
 
+  /**
+   * Sets the type of a resource.
+   *
+   * @param type the type
+   */
   public void setType(String type) {
     this.type = type;
   }
