@@ -25,7 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
  *
  * @author Kyanoush Yahosseini
  */
-
 @Component
 public class DspaceApiConsumer {
 
@@ -80,7 +79,7 @@ public class DspaceApiConsumer {
   /**
    * Creates a POST request to create an item in a collection (provided by the environment). The item is empty.
    *
-   * @return the http entity
+   * @return the the api response
    */
   public ResponseEntity<String> createItem() {
     HttpHeaders headers = createBasicHeaders();
@@ -99,7 +98,8 @@ public class DspaceApiConsumer {
    *
    * @param uuid     the uuid
    * @param metadata the metadata
-   * @return the response entity
+   * @return the the api response
+   * @throws JsonProcessingException the json processing exception
    */
   public ResponseEntity<String> addMetadata(String uuid, ArrayList<DspaceMetadataDTO> metadata)
       throws JsonProcessingException {
@@ -115,6 +115,16 @@ public class DspaceApiConsumer {
 
     return response;
 
+  }
+
+  public String getItem(String uuid) throws JsonProcessingException {
+    HttpHeaders headers = createBasicHeaders();
+    headers.add("Cookie", this.sessionId);
+    HttpEntity<String> request = new HttpEntity<>(headers);
+    ResponseEntity<String> response = new RestTemplate().
+        exchange(env.getProperty("dspace.url") + "/handle/" + handle,
+            HttpMethod.GET, request, String.class);
+    return response;
   }
 
   /**
@@ -152,4 +162,10 @@ public class DspaceApiConsumer {
     matcher.find();
     return matcher.group(1);
   }
+
+  public String getHandle(String uuid) throws JsonProcessingException {
+
+    return getItem(uuid);
+  }
+
 }

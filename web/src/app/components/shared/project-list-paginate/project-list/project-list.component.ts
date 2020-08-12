@@ -4,6 +4,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {StateService} from '../../../../services/state.service';
 import {Resource} from '../../../../models/resource';
 import {Value} from '../../../../models/value';
+import {Router} from '@angular/router';
 
 /**
  * This component shows projects as an expansion panel.
@@ -18,7 +19,8 @@ import {Value} from '../../../../models/value';
 })
 export class ProjectListComponent implements OnInit {
   public shownValues$: Observable<Value[]>;
-  constructor(public stateService: StateService) {
+
+  constructor(public stateService: StateService, readonly router: Router) {
   }
   @Input() projects$: Observable<Project[]>;
   selectedProject$: BehaviorSubject<Project>;

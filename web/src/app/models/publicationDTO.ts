@@ -54,7 +54,7 @@ export class PublicationDTO {
       this.description = project.description;
     }
     if (this.authors.length === 0) {
-      project.owner.forEach(value => this.authors.push(new Author(value, 'Robert-Koch-Institut')));
+      project.owner.forEach(value => this.authors.push(new Author(value, 'Robert Koch-Institut')));
     }
     if (!this.issueDate) {
       const date = new Date();

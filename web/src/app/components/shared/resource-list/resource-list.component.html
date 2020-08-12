@@ -20,6 +20,11 @@
       <td mat-cell *matCellDef="let resource"> {{resource.description}}
       </td>
     </ng-container>
+    <ng-container matColumnDef="type">
+      <th mat-header-cell *matHeaderCellDef> Typ</th>
+      <td mat-cell *matCellDef="let resource"> {{resource.type}}
+      </td>
+    </ng-container>
     <ng-container matColumnDef="license">
       <th mat-header-cell *matHeaderCellDef> Lizenz</th>
       <td mat-cell *matCellDef="let resource"> {{resource.license}}

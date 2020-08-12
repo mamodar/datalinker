@@ -1,16 +1,16 @@
 package de.rki.datalinker.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.rki.datalinker.DataLinkerApplication;
+import de.rki.datalinker.dto.PublishedDTO;
 import de.rki.datalinker.external.dspace.DspaceApiConsumer;
-import de.rki.datalinker.external.dspace.DspaceMetadataDTO;
 import de.rki.datalinker.external.dspace.MetadataDTO;
 import de.rki.datalinker.external.zenodo.ZenodoApiConsumer;
 import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -33,6 +33,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class PublicationController {
 
   private static final Logger log = LoggerFactory.getLogger(DataLinkerApplication.class);
+  private final Environment env;
   /**
    * The autowired {@link DspaceApiConsumer}.
    */
@@ -41,6 +42,10 @@ public class PublicationController {
 
   @Autowired
   ZenodoApiConsumer zenodoApiConsumer;
+
+  public PublicationController(Environment env) {
+    this.env = env;
+  }
 
   /**
    * Create a item on a dspace instance. Authorize with the dspace server. Attach provided metadata as {@link
@@ -51,14 +56,15 @@ public class PublicationController {
    * @return the ID (a uuid) of the created item
    */
   @PostMapping(value = "publications/items/dspace")
-  ResponseEntity<String> createPublication(@RequestBody MetadataDTO metadata) throws JsonProcessingException {
+  ResponseEntity<String> createDspacePublication(@RequestBody MetadataDTO metadata) throws JsonProcessingException {
     log.info("dspace/publications/items" + metadata.toString());
     try {
       this.dspaceApiConsumer.auth();
       ResponseEntity<String> response = this.dspaceApiConsumer.createItem();
-      String itemUUID = this.dspaceApiConsumer.getItemId(response);
+      String itemUUID = this.dspaceApiConsumer.getUuidFromResponse(response);
       this.dspaceApiConsumer.addMetadata(itemUUID, metadata.toDspaceMetadataList());
-      return new ResponseEntity<>(new ObjectMapper().writeValueAsString(itemUUID), HttpStatus.OK);
+      return new ResponseEntity<>(new PublishedDTO(this.dspaceApiConsumer.getHandle(response)).toJsonString(),
+          HttpStatus.OK);
 
     } catch (HttpStatusCodeException e) {
       log.warn("dspace error " + e.getStatusCode() + " " + e.getResponseBodyAsString() + " " + e.getResponseHeaders()
@@ -80,12 +86,17 @@ public class PublicationController {
   @PostMapping(value = "publications/bitstreams/dspace",
       consumes = {"multipart/form-data"})
   ResponseEntity<String> createPublication(
-      @RequestParam(value = "item") String uuid,
+      @RequestParam(value = "item") String handle,
       @RequestPart(value = "file") MultipartFile[] files) throws IOException {
     log.info("dspace/publications/bitstreams");
     try {
       this.dspaceApiConsumer.auth();
-      return this.dspaceApiConsumer.addBitstreams(uuid, files);
+      ResponseEntity response = this.dspaceApiConsumer.getItemFromHandle(handle);
+      String uuid = this.dspaceApiConsumer.getUuidFromResponse(response);
+      this.dspaceApiConsumer.addBitstreams(uuid, files);
+      return new ResponseEntity<>(
+          new PublishedDTO(env.getProperty("dspace.baseurl") + "/", handle).toJsonString(),
+          HttpStatus.OK);
     } catch (HttpStatusCodeException e) {
       log.warn("dspace error " + e.getStatusCode() + " " + e.getResponseBodyAsString() + " " + e.getResponseHeaders()
           .toString());
@@ -98,8 +109,8 @@ public class PublicationController {
     log.info("zenodo/publications/items" + metadata.toString());
     try {
       ResponseEntity<String> response = this.zenodoApiConsumer.createItem(metadata);
-      Long itemId = this.zenodoApiConsumer.getItemId(response);
-      return new ResponseEntity<>(itemId.toString(), HttpStatus.OK);
+      Long itemId = this.zenodoApiConsumer.getId(response);
+      return new ResponseEntity<>(new PublishedDTO(itemId.toString()).toJsonString(), HttpStatus.OK);
     } catch (HttpStatusCodeException e) {
       log.warn("zenodo error " + e.getStatusCode() + " " + e.getResponseBodyAsString() + " " + e.getResponseHeaders()
           .toString());
@@ -116,7 +127,9 @@ public class PublicationController {
       String uuid = zenodoApiConsumer.getBucketUuid(this.zenodoApiConsumer.getItem(Long.parseLong(itemId)));
       this.zenodoApiConsumer.addFiles(uuid, files);
       this.zenodoApiConsumer.publishItem(Long.parseLong(itemId));
-      return new ResponseEntity<>(itemId, HttpStatus.OK);
+      return new ResponseEntity<>(
+          new PublishedDTO(env.getProperty("zenodo.baseurl") + "/record/", itemId).toJsonString(),
+          HttpStatus.OK);
     } catch (HttpStatusCodeException e) {
       log.warn("zenodo error " + e.getStatusCode() + " " + e.getResponseBodyAsString() + " " + e.getResponseHeaders()
           .toString());

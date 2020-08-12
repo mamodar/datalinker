@@ -79,7 +79,7 @@ public class ZenodoApiConsumer {
     HttpHeaders headers = createBasicHeaders();
     HttpEntity<String> request = new HttpEntity<>("{}", headers);
     ResponseEntity<String> response = new RestTemplate()
-        .exchange(createBasicUri("/deposit/depositions/" + id + "/actions/publish").toUriString(), HttpMethod.POST,
+        .exchange(createBasicUri("/deposit/depositions/" + uuid + "/actions/publish").toUriString(), HttpMethod.POST,
             request, String.class);
     return response;
   }

@@ -59,7 +59,6 @@ export class PublishProcedureComponent implements OnInit {
         this.sendToPublishInExternal(publicationDTO);
       }
     });
-
   }
 
 
@@ -95,16 +94,18 @@ export class PublishProcedureComponent implements OnInit {
   private reactToFinishedUpload(event: HttpResponse<any>) {
     this.progressBarType = 'finished';
     console.log(event.status);
+    console.warn(event.body);
     if ((event.status >= 200) && (event.status < 300)) {
       this.openSnackBar('Erfolg!');
+      window.open(event.body.url, '_blank');
     } else {
       this.openSnackBar('Fehler!');
     }
   }
 
   private openSnackBar(message): void {
-    this.snackBar.open(message, null, {
-      duration: 6000,
+    this.snackBar.open(message, 'Schließen', {
+      panelClass: ['mat-toolbar', 'mat-warn'],
       horizontalPosition: 'center',
       verticalPosition: 'top',
     });

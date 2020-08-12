@@ -26,10 +26,10 @@
         </mat-list>
         <app-resource-list [data$]=this.shownResources$></app-resource-list>
         <br>
+        <app-new-resource-add *ngIf="this.router.url === '/projects'"></app-new-resource-add>
         <div *ngIf="this.stateService.getNewShownResources().getValue().length > 0">
           <mat-list dense>
             <mat-list-item style="font-weight: bold"> Neue Projektdatensätze:</mat-list-item>
-
           </mat-list>
           <app-new-resource-list *ngIf="this.stateService.getNewShownResources()"></app-new-resource-list>
           <app-new-resource-attach></app-new-resource-attach>

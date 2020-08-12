@@ -12,6 +12,7 @@ import {ResourcePath} from '../models/resourcePath';
 import {Value} from '../models/value';
 import {PublicationService} from './publication.service';
 import {PublicationDTO} from '../models/publicationDTO';
+import {PublishedDTO} from '../models/publishedDTO';
 
 
 /**
@@ -182,11 +183,11 @@ export class StateService {
       case 'edoc':
         console.log('publishToExternalService' + transferObject.title, transferObject.files.forEach(value => value.name));
         return this.publicationService.createItemDspace(transferObject).pipe(
-          concatMap(value => this.publicationService.uploadBitstreamDspace(value, transferObject)));
+          concatMap((value: PublishedDTO) => this.publicationService.uploadBitstreamDspace(value.id, transferObject)));
       case 'zenodo':
         console.log('publishToExternalService' + transferObject.title, transferObject.files.forEach(value => value.name));
         return this.publicationService.createItemZenodo(transferObject).pipe(
-          concatMap(value => this.publicationService.uploadBitstreamZenodo(value, transferObject)));
+          concatMap((value: PublishedDTO) => this.publicationService.uploadBitstreamZenodo(value.id, transferObject)));
     }
   }
 
