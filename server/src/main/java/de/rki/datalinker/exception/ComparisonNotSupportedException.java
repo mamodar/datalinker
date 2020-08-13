@@ -14,7 +14,7 @@ public class ComparisonNotSupportedException extends RuntimeException {
   /**
    * Instantiates a new comparison not supported exception.
    *
-   * @param the type which is not supported
+   * @param type which is not supported
    */
   public ComparisonNotSupportedException(String type) {
     super("Comparison type " + type + " not supported.");

@@ -40,20 +40,28 @@ public class PublicationController {
   @Autowired
   DspaceApiConsumer dspaceApiConsumer;
 
+  /**
+   * The Zenodo api consumer.
+   */
   @Autowired
   ZenodoApiConsumer zenodoApiConsumer;
 
+  /**
+   * Instantiates a new Publication controller.
+   *
+   * @param env the env
+   */
   public PublicationController(Environment env) {
     this.env = env;
   }
 
   /**
    * Create a item on a dspace instance. Authorize with the dspace server. Attach provided metadata as {@link
-   * DspaceMetadataDTO}. Creates two API calls to the dspace server one to create the item and one to provide the
-   * metadata.
+   * MetadataDTO}*. Creates two API calls to the dspace server one to create the item and one to provide the metadata.
    *
    * @param metadata the metadata
-   * @return the ID (a uuid) of the created item
+   * @return the response entity with the handle of the created item
+   * @throws JsonProcessingException the json processing exception
    */
   @PostMapping(value = "publications/items/dspace")
   ResponseEntity<String> createDspacePublication(@RequestBody MetadataDTO metadata) throws JsonProcessingException {
@@ -75,12 +83,12 @@ public class PublicationController {
   }
 
   /**
-   * Create a bitstream (a file) for an item on a dspace instance. Authorize with the dspace server. Calls the API of
-   * the dspace server once to upload the file.
+   * Create bitstreams (files) for an item on a dspace instance. Authorize with the dspace server. Calls the API of the
+   * dspace server once for each file in the array.
    *
-   * @param uuid  the uuid of the item
-   * @param files the files
-   * @return the http entity
+   * @param handle the handle of the item
+   * @param files  an array of files
+   * @return the response entity with the handle of the item
    * @throws IOException if the bitstream can not be read
    */
   @PostMapping(value = "publications/bitstreams/dspace",
@@ -104,6 +112,14 @@ public class PublicationController {
     }
   }
 
+  /**
+   * Create a item on zenodo. Authorize with the server. Attach provided metadata as {@link MetadataDTO}*. Creates one
+   * API calls to the zenodo server to create the item and to provide the metadata.
+   *
+   * @param metadata the metadata
+   * @return the response entity with the id of the created item
+   * @throws JsonProcessingException the json processing exception
+   */
   @PostMapping(value = "publications/items/zenodo")
   ResponseEntity<String> createZenodoPublication(@RequestBody MetadataDTO metadata) throws JsonProcessingException {
     log.info("zenodo/publications/items" + metadata.toString());
@@ -118,6 +134,14 @@ public class PublicationController {
     }
   }
 
+  /**
+   * Create bitstreams (files) for an item on zendodo. Calls the API of the zenodo once for each file in the array
+   *
+   * @param itemId the id of the item
+   * @param files  an array of files
+   * @return the response entity with the id of the created item
+   * @throws IOException if the bitstream can not be read
+   */
   @PostMapping(value = "publications/bitstreams/zenodo",
       consumes = {"multipart/form-data"})
   ResponseEntity<String> addZenodoBitstream(@RequestParam(value = "item") String itemId,

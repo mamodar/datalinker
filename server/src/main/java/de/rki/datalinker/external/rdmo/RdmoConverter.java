@@ -25,7 +25,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * This component saves rdmo data in the corresponding databases. Data is received by calls to the rdmo API via {@link
- * RdmoApiConsumer}. This class converts the DTOs to DAO before saving.
+ * RdmoApiConsumer}*. This class converts the DTOs to DAO before saving.
  *
  * @author Kyanoush Yahosseini
  */

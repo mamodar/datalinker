@@ -56,6 +56,11 @@ public class MetadataDTO {
     return dspaceMetadata;
   }
 
+  /**
+   * To zenodo metadata list zenodo metdatata dto.
+   *
+   * @return the zenodo metdatata dto
+   */
   public ZenodoMetdatataDTO toZenodoMetadataList() {
     ZenodoMetdatataDTO zenodoMetdatata = new ZenodoMetdatataDTO();
     ArrayList<ZenodoMetdatataDTO> metadata = new ArrayList<>();
@@ -127,26 +132,55 @@ public class MetadataDTO {
     return issueDate;
   }
 
+  /**
+   * Gets keywords.
+   *
+   * @return the keywords
+   */
   public ArrayList<String> getKeywords() {
     return keywords;
   }
 
+  /**
+   * Gets license.
+   *
+   * @return the license
+   */
   public String getLicense() {
     return license;
   }
 
   private static class Author {
 
+    /**
+     * The Name.
+     */
     String name;
+    /**
+     * The Affiliation.
+     */
     String affiliation;
 
+    /**
+     * Instantiates a new Author.
+     */
     public Author() {
     }
 
+    /**
+     * Gets name.
+     *
+     * @return the name
+     */
     public String getName() {
       return name;
     }
 
+    /**
+     * Gets affiliation.
+     *
+     * @return the affiliation
+     */
     public String getAffiliation() {
       return affiliation;
     }

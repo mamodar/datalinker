@@ -117,7 +117,13 @@ public class DspaceApiConsumer {
 
   }
 
-  public String getItem(String uuid) throws JsonProcessingException {
+  /**
+   * Gets the api response for a item specified by its  handle.
+   *
+   * @param handle the handle
+   * @return the item
+   */
+  public ResponseEntity<String> getItemFromHandle(String handle) {
     HttpHeaders headers = createBasicHeaders();
     headers.add("Cookie", this.sessionId);
     HttpEntity<String> request = new HttpEntity<>(headers);
@@ -132,7 +138,7 @@ public class DspaceApiConsumer {
    *
    * @param uuid the uuid
    * @param file the file
-   * @return the response entity
+   * @return the the api response
    * @throws IOException the io exception
    */
   public ResponseEntity<String> addBitstream(String uuid, MultipartFile file) throws IOException {
@@ -148,6 +154,14 @@ public class DspaceApiConsumer {
 
   }
 
+  /**
+   * Creates POST requests to add a bitstreams (files) to an item. Item is identified by its id (a uuid).
+   *
+   * @param uuid  the uuid
+   * @param files the array of files
+   * @return the the api response
+   * @throws IOException the io exception
+   */
   public ResponseEntity<String> addBitstreams(String uuid, MultipartFile[] files) throws IOException {
     ResponseEntity<String> response = new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
     for (MultipartFile file : files) {
@@ -156,16 +170,30 @@ public class DspaceApiConsumer {
     return response;
   }
 
-  public String getItemId(ResponseEntity<String> response) {
+  /**
+   * Gets the uuid for an api response of an item.
+   *
+   * @param response the response
+   * @return the uuid from response
+   */
+  public String getUuidFromResponse(ResponseEntity<String> response) {
     Pattern pattern = Pattern.compile("uuid\":\"([\\w-]*)");
     Matcher matcher = pattern.matcher(response.getBody());
     matcher.find();
     return matcher.group(1);
   }
 
-  public String getHandle(String uuid) throws JsonProcessingException {
-
-    return getItem(uuid);
+  /**
+   * Gets the handle for an api response of an item.
+   *
+   * @param response the response
+   * @return the handle
+   */
+  public String getHandle(ResponseEntity<String> response) {
+    Pattern pattern = Pattern.compile("handle\":\"([\\w/]*)");
+    Matcher matcher = pattern.matcher(response.getBody());
+    matcher.find();
+    return matcher.group(1);
   }
 
 }

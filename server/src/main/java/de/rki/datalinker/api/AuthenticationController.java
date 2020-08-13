@@ -31,7 +31,7 @@ public class AuthenticationController {
 
   /**
    * Gets the authentication principal for the current user as idendified by API call (see {@link
-   * de.rki.datalinker.WebSecurityConfig})
+   * de.rki.datalinker.WebSecurityConfig}*)
    *
    * @param user the principal user
    * @return the principal

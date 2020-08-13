@@ -7,7 +7,7 @@ import de.rki.datalinker.database.Resource;
 
 /**
  * This class provides a DTO for sending {@link Resource}s as part of {@link ProjectController} or {@link
- * ResourceController}*.
+ * ResourceController}**.
  *
  * @author Kyanoush Yahosseini
  */

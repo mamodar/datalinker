@@ -95,6 +95,11 @@ public class ValueDTO {
     return answerText;
   }
 
+  /**
+   * Gets filter.
+   *
+   * @return the filter
+   */
   public Boolean getFilter() {
     return isFilter;
   }
