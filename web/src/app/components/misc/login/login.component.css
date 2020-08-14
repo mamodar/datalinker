@@ -1,13 +1,14 @@
 .grid {
   display: grid;
-  grid-template-columns: 100%;
-  grid-template-rows: 1fr;
+  grid-template-columns: 20em 1fr;
   grid-template-areas:
-    "mainSection";
+    "loginSection" "textSection";
 }
 
-.main {
-  display: flex;
-  grid-area: mainSection;
+.login {
+  grid-area: loginSection;
+}
+
+.descriptionText {
   margin: 1em;
 }

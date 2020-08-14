@@ -30,7 +30,9 @@ public interface ProjectRepository extends JpaRepository<Project, Long>, JpaSpec
    * @return An Optional List of Projects.
    */
   @Query(
-      value = "SELECT * FROM project p WHERE p.id IN (SELECT id FROM search_view, to_tsquery(:query) AS q WHERE (tsv @@ q));",
+      value = " SELECT * FROM project p WHERE p.id IN ("
+          + "   SELECT id FROM search_view, to_tsquery(:query) AS q "
+          + "       WHERE (tsv @@ q) ORDER BY ts_rank(tsv, plainto_tsquery(:query)) DESC);",
       nativeQuery = true)
   Optional<List<Project>> searchFTS(@Param("query") String query);
 

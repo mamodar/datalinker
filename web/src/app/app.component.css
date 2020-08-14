@@ -1,11 +1,30 @@
-.toolbar {
-  height: 3%;
-  max-height: 3%;
-  margin: -.5em -.5em 0em -.5em;
+.grid {
+  display: grid;
+  grid-template-columns: 20em 1fr;
+  grid-template-rows: 5em 1fr;
+  grid-template-areas:
+    "toolbarSection navbarSection"
+    "mainSection mainSection";
 }
 
-.spacer {
-  flex: 0 1 2em;
+.toolbar {
+  grid-area: toolbarSection;
+  margin: -.5em 0em 0em -.5em;
+}
+
+.navbar {
+  justify-self: start;
+  grid-area: navbarSection;
+  margin-left: -.5em;
+}
+
+.fakebar {
+  grid-area: navbarSection;
+  margin: -.5em 0em 0em -.5em;
+}
+
+.main {
+  grid-area: mainSection;
 }
 
 .logo {
@@ -13,5 +32,5 @@
   width: auto;
   max-width: 3.5em;
   max-height: 3.5em;
-  margin: .5em .5em .25em .25em;
+  margin-right: .5em;
 }

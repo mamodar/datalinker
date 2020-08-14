@@ -35,7 +35,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatIconModule} from '@angular/material/icon';
-import {MatPaginatorModule} from '@angular/material/paginator';
+import {MatPaginatorIntl, MatPaginatorModule} from '@angular/material/paginator';
 import {NewResourceTabComponent} from './components/new-resource-tab/new-resource-tab.component';
 import {SearchTabComponent} from './components/search-tab/search-tab.component';
 import {MatChipsModule} from '@angular/material/chips';
@@ -62,6 +62,7 @@ import {NewResourceAddComponent} from './components/new-resource-tab/new-resourc
 import {PaginatorComponent} from './components/shared/project-list-paginate/paginator/paginator.component';
 import {ProjectListPaginateComponent} from './components/shared/project-list-paginate/project-list-paginate.component';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {getGermanPaginatorIntl} from './i18s/germanPaginatorIntl';
 
 @NgModule({
   declarations: [
@@ -121,7 +122,10 @@ import {MatTooltipModule} from '@angular/material/tooltip';
     MatNativeDateModule,
     MatTooltipModule
   ],
-  providers: [{provide: HTTP_INTERCEPTORS, useClass: LoginInterceptor, multi: true}, MatDatepickerModule],
+  providers: [{provide: HTTP_INTERCEPTORS, useClass: LoginInterceptor, multi: true}, MatDatepickerModule, {
+    provide: MatPaginatorIntl,
+    useValue: getGermanPaginatorIntl()
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule {
