@@ -1,0 +1,16 @@
+<div class=grid>
+  <mat-toolbar class="toolbar" color="primary">
+    <img class="logo" alt="DataLinker Logo" src="assets/logo2.png">
+    <mat-grid-tile-header><h1 class="mat-h1">DataLinker</h1></mat-grid-tile-header>
+  </mat-toolbar>
+  <nav *ngIf="stateService.getLoggedInUser().getValue() && stateService.getLoggedInUser().getValue().userName"
+       mat-tab-nav-bar class="navbar">
+    <a mat-tab-link [routerLink]="['/search']" routerLinkActive #search=routerLinkActive [active]="search.isActive">Projektsuche</a>
+    <a mat-tab-link [routerLink]="['/projects']" routerLinkActive #projects=routerLinkActive
+       [active]="projects.isActive">Meine Projekte</a>
+    <a mat-tab-link [routerLink]="['/publish']" routerLinkActive #publish=routerLinkActive [active]="publish.isActive">Veröffentlichung</a>
+    <a mat-tab-link [routerLink]="['/logout']" routerLinkActive #logout=routerLinkActive [active]="logout.isActive">Benutzer</a>
+  </nav>
+  <mat-toolbar *ngIf="!stateService.getLoggedInUser().getValue() || !stateService.getLoggedInUser().getValue().userName"
+               class="fakebar" color="primary"></mat-toolbar>
+</div>

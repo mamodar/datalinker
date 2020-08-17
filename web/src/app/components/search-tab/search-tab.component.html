@@ -1,9 +1,6 @@
 <div class="grid">
   <div class="search">
     <app-search-search (searchString)=addSearchTerm($event)></app-search-search>
-    <!--button mat-mini-fab color="primary" (click)="toggleFilter()">
-      <mat-icon class="icon">+</mat-icon>
-    </button-->
   </div>
   <app-search-filter (filterString)=addFilterTerm($event) class=filter></app-search-filter>
 

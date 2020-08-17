@@ -21,3 +21,10 @@ $rki-app-theme: mat-light-theme((
   )
 ));
 @include angular-material-theme($rki-app-theme);
+
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}

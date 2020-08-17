@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {StateService} from '../../../services/state.service';
+import {StateService} from '../../services/state.service';
 import {catchError} from 'rxjs/operators';
 import {of} from 'rxjs';
 
@@ -9,11 +9,11 @@ import {of} from 'rxjs';
  * @author Kyanoush Yahosseini
  */
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  selector: 'app-login-tab',
+  templateUrl: './login-tab.component.html',
+  styleUrls: ['./login-tab.component.css']
 })
-export class LoginComponent {
+export class LoginTabComponent {
   login: string;
   password: string;
   // no password and no username should not show the error message

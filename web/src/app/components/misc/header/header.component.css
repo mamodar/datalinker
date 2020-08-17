@@ -1,0 +1,38 @@
+.grid {
+  display: grid;
+  grid-template-columns: 15% 1fr;
+  grid-template-rows: 100%;
+  grid-template-areas:
+    "toolbarSection navbarSection";
+}
+
+.toolbar {
+  grid-area: toolbarSection;
+  min-height: 4.5em;
+  max-height: 4.5em;
+  margin: 0em;
+}
+
+.fakebar {
+  grid-area: navbarSection;
+  min-height: 4.5em;
+  max-height: 4.5em;
+  margin: 0em;
+}
+
+.navbar {
+  justify-self: start;
+  grid-area: navbarSection;
+  margin-left: -.75em;
+  margin-top: 3.5em;
+  min-width: 100%;
+}
+
+.logo {
+  height: 100%;
+  width: 100%;
+  max-width: 3.5em;
+  max-height: 3.5em;
+  margin: .5em;
+}
+
