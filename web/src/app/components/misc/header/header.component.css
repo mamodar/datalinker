@@ -5,34 +5,29 @@
   grid-template-areas:
     "toolbarSection navbarSection";
 }
-
 .toolbar {
   grid-area: toolbarSection;
-  min-height: 4.5em;
-  max-height: 4.5em;
+  min-height: 4em;
+  max-height: 4em;
   margin: 0em;
 }
-
 .fakebar {
   grid-area: navbarSection;
-  min-height: 4.5em;
-  max-height: 4.5em;
+  min-height: 4em;
+  max-height: 4em;
   margin: 0em;
 }
 
 .navbar {
   justify-self: start;
   grid-area: navbarSection;
-  margin-left: -.75em;
-  margin-top: 3.5em;
+  padding-top: 2.5em;
   min-width: 100%;
 }
 
 .logo {
-  height: 100%;
-  width: 100%;
   max-width: 3.5em;
   max-height: 3.5em;
-  margin: .5em;
+  margin: .25em;
 }
 

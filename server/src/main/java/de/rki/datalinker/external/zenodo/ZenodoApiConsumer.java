@@ -57,7 +57,9 @@ public class ZenodoApiConsumer {
   /**
    * Creates a POST request to create an item. The provided metadata is connected to the item.
    *
+   * @param metadata the metadata for the item
    * @return the the api response
+   * @throws JsonProcessingException thrown if metadata is not valid
    */
   public ResponseEntity<String> createItem(MetadataDTO metadata) throws JsonProcessingException {
     HttpHeaders headers = createBasicHeaders();
