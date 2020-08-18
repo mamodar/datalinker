@@ -25,7 +25,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * This component saves rdmo data in the corresponding databases. Data is received by calls to the rdmo API via {@link
- * RdmoApiConsumer}. This class converts the DTOs to DAO before saving.
+ * RdmoApiConsumer}*. This class converts the DTOs to DAO before saving.
  *
  * @author Kyanoush Yahosseini
  */
@@ -44,17 +44,19 @@ public class RdmoConverter {
    * A list of all attribute ids of rdmo which should be included in the value table of the datalinker
    */
   private final ArrayList<Long> ALLOWED_RDMO_ATTRIBUTES = new ArrayList<>(
-      Arrays.asList(6L, // contact person
+      Arrays.asList(
           9L, // Principal investigator
           12L, // Organizational unit
           138L, // License/ Terms of use
           152L, // Storage location
           173L, // Funding partner
-          221L, // Cooperation partner internalq
+          221L, // Cooperation partner (internal)
           250L, // Keyword
           269L, // Acronym
           270L,// Project type
-          292L));// Title
+          274L,// Cooperation partner (external)
+          292L, // contact person
+          311L));// Title
 
   private RdmoConverter(
       RdmoOptionRepository rdmoOptionRepository,

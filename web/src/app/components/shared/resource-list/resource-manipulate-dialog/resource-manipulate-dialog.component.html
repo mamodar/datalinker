@@ -1,82 +1,141 @@
 <form #newResourceForm='ngForm'>
-  <p>
-    <label class="mat-caption">Typ:</label>
-    <mat-radio-group required [(ngModel)]="this.data.location.value" name="location" (change)="setSelectedLocation()">
-      <mat-radio-button class="radio" *ngFor="let option of (this.resourceTypes$ |async)"
-                        [value]=option.value><span>{{option.viewValue}}</span></mat-radio-button>
-    </mat-radio-group>
-  </p>
-  <div *ngIf="data.location && data.location.value" [ngSwitch]="data.location.value">
-    <div *ngSwitchCase="'SAN'">
-      <p>
+  <mat-dialog-content>
+    <p>
+      <label class="mat-caption">Typ:</label><br>
+      <mat-radio-group required [(ngModel)]="this.data.location.value" name="location" (change)="setSelectedLocation()">
+        <mat-radio-button class="radio" *ngFor="let option of (this.resourceTypes$ |async)"
+                          [value]=option.value><span>{{option.viewValue}}</span></mat-radio-button>
+      </mat-radio-group>
+    </p>
+    <div *ngIf="data.location && data.location.value" [ngSwitch]="data.location.value">
+      <div *ngSwitchCase="'SAN_OU'">
+        <p>
+          <mat-form-field (change)="changedResourcePath($event)" class="full-width">
+            <mat-label>{{data.location.pathDescriptor}}</mat-label>
+            <input matInput #input=ngModel name="path" [ngModel]="data.path.viewValue"
+                   type="text" required pattern="S:\\OE\\.*"><br>
+            <mat-error *ngIf="input.errors">Kein korrekter Pfad (muss mit 'S:\OE\' beginnen)!</mat-error>
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field *ngIf="data" class="quarter-width">
+            <mat-label>Maximale Größe in GB</mat-label>
+            <input matInput [(ngModel)]="data.size" name="size" type="number" max="100" min="1" required>
+          </mat-form-field>
+          <mat-slide-toggle color="primary" name="personal" class="radio" [(ngModel)]="data.personal">Personenbezogene
+            Daten
+          </mat-slide-toggle>
+        </p>
+
+      </div>
+      <div *ngSwitchCase="'SAN_PROJECT'">
+        <p>
+          <mat-form-field (change)="changedResourcePath($event)" class="full-width">
+            <mat-label>{{data.location.pathDescriptor}}</mat-label>
+            <input matInput #input=ngModel name="path" [ngModel]="data.path.viewValue"
+                   type="text" required pattern="S:\\Projekte\\.*"><br>
+            <mat-error *ngIf="input.errors">Kein korrekter Pfad (muss mit 'S:\Projekte\' beginnen)!</mat-error>
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field *ngIf="data" class="quarter-width">
+            <mat-label>Maximale Größe in GB</mat-label>
+            <input matInput [(ngModel)]="data.size" name="size" type="number" max="100" min="1" required>
+          </mat-form-field>
+          <mat-slide-toggle color="primary" name="personal" class="radio" [(ngModel)]="data.personal">Personenbezogene
+            Daten
+          </mat-slide-toggle>
+        </p>
+
+      </div>
+      <div *ngSwitchCase="'SAN_DATA'">
+        <p>
+          <mat-form-field (change)="changedResourcePath($event)" class="full-width">
+            <mat-label>{{data.location.pathDescriptor}}</mat-label>
+            <input matInput #input=ngModel name="path" [ngModel]="data.path.viewValue"
+                   type="text" required pattern="S:\\Wissdaten\\.*"><br>
+            <mat-error *ngIf="input.errors">Kein korrekter Pfad (muss mit 'S:\Wissdaten' beginnen)!</mat-error>
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field *ngIf="data" class="quarter-width">
+            <mat-label>Maximale Größe in GB</mat-label>
+            <input matInput [(ngModel)]="data.size" name="size" type="number" max="1000" min="1" required>
+          </mat-form-field>
+          <mat-slide-toggle color="primary" name="personal" class="radio" [(ngModel)]="data.personal">
+            Personenbezogene Daten
+          </mat-slide-toggle>
+        </p>
+
+      </div>
+      <div *ngSwitchCase="'OPENBIS'">
+        <mat-form-field (change)="changedResourcePath($event)" class="half-width">
+          <mat-label>{{data.location.pathDescriptor}}</mat-label>
+          <input matInput #input=ngModel [ngModel]="data.path.viewValue"
+                 name="path" required type="number"><br>
+          <mat-error *ngIf="input.errors">Keine korrekte OPENBIS ID!</mat-error>
+        </mat-form-field>
+      </div>
+
+      <div *ngSwitchCase="'DMS'">
+        <mat-form-field (change)="changedResourcePath($event)" class="half-width">
+          <mat-label>{{data.location.pathDescriptor}}</mat-label>
+          <input matInput #input=ngModel [ngModel]="data.path.viewValue"
+                 name="path" required pattern="COO\..*"><br>
+          <mat-error *ngIf="input.errors">Keine korrekte DMS/VBS adresse! (muss mit COO. beginnen)</mat-error>
+        </mat-form-field>
+      </div>
+      <div *ngSwitchCase="'GIT'">
         <mat-form-field (change)="changedResourcePath($event)" class="full-width">
           <mat-label>{{data.location.pathDescriptor}}</mat-label>
-          <input matInput #input=ngModel name="path" [ngModel]="data.path.viewValue"
-                 type="text" required pattern="S:\\.*"><br>
-          <mat-error *ngIf="input.errors">Kein korrekter Pfad (muss mit 'S:\' beginnen)!</mat-error>
+          <input matInput #input=ngModel [ngModel]="data.path.viewValue"
+                 name="path" required type="url" pattern="https?://.+"><br>
+          <mat-error *ngIf="input.errors">Kein korrekte URL!</mat-error>
+        </mat-form-field>
+      </div>
+
+      <div *ngSwitchCase="'DOI'">
+        <mat-form-field (change)="changedResourcePath($event)" class="half-width">
+          <mat-label>{{data.location.pathDescriptor}}</mat-label>
+          <input matInput #input=ngModel [ngModel]="data.path.viewValue"
+                 name="path" required type="text" pattern="^10.\d{4,9}/[-._;()/:A-Z0-9]+"><br>
+          <mat-error *ngIf="input.errors">DOI nicht korrekt! Bitte DOI ohne URL angeben.</mat-error>
+        </mat-form-field>
+      </div>
+
+    </div>
+    <div class="mat-caption" *ngIf="data.location.value">
+
+      <p>
+        <mat-form-field *ngIf="data" class="quarter-width">
+          <mat-label>Lizenz</mat-label>
+          <input matInput [(ngModel)]="data.license" name="license" required>
+        </mat-form-field>
+        <mat-form-field *ngIf="data" class="quarter-width">
+          <mat-label>Typ</mat-label>
+          <input matInput [(ngModel)]="data.type" name="type" required disabled=true>
         </mat-form-field>
       </p>
       <p>
-        <mat-form-field *ngIf="data" class="quarter-width">
-          <mat-label>maximale Größe in GB</mat-label>
-          <input matInput [(ngModel)]="data.size" name="size" type="number" max="1000" min="0.1" required>
+        <mat-form-field class="full-width">
+          <mat-label>Beschreibung</mat-label>
+          <textarea matInput name="description" [(ngModel)]="data.description"> </textarea>
         </mat-form-field>
       </p>
     </div>
-
-    <div *ngSwitchCase="'OPENBIS'" >
-      <mat-form-field (change)="changedResourcePath($event)" class="half-width">
-        <mat-label>{{data.location.pathDescriptor}}</mat-label>
-        <input matInput #input=ngModel [ngModel]="data.path.viewValue"
-               name="path" required type="number"><br>
-        <mat-error *ngIf="input.errors">Keine korrekte OPENBIS ID!</mat-error>
-      </mat-form-field>
-    </div>
-
-    <div *ngSwitchCase="'GIT'">
-      <mat-form-field (change)="changedResourcePath($event)" class="full-width">
-        <mat-label>{{data.location.pathDescriptor}}</mat-label>
-        <input matInput #input=ngModel [ngModel]="data.path.viewValue"
-               name="path" required type="url" pattern="https?://.+"><br>
-        <mat-error *ngIf="input.errors">Kein korrekte URL!</mat-error>
-      </mat-form-field>
-    </div>
-
-    <div  *ngSwitchCase = "'DOI'">
-      <mat-form-field (change)="changedResourcePath($event)" class="half-width">
-        <mat-label>{{data.location.pathDescriptor}}</mat-label>
-        <input matInput #input=ngModel [ngModel]="data.path.viewValue"
-               name="path" required type="text" pattern="^10.\d{4,9}/[-._;()/:A-Z0-9]+"><br>
-        <mat-error *ngIf="input.errors">DOI nicht korrekt!</mat-error>
-      </mat-form-field>
-    </div>
-
-  </div>
-
-  <div *ngIf="data.location.value">
-    <p>
-      <mat-slide-toggle color="primary" name="personal" class="radio" [(ngModel)]="data.personal">personenbezogene
-        Daten
-      </mat-slide-toggle>
-      <mat-slide-toggle color="primary" name="archived" class="radio" [(ngModel)]="data.archived">Archivierung möglich
-      </mat-slide-toggle>
-    </p>
-  </div>
-
-  <div class="mat-caption" *ngIf="data.location.value">
-    <p>
-      <mat-form-field class="full-width">
-        <mat-label>Beschreibung</mat-label>
-        <textarea matInput name="description" [(ngModel)]="data.description"> </textarea>
-      </mat-form-field>
-    </p>
-  </div>
-  <div *ngIf="data.createdBy" class="mat-caption">Angelegt von {{data.createdBy}} um {{data.createdTimestamp}}</div>
-  <div *ngIf="data.createdBy && (data.updatedTimestamp !== data.createdTimestamp)"
-       class="mat-caption">Aktualisiert von {{data.updatedBy}} um {{data.updatedTimestamp}}</div>
-  <mat-divider></mat-divider>
+    <div *ngIf="data.createdBy" class="mat-caption">Angelegt von {{data.createdBy}}
+      um {{data.createdTimestamp}}</div>
+    <div *ngIf="data.createdBy && (data.updatedTimestamp !== data.createdTimestamp)"
+         class="mat-caption">Aktualisiert von {{data.updatedBy}} um {{data.updatedTimestamp}}</div>
+    <mat-divider></mat-divider>
+  </mat-dialog-content>
   <div mat-dialog-actions>
-    <button mat-button mat-raised-button color="primary" [mat-dialog-close]="{send: false , resource: dataBackup}">Abbrechen</button>
-    <button mat-button mat-raised-button color="warn" [mat-dialog-close]="{send: true , resource: data}" [disabled]="!newResourceForm.form.valid">Speichern</button>
+    <button mat-button mat-raised-button color="primary" [mat-dialog-close]="{send: true , resource: data}"
+            [disabled]="!newResourceForm.form.valid">Speichern
+    </button>
+    <button mat-button mat-raised-button color="warn" [mat-dialog-close]="{send: false , resource: dataBackup}">
+      Abbrechen
+    </button>
+
   </div>
 </form>

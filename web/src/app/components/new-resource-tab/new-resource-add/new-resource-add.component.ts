@@ -4,6 +4,7 @@ import {filter, map, take} from 'rxjs/operators';
 import {StateService} from '../../../services/state.service';
 import {Resource} from '../../../models/resource';
 import {ActivatedRoute, Router} from '@angular/router';
+// tslint:disable-next-line:max-line-length
 import {ResourceManipulateDialogComponent} from '../../shared/resource-list/resource-manipulate-dialog/resource-manipulate-dialog.component';
 import {ResourceType} from '../../../models/resourceType';
 
@@ -29,9 +30,15 @@ export class NewResourceAddComponent implements OnInit {
     this.activatedRoute.queryParamMap.pipe(take(1), map(_ => _.has('path') ? this.openAddNew() : null)).subscribe();
   }
 
+  projectSelected(): boolean {
+    return this.stateService.getSelectedProject().getValue() === undefined;
+  }
+
   openAddNew(): void {
     this.newResource = new Resource();
     this.newResource.location = new ResourceType(null);
+    this.newResource.license = 'Namensnennung 3.0 (CC BY 3.0)';
+    this.newResource.type = 'Ordner';
     const dialogConfig = new MatDialogConfig();
     dialogConfig.minWidth = '50%';
     dialogConfig.maxWidth = '50%';

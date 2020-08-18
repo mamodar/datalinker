@@ -35,15 +35,14 @@ import {MatInputModule} from '@angular/material/input';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatIconModule} from '@angular/material/icon';
-import {MatPaginatorModule} from '@angular/material/paginator';
+import {MatPaginatorIntl, MatPaginatorModule} from '@angular/material/paginator';
 import {NewResourceTabComponent} from './components/new-resource-tab/new-resource-tab.component';
 import {SearchTabComponent} from './components/search-tab/search-tab.component';
 import {MatChipsModule} from '@angular/material/chips';
-import {RouterHeaderComponent} from './components/misc/router-header/router-header.component';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {ResourceDeleteDialogComponent} from './components/shared/resource-list/resource-delete-button/resource-delete-dialog.component';
-import {LoginComponent} from './components/misc/login/login.component';
+import {LoginTabComponent} from './components/login-tab/login-tab.component';
 import {LoginInterceptor} from './services/login.interceptor';
 import {ResourceManipulateDialogComponent} from './components/shared/resource-list/resource-manipulate-dialog/resource-manipulate-dialog.component';
 import {ResourceManipulateButtonComponent} from './components/shared/resource-list/resource-edit-button/resource-manipulate-button.component';
@@ -61,6 +60,12 @@ import {MatNativeDateModule} from '@angular/material/core';
 import {NewResourceAddComponent} from './components/new-resource-tab/new-resource-add/new-resource-add.component';
 import {PaginatorComponent} from './components/shared/project-list-paginate/paginator/paginator.component';
 import {ProjectListPaginateComponent} from './components/shared/project-list-paginate/project-list-paginate.component';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {getGermanPaginatorIntl} from './i18s/germanPaginatorIntl';
+import {FooterComponent} from './components/misc/footer/footer.component';
+import {HeaderComponent} from './components/misc/header/header.component';
+import {ContactTabComponent} from './components/contact-tab/contact-tab.component';
+import {LoginDescriptionComponent} from './components/login-tab/login-description/login-description.component';
 
 @NgModule({
   declarations: [
@@ -74,10 +79,9 @@ import {ProjectListPaginateComponent} from './components/shared/project-list-pag
     ResourceDeleteButtonComponent,
     NewResourceTabComponent,
     SearchTabComponent,
-    RouterHeaderComponent,
     ResourceDeleteDialogComponent,
     ResourceManipulateButtonComponent,
-    LoginComponent,
+    LoginTabComponent,
     ResourceManipulateDialogComponent,
     SearchFilterComponent,
     SearchSearchComponent,
@@ -87,7 +91,11 @@ import {ProjectListPaginateComponent} from './components/shared/project-list-pag
     PublishProjectDialogComponent,
     NewResourceAddComponent,
     PaginatorComponent,
-    ProjectListPaginateComponent
+    ProjectListPaginateComponent,
+    FooterComponent,
+    HeaderComponent,
+    ContactTabComponent,
+    LoginDescriptionComponent
   ],
   imports: [
     BrowserModule,
@@ -117,9 +125,13 @@ import {ProjectListPaginateComponent} from './components/shared/project-list-pag
     MatProgressBarModule,
     MatSnackBarModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatTooltipModule
   ],
-  providers: [{provide: HTTP_INTERCEPTORS, useClass: LoginInterceptor, multi: true}, MatDatepickerModule],
+  providers: [{provide: HTTP_INTERCEPTORS, useClass: LoginInterceptor, multi: true}, MatDatepickerModule, {
+    provide: MatPaginatorIntl,
+    useValue: getGermanPaginatorIntl()
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule {

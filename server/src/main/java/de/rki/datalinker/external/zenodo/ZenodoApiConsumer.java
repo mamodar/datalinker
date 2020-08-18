@@ -23,12 +23,22 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
+/**
+ * This low-level component implements the API consumer for zendodo.
+ *
+ * @author Kyanoush Yahosseini
+ */
 @Component
 public class ZenodoApiConsumer {
 
   private static final Logger log = LoggerFactory.getLogger(DataLinkerApplication.class);
   private final Environment env;
 
+  /**
+   * Instantiates a new Zenodo api consumer.
+   *
+   * @param env the env
+   */
   public ZenodoApiConsumer(Environment env) {
     this.env = env;
   }
@@ -40,10 +50,17 @@ public class ZenodoApiConsumer {
   }
 
   private UriComponentsBuilder createBasicUri(String uriPath) {
-   return UriComponentsBuilder.fromHttpUrl(env.getProperty("zenodo.url") + uriPath)
-       .queryParam("access_token", env.getProperty("zenodo.access_token"));
+    return UriComponentsBuilder.fromHttpUrl(env.getProperty("zenodo.url") + uriPath)
+        .queryParam("access_token", env.getProperty("zenodo.access_token"));
   }
 
+  /**
+   * Creates a POST request to create an item. The provided metadata is connected to the item.
+   *
+   * @param metadata the metadata for the item
+   * @return the the api response
+   * @throws JsonProcessingException thrown if metadata is not valid
+   */
   public ResponseEntity<String> createItem(MetadataDTO metadata) throws JsonProcessingException {
     HttpHeaders headers = createBasicHeaders();
     HttpEntity<String> request = new HttpEntity<>(
@@ -56,6 +73,14 @@ public class ZenodoApiConsumer {
   }
 
 
+  /**
+   * Creates POST requests to add a bitstreams (files) to an item. Item is identified by its id (a uuid).
+   *
+   * @param uuid  the uuid
+   * @param files the files array
+   * @return the the api response
+   * @throws IOException the io exception
+   */
   public ResponseEntity<String> addFiles(String uuid, MultipartFile[] files) throws IOException {
     ArrayList<MultipartFile> filesList = new ArrayList<>(Arrays.asList(files));
     ResponseEntity<String> response = new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
@@ -65,6 +90,14 @@ public class ZenodoApiConsumer {
     return response;
   }
 
+  /**
+   * Creates a POST request to add a bitstream (a file) to an item. Item is identified by its id (a uuid).
+   *
+   * @param uuid the uuid
+   * @param file the file
+   * @return the the api response
+   * @throws IOException the io exception
+   */
   public ResponseEntity<String> addFile(String uuid, MultipartFile file) throws IOException {
     HttpHeaders headers = createBasicHeaders();
     headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
@@ -75,16 +108,28 @@ public class ZenodoApiConsumer {
     return response;
   }
 
-  public ResponseEntity<String> publishItem(Long id) {
+  /**
+   * Creates a POST request to publish an item. Item is identified by its id (a uuid).
+   *
+   * @param uuid the uuid
+   * @return the the api response
+   */
+  public ResponseEntity<String> publishItem(Long uuid) {
     HttpHeaders headers = createBasicHeaders();
     HttpEntity<String> request = new HttpEntity<>("{}", headers);
     ResponseEntity<String> response = new RestTemplate()
-        .exchange(createBasicUri("/deposit/depositions/" + id + "/actions/publish").toUriString(), HttpMethod.POST,
+        .exchange(createBasicUri("/deposit/depositions/" + uuid + "/actions/publish").toUriString(), HttpMethod.POST,
             request, String.class);
     return response;
   }
 
 
+  /**
+   * Gets item.
+   *
+   * @param id the id
+   * @return the item
+   */
   public ResponseEntity<String> getItem(Long id) {
     HttpHeaders headers = createBasicHeaders();
     HttpEntity<String> request = new HttpEntity<>(headers);
@@ -94,6 +139,12 @@ public class ZenodoApiConsumer {
     return response;
   }
 
+  /**
+   * Gets bucket uuid.
+   *
+   * @param response the response
+   * @return the bucket uuid
+   */
   public String getBucketUuid(ResponseEntity<String> response) {
     Pattern pattern = Pattern.compile("bucket\":\"([\\w-:/.]*)");
     Matcher matcher = pattern.matcher(response.getBody());
@@ -102,7 +153,13 @@ public class ZenodoApiConsumer {
     return url[url.length - 1];
   }
 
-  public Long getItemId(ResponseEntity<String> response) {
+  /**
+   * Gets id.
+   *
+   * @param response the response
+   * @return the id
+   */
+  public Long getId(ResponseEntity<String> response) {
     Pattern pattern = Pattern.compile("\"id\":([0-9]*)");
     Matcher matcher = pattern.matcher(response.getBody());
     matcher.find();

@@ -1,4 +1,23 @@
-.logo {
-  width: 5% !important;
-  height: auto;
+.main-grid {
+  display: grid;
+  grid-template-rows: 6em 1fr 1em;
+  grid-template-areas:
+  "headerSection"
+  "mainSection"
+  "footerSection";
+  grid-row-gap: 1em;
+}
+
+.app-header {
+  grid-area: headerSection;
+}
+
+.app-home {
+  min-height: calc(100vh - 9.75em);
+  grid-area: mainSection;
+}
+
+.app-footer {
+  grid-area: footerSection;
+  min-width: 100%;
 }

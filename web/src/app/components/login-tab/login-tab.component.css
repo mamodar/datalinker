@@ -1,0 +1,21 @@
+.grid2 {
+  display: grid;
+  grid-template-columns: 15% 1fr 25%;
+  grid-template-areas:
+     "loginSection textSection .";
+}
+
+.login {
+  grid-area: loginSection;
+  margin-top: 1em;
+  align-self: center;
+
+}
+.descriptionText {
+  margin-top: 1em;
+  grid-area: textSection;
+  text-align: justify-all;
+}
+.succLogin {
+  grid-area: textSection;
+}

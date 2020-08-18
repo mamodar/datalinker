@@ -1,3 +1,7 @@
-#tableheader{
-  visibility:collapse;
+.table {
+  width: 100% !important;
+}
+
+.mat-cell {
+  color: #97003f;
 }

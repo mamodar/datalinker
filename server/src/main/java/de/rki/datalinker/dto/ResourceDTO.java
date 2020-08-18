@@ -7,7 +7,7 @@ import de.rki.datalinker.database.Resource;
 
 /**
  * This class provides a DTO for sending {@link Resource}s as part of {@link ProjectController} or {@link
- * ResourceController}.
+ * ResourceController}**.
  *
  * @author Kyanoush Yahosseini
  */
@@ -19,6 +19,8 @@ public class ResourceDTO {
   private String updatedBy;
   private String path;
   private String location;
+  private String license;
+  private String type;
   private String createdTimestamp;
   private String updatedTimestamp;
   private Float size;
@@ -41,7 +43,7 @@ public class ResourceDTO {
    */
   public ResourceDTO(Resource resource) {
     this.id = resource.getId();
-    this.location = resource.getResourceType().name();
+    this.location = resource.getResourceType();
     this.path = resource.getPath();
     this.isArchived = resource.getArchived();
     this.isPersonal = resource.getPersonal();
@@ -49,10 +51,12 @@ public class ResourceDTO {
     this.createdTimestamp = resource.getCreationTimestamp().toString();
     this.updatedTimestamp = resource.getUpdatedTimestamp().toString();
     this.projectId = resource.getProject().getId();
-  this.createdBy = resource.getCreatedByUser().getUsername();
-  this.updatedBy = resource.getUpdatedByUser().getUsername();
-  this.description = resource.getDescription();
-}
+    this.createdBy = resource.getCreatedByUser().getUsername();
+    this.updatedBy = resource.getUpdatedByUser().getUsername();
+    this.description = resource.getDescription();
+    this.license = resource.getLicense();
+    this.type = resource.getType();
+  }
 
   /**
    * Gets created timestamp.
@@ -260,5 +264,41 @@ public class ResourceDTO {
    */
   public void setProjectId(Long projectId) {
     this.projectId = projectId;
+  }
+
+  /**
+   * Gets license.
+   *
+   * @return the license
+   */
+  public String getLicense() {
+    return license;
+  }
+
+  /**
+   * Sets license.
+   *
+   * @param license the license
+   */
+  public void setLicense(String license) {
+    this.license = license;
+  }
+
+  /**
+   * Gets the type of a resource.
+   *
+   * @return the type
+   */
+  public String getType() {
+    return type;
+  }
+
+  /**
+   * Sets the type of a resource.
+   *
+   * @param type the type
+   */
+  public void setType(String type) {
+    this.type = type;
   }
 }

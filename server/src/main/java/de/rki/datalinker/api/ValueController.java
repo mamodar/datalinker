@@ -41,6 +41,7 @@ public class ValueController {
       }
     });
     valueDTOs.removeIf(valueDTO -> valueDTO.getAnswerText().isBlank());
+    valueDTOs.removeIf(valueDTO -> valueDTO.getQuestionText() == null);
     return valueDTOs;
   }
 

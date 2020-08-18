@@ -37,15 +37,16 @@ export class ResourceManipulateDialogComponent implements OnInit {
       // creates an object from aromatically selecting a location
       _ => {
         if (_.get('path')) {
-            this.data.location = new ResourceType(_.get('location'));
-            this.data.path.updateFromViewValue( _.get('path'), this.data.location);
-          }
+          this.data.location = new ResourceType(_.get('location'));
+          this.data.path.updateFromViewValue(_.get('path'), this.data.location);
+        }
       })).subscribe();
   }
 
 // creates an object from manually selecting a location
 
   setSelectedLocation(): void {
+    this.data.path = new ResourcePath();
     this.data.location = new ResourceType(this.data.location.value);
   }
 
@@ -53,7 +54,7 @@ export class ResourceManipulateDialogComponent implements OnInit {
     if (!event.target) {
       this.data.path.updateFromViewValue(event.value, this.data.location);
     } else {
-    this.data.path.updateFromViewValue(event.target.value, this.data.location);
+      this.data.path.updateFromViewValue(event.target.value, this.data.location);
     }
   }
 }

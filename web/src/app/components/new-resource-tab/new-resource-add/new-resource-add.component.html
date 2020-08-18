@@ -1,2 +1,5 @@
-<button class="button" mat-raised-button color="primary" (click)="openAddNew()">Neuen Pfad hinzufügen</button>
+<button class="button" mat-raised-button color="primary" (click)="openAddNew()"
+        [disabled]="projectSelected()">
+  Neuen Datensatz verknüpfen
+</button>
 

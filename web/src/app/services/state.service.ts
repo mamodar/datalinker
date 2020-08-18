@@ -12,6 +12,7 @@ import {ResourcePath} from '../models/resourcePath';
 import {Value} from '../models/value';
 import {PublicationService} from './publication.service';
 import {PublicationDTO} from '../models/publicationDTO';
+import {PublishedDTO} from '../models/publishedDTO';
 
 
 /**
@@ -47,7 +48,7 @@ export class StateService {
   private filterResourcesByProject = new BehaviorSubject<Project>(undefined);
   private currentUser = new BehaviorSubject<AuthUser>(null);
   private newResources = new Array<Resource>();
-  private shownNewResources = new BehaviorSubject<Resource[]>(null);
+  private shownNewResources = new BehaviorSubject<Resource[]>([]);
   private resourceTypes: ResourceType[];
 
   public getResources(): BehaviorSubject<Resource[]> {
@@ -70,7 +71,7 @@ export class StateService {
   public getValuesForSelectedProject(): BehaviorSubject<Value[]> {
     if (this.filterResourcesByProject.getValue()) {
       this.projectService.getValuesOfProject(this.filterResourcesByProject.getValue())
-      .subscribe(values => this.shownValues.next(this.concatValueAnswers(values.map(value => new Value(value)))));
+      .subscribe(values => this.shownValues.next(this.reduceValueCollections(values.map(value => new Value(value)))));
     } else {
       this.shownResources.next([]);
     }
@@ -147,6 +148,11 @@ export class StateService {
     return this.resourceService.updateResource(resource);
   }
 
+  public getValues(): Observable<Value[]> {
+    return this.apiService.get('/values').pipe(
+      map((values: Value[]) => values.map((value: Value) => new Value(value))));
+  }
+
   public getLoggedInUser(): BehaviorSubject<AuthUser | null> {
     return this.currentUser;
   }
@@ -172,7 +178,31 @@ export class StateService {
   }
 
 
-  private concatValueAnswers(values: Value[]): Value[] {
+  public publishToExternalService(type: string, transferObject: PublicationDTO): Observable<any> {
+    switch (type) {
+      case 'edoc':
+        console.log('publishToExternalService' + transferObject.title, transferObject.files.forEach(value => value.name));
+        return this.publicationService.createItemDspace(transferObject).pipe(
+          concatMap((value: PublishedDTO) => this.publicationService.uploadBitstreamDspace(value.id, transferObject)));
+      case 'zenodo':
+        console.log('publishToExternalService' + transferObject.title, transferObject.files.forEach(value => value.name));
+        return this.publicationService.createItemZenodo(transferObject).pipe(
+          concatMap((value: PublishedDTO) => this.publicationService.uploadBitstreamZenodo(value.id, transferObject)));
+    }
+  }
+
+  private initializeTypes(): void {
+    this.resourceTypes = [];
+    this.resourceTypes.push(new ResourceType('SAN_OU'));
+    this.resourceTypes.push(new ResourceType('SAN_PROJECT'));
+    this.resourceTypes.push(new ResourceType('SAN_DATA'));
+    this.resourceTypes.push(new ResourceType('OPENBIS'));
+    this.resourceTypes.push(new ResourceType('GIT'));
+    this.resourceTypes.push(new ResourceType('DOI'));
+    this.resourceTypes.push(new ResourceType('DMS'));
+  }
+
+  private reduceValueCollections(values: Value[]): Value[] {
     const reducedValues: Value[] = [];
     values.forEach(
       value => {
@@ -183,35 +213,6 @@ export class StateService {
         }
       });
     return reducedValues;
-  }
-
-  publishToExternalService(type: string, transferObject: PublicationDTO): Observable<any> {
-    switch (type) {
-      case 'edoc':
-        console.log('publishToExternalService' + transferObject.title, transferObject.files.forEach(value => value.name));
-        return this.publicationService.createItemDspace(transferObject).pipe(
-          concatMap(value => this.publicationService.uploadBitstreamDspace(value, transferObject)));
-        break;
-      case 'zenodo':
-        console.log('publishToExternalService' + transferObject.title, transferObject.files.forEach(value => value.name));
-        return this.publicationService.createItemZenodo(transferObject).pipe(
-          concatMap(value => this.publicationService.uploadBitstreamZenodo(value, transferObject)));
-        break;
-    }
-  }
-
-  private initializeTypes(): void {
-    this.resourceTypes = [];
-    this.resourceTypes.push(new ResourceType('SAN'));
-    this.resourceTypes.push(new ResourceType('OPENBIS'));
-    this.resourceTypes.push(new ResourceType('GIT'));
-    this.resourceTypes.push(new ResourceType('DOI'));
-  }
-
-  public getValues(): Observable<Value[]> {
-
-    return this.apiService.get('/values').pipe(
-      map((values: Value[]) => values.map((value: Value) => new Value(value))));
   }
 
 }

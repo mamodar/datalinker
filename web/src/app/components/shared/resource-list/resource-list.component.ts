@@ -41,9 +41,9 @@ export class ResourceListComponent implements OnDestroy, OnInit {
           JSON.stringify(data).trim().toLocaleLowerCase().includes(filter.trim().toLocaleLowerCase());
       });
     if (this.router.url === '/projects') {
-      this.displayedColumns = ['path', 'location', 'action'];
+      this.displayedColumns = ['path', 'location', 'description', 'type', 'license', 'action'];
     } else {
-      this.displayedColumns = ['path', 'location'];
+      this.displayedColumns = ['path', 'location', 'description', 'type', 'license'];
     }
   }
 
@@ -51,10 +51,6 @@ export class ResourceListComponent implements OnDestroy, OnInit {
     if (this.sub) {
       this.sub.unsubscribe();
     }
-  }
-
-  search($event): void {
-    this.dataSource.filter = ($event.target as HTMLInputElement).value;
   }
 
 }

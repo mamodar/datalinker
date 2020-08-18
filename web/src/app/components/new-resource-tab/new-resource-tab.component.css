@@ -18,19 +18,9 @@
 }
 
 .main {
-  display: flex;
   grid-area: mainSection;
+  width: auto;
   margin: 1em;
 }
-
-.colleft {
-  flex-basis: 70%;
-  margin-right: 1em;
-}
-
-.colright {
-  flex-basis: 30%;
-}
-
 
 

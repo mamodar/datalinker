@@ -16,6 +16,7 @@ public class ValueDTO {
   private Long attribute;
   private String questionText;
   private String answerText;
+  private Boolean isFilter;
 
   /**
    * Instantiates a new Value dto.
@@ -33,7 +34,7 @@ public class ValueDTO {
     this.projectId = value.getProjectRdmoId();
     this.attribute = value.getAttribute();
     this.questionText = value.getQuestionText();
-
+    this.isFilter = value.getFilter();
     if (value.getOptionText() != null) {
       this.answerText = value.getOptionText();
     } else {
@@ -92,5 +93,14 @@ public class ValueDTO {
    */
   public String getAnswerText() {
     return answerText;
+  }
+
+  /**
+   * Gets filter.
+   *
+   * @return the filter
+   */
+  public Boolean getFilter() {
+    return isFilter;
   }
 }

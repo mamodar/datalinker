@@ -7,6 +7,7 @@ export class Value {
     this.id = value.id;
     this.projectId = value.projectId;
     this.questionText = value.questionText;
+    this.isFilter = value.isFilter;
     this._answerText = value.answerText;
   }
 
@@ -16,7 +17,7 @@ export class Value {
   questionText: string;
   // tslint:disable-next-line:variable-name
   private _answerText: string;
-
+  isFilter: boolean;
   get answerText(): string {
     if (this._answerText === '1') {
       return 'ja';

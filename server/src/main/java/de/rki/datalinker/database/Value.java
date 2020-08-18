@@ -33,6 +33,12 @@ public class Value {
   @Column(name = "option_text")
   private String optionText;
 
+  @Column(name = "order")
+  private Integer order;
+  @Column(name = "is_filter")
+  private Boolean isFilter;
+  @Column(name = "is_collection")
+  private Boolean isCollection;
 
   /**
    * Gets id.
@@ -95,5 +101,32 @@ public class Value {
    */
   public String getUnit() {
     return unit;
+  }
+
+  /**
+   * Gets value order.
+   *
+   * @return the order
+   */
+  public Integer getOrder() {
+    return order;
+  }
+
+  /**
+   * Gets if a value can be used as a search filter.
+   *
+   * @return the filter
+   */
+  public Boolean getFilter() {
+    return isFilter;
+  }
+
+  /**
+   * Gets if a value is a collection.
+   *
+   * @return the collection
+   */
+  public Boolean getCollection() {
+    return isCollection;
   }
 }

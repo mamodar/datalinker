@@ -13,10 +13,8 @@ import {map} from 'rxjs/operators';
  * @author Kyanoush Yahosseini
  */
 export class SearchFilterComponent implements OnInit {
-  filterValues: string[] = ['', '', '', '', '', '', '', '', ''];
-  filterKeys: string[] = [
-    'Speicherort', 'Titel', 'Lizenz', 'Förderer', 'Projektart',
-    'Kontaktperson', 'Kooperationspartner (intern)', 'Organisationseinheit', 'Akronym'];
+  filterValues: string[] = ['', '', '', ''];
+  filterKeys: string[] = ['Organisationseinheit', 'Projektart', 'Förderer', 'Kooperationspartner (extern)'];
   allValues: Value[] = [];
   @Output() filterString: EventEmitter<string> = new EventEmitter<string>();
 
@@ -47,5 +45,10 @@ export class SearchFilterComponent implements OnInit {
     } else {
       return [...new Set(suggestions)].filter(value => value.toLocaleLowerCase().includes(filterValue.toLocaleLowerCase()));
     }
+  }
+
+  deleteFilter(): void {
+    this.filterValues = ['', '', '', ''];
+    this.onApplyFilter();
   }
 }

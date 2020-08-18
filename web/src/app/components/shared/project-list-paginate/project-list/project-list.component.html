@@ -1,33 +1,49 @@
-<div *ngIf = "projects$ | async as projects; else loading">
-<mat-accordion>
-<mat-expansion-panel *ngFor="let project of projects" hideToggle>
-  <mat-expansion-panel-header (click)="onSelect(project);$event.stopPropagation();">
-    <mat-panel-title>
-      {{project.projectName}}
-    </mat-panel-title>
-    <mat-panel-description>
-      Ansprechpartner:<a href='mailto:{{project.owner}}@rki.de?subject=Anfrage zum Projekt "{{project.projectName}}"'
-                         class="email"> {{project.owner}}</a>
-    </mat-panel-description>
-    <mat-checkbox  [disabled]="true"  [checked]="this.selectedProject$.getValue() === project"></mat-checkbox>
-  </mat-expansion-panel-header>
+<div *ngIf="projects$ | async as projects; else loading">
+  <mat-accordion>
+    <mat-expansion-panel *ngFor="let project of projects" hideToggle>
+      <mat-expansion-panel-header (click)="onSelect(project);$event.stopPropagation();">
+        <mat-panel-title class="title">
+          {{project.projectName}}
+        </mat-panel-title>
+        <mat-panel-description class="description">
+          Ansprechpartner:<a
+          href='mailto:{{project.owner.join("@rki.de; ")}}@rki.de?subject=Anfrage zum Projekt "{{project.projectName}}"'
+          class="email"> {{project.owner}}</a>
+        </mat-panel-description>
+        <mat-checkbox [disabled]="true" [checked]="this.selectedProject$.getValue() === project"></mat-checkbox>
+      </mat-expansion-panel-header>
 
-  <ng-template matExpansionPanelContent>
-  <mat-list dense>
-    <mat-list-item class="mat-list-item">
-      <div style="font-weight: bold">Beschreibung:&nbsp;</div>
-      {{project.description}}</mat-list-item>
-    <mat-list-item
-      *ngFor="let values of shownValues$  | async">
-      <div style="font-weight: bold">{{values.questionText}}:&nbsp;</div>
-      {{values.answerText}}</mat-list-item>
-  </mat-list>
-    <app-resource-list [data$] = this.shownResources$></app-resource-list>
-  </ng-template>
-</mat-expansion-panel>
-</mat-accordion>
-  <div *ngIf='projects?.length === 0' class = "mat-body-strong">Leider keine Projekte gefunden!</div>
+      <ng-template matExpansionPanelContent>
+        <mat-list dense>
+          <mat-list-item class="mat-list-item">
+            <div style="font-weight: bold">Beschreibung:&nbsp;</div>
+            {{project.description}}</mat-list-item>
+          <mat-list-item
+            *ngFor="let values of shownValues$  | async">
+            <div style="font-weight: bold">{{values.questionText}}:&nbsp;</div>
+            {{values.answerText}}</mat-list-item>
+          <mat-list-item style="font-weight: bold">Projektdatensätze:</mat-list-item>
+        </mat-list>
+        <app-resource-list [data$]=this.shownResources$></app-resource-list>
+        <br>
+        <app-new-resource-add *ngIf="this.router.url === '/projects'"></app-new-resource-add>
+        <div *ngIf="this.stateService.getNewShownResources().getValue().length > 0">
+          <mat-list dense>
+            <mat-list-item style="font-weight: bold"> Neue Projektdatensätze:</mat-list-item>
+          </mat-list>
+          <app-new-resource-list *ngIf="this.stateService.getNewShownResources()"></app-new-resource-list>
+          <app-new-resource-attach></app-new-resource-attach>
+        </div>
+      </ng-template>
+
+
+    </mat-expansion-panel>
+
+  </mat-accordion>
+  <div *ngIf='projects?.length === 0' class="mat-body-strong">Leider keine Projekte gefunden!</div>
 </div>
 
-<ng-template #loading class = "loader"><mat-spinner ></mat-spinner></ng-template>
+<ng-template #loading class="loader">
+  <mat-spinner></mat-spinner>
+</ng-template>
 

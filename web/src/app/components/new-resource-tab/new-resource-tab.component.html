@@ -1,18 +1,9 @@
 <div class="grid">
+    <div class="interaction">
 
-  <div class="interaction">
-    <div mat-dialog-actions>
-      <app-new-resource-add></app-new-resource-add>
-      <app-new-resource-attach></app-new-resource-attach>
     </div>
-  </div>
-
-  <mat-divider class="divider"></mat-divider>
-
-  <div class="main">
-    <app-project-list-paginate [projects$]="this.projects$" class="colleft"></app-project-list-paginate>
-    <app-new-resource-list class="colright"></app-new-resource-list>
-  </div>
+  <div class="divider"></div>
+  <app-project-list-paginate [projects$]="this.projects$" class="main"></app-project-list-paginate>
 
 </div>
 

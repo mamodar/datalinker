@@ -23,7 +23,10 @@ export class PublicationDTO {
           this.title = value.answerText;
           break;
         case 'kontaktperson':
-          this.authors.push(new Author(value.answerText, 'Robert-Koch-Institut'));
+          value.answerText.split(',').forEach(value1 => this.authors.push(new Author(value1, 'Robert-Koch-Institut')));
+          break;
+        case 'projektleiter\*in':
+          value.answerText.split(',').forEach(value1 => this.authors.push(new Author(value1, 'Robert-Koch-Institut')));
           break;
         case 'beschreibung':
           this.description = value.answerText;
@@ -36,7 +39,7 @@ export class PublicationDTO {
           this.license = value.answerText;
           break;
         case 'schlagwort':
-          this.keywords.push(value.answerText);
+          value.answerText.split(',').forEach(value1 => this.keywords.push(value1));
           break;
       }
     }
@@ -51,7 +54,7 @@ export class PublicationDTO {
       this.description = project.description;
     }
     if (this.authors.length === 0) {
-      project.owner.forEach(value => this.authors.push(new Author(value, 'Robert-Koch-Institut')));
+      project.owner.forEach(value => this.authors.push(new Author(value, 'Robert Koch-Institut')));
     }
     if (!this.issueDate) {
       const date = new Date();

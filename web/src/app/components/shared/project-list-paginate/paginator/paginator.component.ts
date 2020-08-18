@@ -33,8 +33,12 @@ export class PaginatorComponent implements OnInit {
     // if project is undefined (API call hasn't went trough) emit null
     // otherwise emit the projects
     this.projectEmitter.emit(this.projects$.pipe(
-      map(value => value ? value.filter((value1, index) =>
-        index < ((event.pageIndex + 1) * event.pageSize) &&
-        index >= ((event.pageIndex) * event.pageSize)) : null)));
+      map(value => value ?
+        value.length > event.pageSize ?
+          value.filter((value1, index) =>
+            index < ((event.pageIndex + 1) * event.pageSize) &&
+            index >= ((event.pageIndex) * event.pageSize))
+          : value
+        : null)));
   }
 }

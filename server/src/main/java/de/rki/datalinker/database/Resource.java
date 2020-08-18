@@ -1,14 +1,11 @@
 package de.rki.datalinker.database;
 
-import de.rki.datalinker.ResourceType;
 import de.rki.datalinker.api.ResourceController;
 import de.rki.datalinker.dto.ResourceDTO;
 import java.util.Date;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -29,33 +26,29 @@ import javax.persistence.TemporalType;
 @Table(name = "resource")
 public class Resource {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE)
-  @Column(name = "id", updatable = false, nullable = false)
-  private Long id;
-
   /**
    * The timestamp when the resource was created.
    */
   @Column
   @Temporal(TemporalType.TIMESTAMP)
   Date creationTimestamp;
-
   /**
    * The timestamp when the resource was last updated.
    */
   @Column
   @Temporal(TemporalType.TIMESTAMP)
   Date updatedTimestamp;
-
-  @Column(name = "path",nullable = false)
+  @Id
+  @GeneratedValue(strategy = GenerationType.SEQUENCE)
+  @Column(name = "id", updatable = false, nullable = false)
+  private Long id;
+  @Column(name = "path", nullable = false)
   private String path;
 
-  @Column(name="location",nullable = false)
-  @Enumerated(EnumType.STRING)
-  private ResourceType resourceType;
+  @Column(name = "location", nullable = false)
+  private String resourceType;
 
-  @Column(name="size")
+  @Column(name = "size")
   private Float size;
 
   @Column(name = "personal")
@@ -64,16 +57,21 @@ public class Resource {
   @Column(name = "archived")
   private Boolean isArchived;
 
-
   @Column(name = "description")
   private String description;
 
+  @Column(name = "license")
+  private String license;
+
+  @Column(name = "type")
+  private String type;
+
   @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "created_by_user_id",nullable = false)
+  @JoinColumn(name = "created_by_user_id", nullable = false)
   private User createdByUser;
 
   @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "updated_by_user_id",nullable = false)
+  @JoinColumn(name = "updated_by_user_id", nullable = false)
   private User updatedByUser;
 
   @ManyToOne(targetEntity = Project.class)
@@ -93,11 +91,13 @@ public class Resource {
   public Resource(ResourceDTO resourceDTO) {
 
     this.path = resourceDTO.getPath();
-    this.resourceType = ResourceType.valueOf(resourceDTO.getLocation());
+    this.resourceType = resourceDTO.getLocation();
     this.description = resourceDTO.getDescription();
     this.isArchived = resourceDTO.getArchived();
     this.isPersonal = resourceDTO.getPersonal();
     this.size = resourceDTO.getSize();
+    this.type = resourceDTO.getType();
+    this.license = resourceDTO.getLicense();
 
   }
 
@@ -111,11 +111,13 @@ public class Resource {
     Objects.requireNonNull(resourceDTO.getLocation());
 
     this.path = resourceDTO.getPath();
-    this.resourceType = ResourceType.valueOf(resourceDTO.getLocation());
+    this.resourceType = resourceDTO.getType();
     this.description = resourceDTO.getDescription() != null ? resourceDTO.getDescription() : this.description;
     this.isArchived = resourceDTO.getArchived() != null ? resourceDTO.getArchived() : this.isArchived;
     this.isPersonal = resourceDTO.getPersonal() != null ? resourceDTO.getPersonal() : this.isPersonal;
     this.size = resourceDTO.getSize() != null ? resourceDTO.getSize() : this.size;
+    this.type = resourceDTO.getType() != null ? resourceDTO.getType() : this.type;
+    this.license = resourceDTO.getLicense() != null ? resourceDTO.getLicense() : this.license;
   }
 
   /**
@@ -223,7 +225,7 @@ public class Resource {
    *
    * @return the resource type
    */
-  public ResourceType getResourceType() {
+  public String getResourceType() {
     return resourceType;
   }
 
@@ -232,7 +234,7 @@ public class Resource {
    *
    * @param resourceType the resource type
    */
-  public void setResourceType(ResourceType resourceType) {
+  public void setResourceType(String resourceType) {
     this.resourceType = resourceType;
   }
 
@@ -327,5 +329,39 @@ public class Resource {
     this.project = project;
   }
 
+  /**
+   * Gets license.
+   *
+   * @return the license
+   */
+  public String getLicense() {
+    return license;
+  }
 
+  /**
+   * Sets license.
+   *
+   * @param license the license
+   */
+  public void setLicense(String license) {
+    this.license = license;
+  }
+
+  /**
+   * Gets the type of a resource.
+   *
+   * @return the type
+   */
+  public String getType() {
+    return type;
+  }
+
+  /**
+   * Sets the type of a resource.
+   *
+   * @param type the type
+   */
+  public void setType(String type) {
+    this.type = type;
+  }
 }

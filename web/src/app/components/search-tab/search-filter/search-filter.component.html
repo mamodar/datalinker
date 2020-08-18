@@ -2,8 +2,11 @@
   <mat-label>{{filterKey}}</mat-label>
   <input matInput [(ngModel)]=filterValues[i] [matAutocomplete]="auto">
   <mat-autocomplete #auto="matAutocomplete">
-    <mat-option *ngFor="let option of suggestionsForKey(filterKey,filterValues[i])" [value]="option">
+    <mat-option *ngFor="let option of suggestionsForKey(filterKey,filterValues[i])" [value]="option"
+                (click)="onApplyFilter()" class="small">
       {{option}}</mat-option>
   </mat-autocomplete>
-</mat-form-field>
-<button mat-raised-button color="primary" (click)="onApplyFilter()">Filter</button>
+</mat-form-field><br>
+<button mat-raised-button color="primary" (click)="onApplyFilter()" class="button">Filter</button>
+<button mat-raised-button color="warn" (click)="deleteFilter()" class="button">Löschen</button>
+
