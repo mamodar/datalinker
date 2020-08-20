@@ -1,7 +1,7 @@
 .grid {
   display: grid;
   grid-template-columns: 100%;
-  grid-template-rows: 10% .5em 1fr;
+  grid-template-rows: 5vmin .5rem 1fr;
   grid-template-areas:
     "interactionSection"
     "dividerSection"
@@ -11,6 +11,7 @@
 .interaction {
   grid-area: interactionSection;
   justify-self: center;
+  align-self: center;
 }
 
 .divider {
@@ -19,7 +20,7 @@
 
 .main {
   grid-area: mainSection;
-  margin: 1em;
+  margin: 1rem;
   width: auto;
 }
 

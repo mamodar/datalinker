@@ -1,11 +1,11 @@
 .field {
-  margin-right: 0.5em;
+  margin-right: 0.5rem;
 }
 
 .button {
-  margin: .5em;
+  margin: .5rem;
 }
 
 .small {
-  font-size: small;
+  font-size: smaller;
 }

@@ -7,12 +7,12 @@
 
 .login {
   grid-area: loginSection;
-  margin-top: 1em;
+  margin-top: 1rem;
   align-self: center;
 
 }
 .descriptionText {
-  margin-top: 1em;
+  margin-top: 1rem;
   grid-area: textSection;
   text-align: justify-all;
 }

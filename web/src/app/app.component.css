@@ -1,11 +1,10 @@
 .main-grid {
   display: grid;
-  grid-template-rows: 6em 1fr 1em;
+  grid-template-rows: 8vmin 1fr 2vmin !important;
   grid-template-areas:
   "headerSection"
   "mainSection"
   "footerSection";
-  grid-row-gap: 1em;
 }
 
 .app-header {
@@ -13,11 +12,16 @@
 }
 
 .app-home {
-  min-height: calc(100vh - 9.75em);
+  margin-top: 1rem;
+  min-height: calc(100vmin - 8vmin - 2vmin - 1vmin - 4px);
   grid-area: mainSection;
 }
 
 .app-footer {
   grid-area: footerSection;
   min-width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }

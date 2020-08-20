@@ -1,6 +1,6 @@
 .footer-toolbar {
-  max-height: 1em;
-  min-height: 1em;
+  max-height: 2vmin;
+  min-height: 1.5rem;
   min-width: 100% !important;
   width: 100% !important;
   background-color: #DCDCDC;

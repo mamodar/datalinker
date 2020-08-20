@@ -9,12 +9,12 @@
 }
 
 .mat-list-item {
-  margin-top: -1em;
-  margin-bottom: -1em;
+  margin-top: -1rem;
+  margin-bottom: -1rem;
 }
 
 .email {
-  margin-left: .5em;
+  margin-left: .5rem;
   text-decoration: none;
 }
 
