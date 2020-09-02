@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 /**
@@ -105,8 +106,12 @@ public class RdmoConverter {
    * @param rdmoValues the array of rdmo values
    */
   public void addRdmoValues(RdmoValueDTO[] rdmoValues) {
+
     this.rdmoValueRepository.deleteAll();
-    this.rdmoValueRepository.saveAll(this.valuesToDAO(rdmoValues));
+    List<RdmoValueDTO> rdmoValueDTOs = new ArrayList<>(Arrays.asList(rdmoValues));
+    rdmoValueDTOs = rdmoValueDTOs.stream().filter(rdmoValueDTO -> rdmoValueDTO.getSnapshot() == null)
+        .collect(Collectors.toList());
+    this.rdmoValueRepository.saveAll(this.valuesToDAO(rdmoValueDTOs));
   }
 
   /**
@@ -136,13 +141,18 @@ public class RdmoConverter {
     return (rdmoOptionDAOs);
   }
 
-  private List<RdmoValue> valuesToDAO(RdmoValueDTO[] rdmoValues) {
-
-    ArrayList<RdmoValueDTO> rdmoValueDTOs = new ArrayList<>(Arrays.asList(rdmoValues));
+  private List<RdmoValue> valuesToDAO(List<RdmoValueDTO> rdmoValueDTOs) {
     ArrayList<RdmoValue> rdmoValueDAOs = new ArrayList<>();
     rdmoValueDTOs.removeIf(rdmoValueDTO -> !ALLOWED_RDMO_ATTRIBUTES.contains(rdmoValueDTO.getAttribute()));
     rdmoValueDTOs.forEach(rdmoValueDTO -> rdmoValueDAOs.add(new RdmoValue(rdmoValueDTO)));
     return (rdmoValueDAOs);
+  }
+
+  private List<RdmoValue> valuesToDAO(RdmoValueDTO[] rdmoValues) {
+
+    ArrayList<RdmoValueDTO> rdmoValueDTOs = new ArrayList<>(Arrays.asList(rdmoValues));
+    return this.valuesToDAO(rdmoValueDTOs);
+
   }
 
   private List<Project> projectsToDAO(RdmoProjectDTO[] rdmoProjects) {

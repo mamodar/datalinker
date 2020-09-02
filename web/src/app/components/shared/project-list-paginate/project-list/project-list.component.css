@@ -9,8 +9,9 @@
 }
 
 .mat-list-item {
-  margin-top: -1rem;
-  margin-bottom: -1rem;
+  overflow: auto;
+  height: auto !important;
+  margin-bottom: 0.5rem;
 }
 
 .email {
@@ -24,4 +25,9 @@ mat-panel-description.title {
 
 mat-panel-description.description {
   flex: 0 1 40% !important;
+}
+
+
+.mat-checkbox {
+  display: none
 }

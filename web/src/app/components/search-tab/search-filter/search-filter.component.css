@@ -1,5 +1,9 @@
 .field {
-  margin-right: 0.5rem;
+  width: available; /* Chrome */
+  width: -moz-available;
+
+  margin-left: 1rem;
+  margin-right: 1rem;
 }
 
 .button {

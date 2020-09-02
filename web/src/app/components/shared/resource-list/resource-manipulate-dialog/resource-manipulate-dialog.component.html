@@ -1,9 +1,9 @@
 <form #newResourceForm='ngForm'>
   <mat-dialog-content>
     <p>
-      <label class="mat-caption">Typ:</label><br>
+      <label class="mat-caption">Quelle:</label><br>
       <mat-radio-group required [(ngModel)]="this.data.location.value" name="location" (change)="setSelectedLocation()">
-        <mat-radio-button class="radio" *ngFor="let option of (this.resourceTypes$ |async)"
+        <mat-radio-button class="radio" *ngFor="let option of (this.resourceLocations$ |async)"
                           [value]=option.value><span>{{option.viewValue}}</span></mat-radio-button>
       </mat-radio-group>
     </p>
@@ -85,6 +85,14 @@
           <mat-error *ngIf="input.errors">Keine korrekte DMS/VBS adresse! (muss mit COO. beginnen)</mat-error>
         </mat-form-field>
       </div>
+      <div *ngSwitchCase="'URL'">
+        <mat-form-field (change)="changedResourcePath($event)" class="full-width">
+          <mat-label>{{data.location.pathDescriptor}}</mat-label>
+          <input matInput #input=ngModel [ngModel]="data.path.viewValue"
+                 name="path" required type="url" pattern="https?://.+"><br>
+          <mat-error *ngIf="input.errors">Kein korrekte URL!</mat-error>
+        </mat-form-field>
+      </div>
       <div *ngSwitchCase="'GIT'">
         <mat-form-field (change)="changedResourcePath($event)" class="full-width">
           <mat-label>{{data.location.pathDescriptor}}</mat-label>
@@ -107,19 +115,32 @@
     <div class="mat-caption" *ngIf="data.location.value">
 
       <p>
-        <mat-form-field *ngIf="data" class="quarter-width">
-          <mat-label>Lizenz</mat-label>
-          <input matInput [(ngModel)]="data.license" name="license" required>
+        <mat-form-field *ngIf="data" class="half-width">
+          <mat-label>Lizenz / Nutzungsbedingung</mat-label>
+          <input matInput [(ngModel)]="data.license" name="license" required [matAutocomplete]="autoLicense">
+          <mat-autocomplete #autoLicense="matAutocomplete">
+            <span class="mat-small small">Vorschläge (Freitext ist möglich): </span>
+            <mat-option *ngFor=" let license of this.typeService.getLicenseTypes() | async" value="{{license}}"
+                        class="small">
+              {{license}}</mat-option>
+          </mat-autocomplete>
         </mat-form-field>
+
         <mat-form-field *ngIf="data" class="quarter-width">
           <mat-label>Typ</mat-label>
-          <input matInput [(ngModel)]="data.type" name="type" required disabled=true>
+          <input matInput [(ngModel)]="data.type" name="type" required [matAutocomplete]="autoType">
+          <mat-autocomplete #autoType="matAutocomplete">
+            <span class="mat-small small">Vorschläge (Freitext ist möglich): </span>
+            <mat-option *ngFor=" let type of this.typeService.getResourceTypeTypes() | async" value="{{type}}"
+                        class="small">
+              {{type}}</mat-option>
+          </mat-autocomplete>
         </mat-form-field>
       </p>
       <p>
         <mat-form-field class="full-width">
           <mat-label>Beschreibung</mat-label>
-          <textarea matInput name="description" [(ngModel)]="data.description"> </textarea>
+          <input matInput name="description" [(ngModel)]="data.description">
         </mat-form-field>
       </p>
     </div>

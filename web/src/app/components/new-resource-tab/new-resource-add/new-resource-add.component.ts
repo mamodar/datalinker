@@ -6,7 +6,7 @@ import {Resource} from '../../../models/resource';
 import {ActivatedRoute, Router} from '@angular/router';
 // tslint:disable-next-line:max-line-length
 import {ResourceManipulateDialogComponent} from '../../shared/resource-list/resource-manipulate-dialog/resource-manipulate-dialog.component';
-import {ResourceType} from '../../../models/resourceType';
+import {ResourceLocation} from '../../../models/resourceLocation';
 
 /**
  * This components contains the create new resource logic.
@@ -36,9 +36,7 @@ export class NewResourceAddComponent implements OnInit {
 
   openAddNew(): void {
     this.newResource = new Resource();
-    this.newResource.location = new ResourceType(null);
-    this.newResource.license = 'Namensnennung 3.0 (CC BY 3.0)';
-    this.newResource.type = 'Ordner';
+    this.newResource.location = new ResourceLocation(null);
     const dialogConfig = new MatDialogConfig();
     dialogConfig.minWidth = '50%';
     dialogConfig.maxWidth = '50%';

@@ -135,8 +135,8 @@ CREATE TABLE "project_resource"
     "project_id"  BIGINT NOT NULL,
     "resource_id" BIGINT NOT NULL,
     PRIMARY KEY ("project_id", "resource_id"),
-    CONSTRAINT "fkgvyjy4pwnuerf1ojtk71e4edo" FOREIGN KEY ("project_id") REFERENCES "public"."project" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION,
-    CONSTRAINT "fkqloe28wnxlwb5plj7msbnf2j3" FOREIGN KEY ("resource_id") REFERENCES "public"."resource" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+    CONSTRAINT "fkgvyjy4pwnuerf1ojtk71e4edo" FOREIGN KEY ("project_id") REFERENCES "public"."project" ("id") ON UPDATE NO ACTION ON DELETE CASCADE,
+    CONSTRAINT "fkqloe28wnxlwb5plj7msbnf2j3" FOREIGN KEY ("resource_id") REFERENCES "public"."resource" ("id") ON UPDATE NO ACTION ON DELETE CASCADE
 )
 ;
 

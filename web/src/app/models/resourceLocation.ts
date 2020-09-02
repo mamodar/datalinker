@@ -4,12 +4,13 @@
  * @author Kyanoush Yahosseini
  *
  */
-export class ResourceType {
+export class ResourceLocation {
   value: string;
   viewValue: string;
   pathDescriptor: string;
 
   constructor(value: string | number) {
+    console.log(value);
     switch (value) {
       case 'SAN_OU':
         return {value: 'SAN_OU', viewValue: 'Gruppenlaufwerk (S:\\OE)', pathDescriptor: 'Pfad:'};
@@ -21,6 +22,8 @@ export class ResourceType {
         return {value: 'OPENBIS', viewValue: 'OpenBIS', pathDescriptor: 'ID:'};
       case 'GIT':
         return {value: 'GIT', viewValue: 'Git Repositorium', pathDescriptor: 'URL:'};
+      case 'URL':
+        return {value: 'URL', viewValue: 'Website/URL', pathDescriptor: 'URL:'};
       case 'DOI':
         return {value: 'DOI', viewValue: 'DOI Referenz', pathDescriptor: 'DOI:'};
       case 'DMS':

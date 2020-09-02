@@ -15,13 +15,16 @@
 
       <ng-template matExpansionPanelContent>
         <mat-list dense>
-          <mat-list-item class="mat-list-item">
-            <div style="font-weight: bold">Beschreibung:&nbsp;</div>
-            {{project.description}}</mat-list-item>
+          <mat-list-item class="mat-list-item-description">
+            <span style="font-weight: bold">Beschreibung:&nbsp;</span>
+            {{project.description}}
+          </mat-list-item>
           <mat-list-item
             *ngFor="let values of shownValues$  | async">
-            <div style="font-weight: bold">{{values.questionText}}:&nbsp;</div>
-            {{values.answerText}}</mat-list-item>
+
+            <span style="font-weight: bold">{{values.questionText}}:&nbsp;</span>
+            {{values.answerText}}
+          </mat-list-item>
           <mat-list-item style="font-weight: bold">Projektdatensätze:</mat-list-item>
         </mat-list>
         <app-resource-list [data$]=this.shownResources$></app-resource-list>
@@ -40,7 +43,10 @@
     </mat-expansion-panel>
 
   </mat-accordion>
-  <div *ngIf='projects?.length === 0' class="mat-body-strong">Leider keine Projekte gefunden!</div>
+  <mat-list *ngIf='projects?.length === 0'>
+    <mat-list-item>Suche ist leer oder war erfolglos.</mat-list-item>
+    <mat-list-item style="font-weight: bold">Keine Projekte gefunden!</mat-list-item>
+  </mat-list>
 </div>
 
 <ng-template #loading class="loader">

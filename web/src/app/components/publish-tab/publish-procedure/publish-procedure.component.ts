@@ -96,16 +96,16 @@ export class PublishProcedureComponent implements OnInit {
     console.log(event.status);
     console.warn(event.body);
     if ((event.status >= 200) && (event.status < 300)) {
-      this.openSnackBar('Erfolg!');
+      this.openSnackBar('Ihre Veröffentlichung war erfolgreich!');
       window.open(event.body.url, '_blank');
     } else {
-      this.openSnackBar('Fehler!');
+      this.openSnackBar('Fehler! Veröffentlichung abgebrochen.');
     }
   }
 
   private openSnackBar(message): void {
     this.snackBar.open(message, 'Schließen', {
-      panelClass: ['mat-toolbar', 'mat-warn'],
+      panelClass: ['mat-toolbar', 'snackbar-inv'],
       horizontalPosition: 'center',
       verticalPosition: 'top',
     });

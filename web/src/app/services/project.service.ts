@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Project} from '../models/project';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {ApiService} from './api.service';
 import {Resource} from '../models/resource';
 import {Value} from '../models/value';
@@ -39,7 +39,7 @@ export class ProjectService {
     if (filter) {
       return this.apiService.get('/projects/search?filter=' + filter);
     }
-    return this.apiService.get('/projects/search');
+    return of([]);
 
   }
   getValuesOfProject(project: Project): Observable<Value[]> {

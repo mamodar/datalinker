@@ -27,11 +27,7 @@ export class PublishProjectDialogComponent {
     }
   }
 
-  addAuthor(): void {
-    this.data.authors = [...this.data.authors, new Author(null, null)];
-    this.ref.detectChanges();
 
-  }
 
   addKeyword(): void {
     this.data.keywords = [...this.data.keywords, ''];
@@ -46,8 +42,20 @@ export class PublishProjectDialogComponent {
     return 0;
   }
 
-  removeAuthor(): void {
-    this.data.authors = this.data.authors.slice(0, this.data.authors.length - 1);
+  addAuthor(index: number): void {
+    console.log(index);
+    console.log(this.data.authors.slice(0, index + 1));
+    console.log(this.data.authors.slice(index + 1, this.data.authors.length));
+    this.data.authors = [
+      ...this.data.authors.slice(0, index + 1),
+      new Author(null, null),
+      ...this.data.authors.slice(index + 1, this.data.authors.length)];
+    this.ref.detectChanges();
+  }
+
+  removeAuthor(index: number): void {
+    this.data.authors = [...this.data.authors.slice(0, index),
+      ...this.data.authors.slice(index + 1, this.data.authors.length)];
     this.ref.detectChanges();
 
   }

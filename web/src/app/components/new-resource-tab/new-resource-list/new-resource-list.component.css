@@ -5,3 +5,7 @@
 .mat-cell {
   color: #97003f;
 }
+
+td {
+  font-size: smaller;
+}
