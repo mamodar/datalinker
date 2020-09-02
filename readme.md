@@ -97,7 +97,8 @@ Connect to your server and login into postgres `sudo -u postgres psql postgres`,
 
 To install and configure RDMO please refer to the [RDMO documentation](https://rdmo.readthedocs.io/en/latest/installation/index.html).
 
-## Technical documentation
+## Documentation
 
-[JavaDoc](http://h2879007.stratoserver.net/doc/javadoc)   
-[Compodoc](http://h2879007.stratoserver.net/doc/compdoc)
+[ReadTheDocs](https://mamodar-docs-en.readthedocs.io/en/latest/)  
+[JavaDoc](http://h2888668.stratoserver.net/doc/javadoc)   
+[Compodoc](http://h2888668.stratoserver.net/doc/compdoc)
