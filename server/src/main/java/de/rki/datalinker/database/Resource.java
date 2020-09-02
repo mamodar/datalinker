@@ -111,7 +111,7 @@ public class Resource {
     Objects.requireNonNull(resourceDTO.getLocation());
 
     this.path = resourceDTO.getPath();
-    this.resourceType = resourceDTO.getType();
+    this.resourceType = resourceDTO.getLocation();
     this.description = resourceDTO.getDescription() != null ? resourceDTO.getDescription() : this.description;
     this.isArchived = resourceDTO.getArchived() != null ? resourceDTO.getArchived() : this.isArchived;
     this.isPersonal = resourceDTO.getPersonal() != null ? resourceDTO.getPersonal() : this.isPersonal;

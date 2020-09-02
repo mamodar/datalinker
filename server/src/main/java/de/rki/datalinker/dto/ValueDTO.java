@@ -35,13 +35,15 @@ public class ValueDTO {
     this.attribute = value.getAttribute();
     this.questionText = value.getQuestionText();
     this.isFilter = value.getFilter();
+    this.answerText = "";
+    if (!value.getAnswer().isBlank()) {
+      this.answerText = value.getAnswer();
+    }
     if (value.getOptionText() != null) {
-      this.answerText = value.getOptionText();
-    } else {
-      if (!value.getAnswer().isBlank()) {
-        this.answerText = value.getAnswer();
+      if (this.answerText.equals("")) {
+        this.answerText = value.getOptionText();
       } else {
-        this.answerText = "";
+        this.answerText = this.answerText.concat(": ".concat(value.getQuestionText()));
       }
     }
     if (value.getUnit() != null) {

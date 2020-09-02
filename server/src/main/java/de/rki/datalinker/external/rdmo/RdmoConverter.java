@@ -19,6 +19,7 @@ import de.rki.datalinker.external.rdmo.database.RdmoValue;
 import de.rki.datalinker.external.rdmo.database.RdmoValueRepository;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Component;
@@ -121,6 +122,9 @@ public class RdmoConverter {
     List<RdmoQuestionDTO> rdmoQuestionDTOs = Arrays.asList(rdmoQuestions);
     List<RdmoQuestion> rdmoQuestionDAOs = new ArrayList<>();
     rdmoQuestionDTOs.forEach(rdmoQuestionDTO -> rdmoQuestionDAOs.add(new RdmoQuestion(rdmoQuestionDTO)));
+    // remove multiple questions with the same attribute id
+    HashSet<Long> seen = new HashSet<>();
+    rdmoQuestionDAOs.removeIf(rdmoQuestion -> !seen.add(rdmoQuestion.getAttribute()));
     return (rdmoQuestionDAOs);
   }
 

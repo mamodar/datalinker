@@ -63,4 +63,7 @@ public class RdmoQuestion {
     this.attribute = rdmoQuestionDTO.getAttribute();
   }
 
+  public Long getAttribute() {
+    return attribute;
+  }
 }
