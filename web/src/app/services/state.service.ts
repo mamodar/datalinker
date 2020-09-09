@@ -47,9 +47,6 @@ export class StateService {
   private selectedProject = new BehaviorSubject<Project>(undefined);
   private filterResourcesByProject = new BehaviorSubject<Project>(undefined);
   private currentUser = new BehaviorSubject<AuthUser>(null);
-  private newResources = new Array<Resource>();
-  private shownNewResources = new BehaviorSubject<Resource[]>([]);
-  private resourceTypes: ResourceLocation[];
 
   public getResources(): BehaviorSubject<Resource[]> {
     if (this.filterResourcesByProject.getValue()) {
@@ -113,30 +110,8 @@ export class StateService {
     return this.resourceService.createResource(resource, this.getSelectedProject().getValue());
   }
 
-  public addNewResource(resource: Resource): void {
-    this.newResources.push(resource);
-    this.shownNewResources.next(this.newResources);
-  }
-
-  public getNewShownResources(): BehaviorSubject<Resource[]> {
-    return this.shownNewResources;
-  }
-
-
-  public resetNewResources(): void {
-    this.newResources.length = 0;
-    this.shownNewResources.next(this.newResources);
-    this.getResources();
-  }
-
   public deleteResource(resource: Resource): void {
-    if (!resource.id) {
-      this.newResources = this.newResources.filter(_ => _ !== resource);
-      this.shownNewResources.next(this.newResources);
-    } else {
       this.resourceService.deleteResource(resource.id).subscribe(_ => this.getResources());
-
-    }
   }
 
 

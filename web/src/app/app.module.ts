@@ -12,10 +12,6 @@ import {ProjectListComponent} from './components/shared/project-list-paginate/pr
 
 import {ResourceListComponent} from './components/shared/resource-list/resource-list.component';
 
-
-import {NewResourceListComponent} from './components/new-resource-tab/new-resource-list/new-resource-list.component';
-import {NewResourceAttachComponent} from './components/new-resource-tab/new-resource-attach/new-resource-attach.component';
-
 import {ResourceDeleteButtonComponent} from './components/shared/resource-list/resource-delete-button/resource-delete-button.component';
 
 import {MatToolbarModule} from '@angular/material/toolbar';
@@ -74,8 +70,6 @@ import {LoginDescriptionComponent} from './components/login-tab/login-descriptio
     ProjectListComponent,
     ResourceListComponent,
     NewResourceAddComponent,
-    NewResourceListComponent,
-    NewResourceAttachComponent,
     ResourceDeleteButtonComponent,
     NewResourceTabComponent,
     SearchTabComponent,

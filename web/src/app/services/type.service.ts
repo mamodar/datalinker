@@ -5,6 +5,10 @@ import {ResourceLocation} from '../models/resourceLocation';
 @Injectable({
   providedIn: 'root'
 })
+/**
+ * This service provides allowed/suggested values for all auto suggestion fields. It bundles the different suggestions for new resources.
+ * @author Kyanoush Yahosseini
+ */
 export class TypeService {
   private resourceLocationTypes: ResourceLocation[];
   private licenseTypes: string[];
