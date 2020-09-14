@@ -1,7 +1,8 @@
-import {ChangeDetectorRef, Component, Inject} from '@angular/core';
-import {MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {ChangeDetectorRef, Component, Inject, ViewChild} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {PublicationDTO} from '../../../models/publicationDTO';
 import {Author} from '../../../models/author';
+import {TypeService} from '../../../services/type.service';
 
 @Component({
   selector: 'app-publish-project-dialog',
@@ -14,9 +15,15 @@ import {Author} from '../../../models/author';
  */
 
 export class PublishProjectDialogComponent {
+  @ViewChild('publishForm') publishForm: any; // Initialize the ref of input element
+  showFileUploadError = false;
+
+
   constructor(
+    public dialogRef: MatDialogRef<PublishProjectDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: PublicationDTO,
-    private ref: ChangeDetectorRef) {
+    private ref: ChangeDetectorRef,
+    public typeService: TypeService) {
   }
 
   uploadFile(filesEvent: Event): void {
@@ -29,11 +36,6 @@ export class PublishProjectDialogComponent {
 
 
 
-  addKeyword(): void {
-    this.data.keywords = [...this.data.keywords, ''];
-    this.ref.detectChanges();
-
-  }
 
   fileSize(file: File[]): number {
     if (file) {
@@ -43,9 +45,6 @@ export class PublishProjectDialogComponent {
   }
 
   addAuthor(index: number): void {
-    console.log(index);
-    console.log(this.data.authors.slice(0, index + 1));
-    console.log(this.data.authors.slice(index + 1, this.data.authors.length));
     this.data.authors = [
       ...this.data.authors.slice(0, index + 1),
       new Author(null, null),
@@ -60,8 +59,34 @@ export class PublishProjectDialogComponent {
 
   }
 
-  removeKeyword() {
-    this.data.keywords = this.data.keywords.slice(0, this.data.keywords.length - 1);
+  addKeyword(index: number): void {
+    this.data.keywords = [
+      ...this.data.keywords.slice(0, index + 1),
+      '',
+      ...this.data.keywords.slice(index + 1, this.data.keywords.length)];
     this.ref.detectChanges();
+
+  }
+
+  removeKeyword(index: number) {
+    this.data.keywords = [...this.data.keywords.slice(0, index),
+      ...this.data.keywords.slice(index + 1, this.data.keywords.length)];
+    this.ref.detectChanges();
+  }
+
+  onClose(data: { resource: PublicationDTO; send: boolean }) {
+    this.publishForm.form.markAllAsTouched();
+    if (!data.resource.files ||
+      (data.resource.files.length <= 0) ||
+      (this.fileSize(data.resource.files) > 50)) {
+      this.showFileUploadError = true;
+    }
+    if ((this.publishForm.form.status === 'VALID' &&
+      data.resource.files &&
+      (data.resource.files.length > 0) &&
+      (this.fileSize(data.resource.files) < 50))
+      || !data.send) {
+      this.dialogRef.close(data);
+    }
   }
 }

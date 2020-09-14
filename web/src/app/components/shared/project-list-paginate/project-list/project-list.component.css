@@ -20,14 +20,20 @@
 }
 
 mat-panel-description.title {
-  flex: 0 1 60% !important;
+  flex: 0 1 60%;
 }
 
 mat-panel-description.description {
-  flex: 0 1 40% !important;
+  flex: 0 1 40%;
 }
 
 
 .mat-checkbox {
   display: none
+}
+
+
+.enum-front {
+  font-weight: bold;
+  min-width: 20rem;
 }

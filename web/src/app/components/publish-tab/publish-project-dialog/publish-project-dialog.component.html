@@ -33,46 +33,56 @@
 
 
   </p>
-  <p>
-    <mat-form-field *ngFor="let keyword of data.keywords;let index = index;" class=quarter-width>
+  <p *ngFor="let keyword of data.keywords;let index = index;">
+    <mat-form-field class=quarter-width>
       <mat-label>Schlagwort</mat-label>
       <input [(ngModel)]="data.keywords[index]" matInput [ngModelOptions]="{standalone: true, updateOn: 'blur'}"><br>
     </mat-form-field>
-    <button class="button" color="primary" mat-mini-fab (click)="addKeyword()">+</button>
-    <button *ngIf="data.keywords.length>1" class="button" color="warn" mat-mini-fab (click)="removeKeyword()">-</button>
+    <button class="button" color="primary" mat-mini-fab (click)="addKeyword(index)">+</button>
+    <button *ngIf="data.keywords.length>1" class="button" color="warn" mat-mini-fab (click)="removeKeyword(index)">-
+    </button>
   </p>
   <p>
     <mat-form-field class=half-width>
-      <mat-label>Lizenz</mat-label>
-      <input [(ngModel)]="data.license" matInput name="license" required></mat-form-field>
+      <mat-label>Lizenz / Nutzungsbedingung</mat-label>
+      <input matInput [(ngModel)]="data.license" name="license" required [matAutocomplete]="autoLicense">
+      <mat-autocomplete #autoLicense="matAutocomplete">
+        <span class="mat-small small">Vorschläge (Freitext ist möglich): </span>
+        <mat-option *ngFor=" let license of this.typeService.getLicenseTypes() | async" value="{{license}}"
+                    class="small"> {{license}}</mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
   </p>
   <p>
     <mat-form-field appearance="fill" class="quarter-width">
       <mat-label>Ausgabedatum</mat-label>
       <input matInput [matDatepicker]="datepicker" disabled [(ngModel)]="data.issueDate" name="issueDate">
-      <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+      <mat-datepicker-toggle disabled matSuffix [for]="datepicker"></mat-datepicker-toggle>
       <mat-datepicker #datepicker disabled="false"></mat-datepicker>
     </mat-form-field>
 
   </p>
 
   <div class=half-width>
+
     <button (click)="fileInput.click()" mat-raised-button type="button">Datei(en) auswählen</button>
-    <div class="mat-caption">(max. 50MB)</div>
+    <br>
     <input #fileInput (change)="uploadFile($event)" multiple hidden id="file" required type="file"><br>
-    <div *ngIf="data.files" class="mat-caption">
-      Anzahl: {{data.files.length}} Größe: {{fileSize(data.files)|number}}MB
-    </div>
+    <div *ngIf="showFileUploadError" class="mat-error">Keine Daten ausgewählt oder Daten sind zu groß!</div>
+    <br>
+    <div class="mat-caption">(max. 50MB) <span *ngIf="data.files" class="mat-caption"> Anzahl: {{data.files.length}}
+      Größe: {{fileSize(data.files)|number}}MB </span></div>
+
+
   </div>
 </mat-dialog-content>
   <div mat-dialog-actions>
     <button
-      [disabled]="publishForm.form.invalid || !this.data.files || !(this.data.files.length > 0) || (fileSize(data.files) > 50)"
-      [mat-dialog-close]="{send: true , resource: data}" class="button"
+      (click)="onClose({send: true , resource: data})" class="button"
       color="primary" mat-raised-button>
       Veröffentlichen
     </button>
-    <button [mat-dialog-close]="{send: false , resource: data}" class="button" color="warn" mat-raised-button>
+    <button (click)="onClose({send: false , resource: data})" class="button" color="warn" mat-raised-button>
       Abbrechen
     </button>
 

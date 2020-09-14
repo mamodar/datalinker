@@ -62,6 +62,7 @@ import {FooterComponent} from './components/misc/footer/footer.component';
 import {HeaderComponent} from './components/misc/header/header.component';
 import {ContactTabComponent} from './components/contact-tab/contact-tab.component';
 import {LoginDescriptionComponent} from './components/login-tab/login-description/login-description.component';
+import {PublishProjectCheckDialogComponent} from './components/publish-tab/publish-project-dialog/publish-project-check-dialog.component';
 
 @NgModule({
   declarations: [
@@ -89,7 +90,8 @@ import {LoginDescriptionComponent} from './components/login-tab/login-descriptio
     FooterComponent,
     HeaderComponent,
     ContactTabComponent,
-    LoginDescriptionComponent
+    LoginDescriptionComponent,
+    PublishProjectCheckDialogComponent
   ],
   imports: [
     BrowserModule,

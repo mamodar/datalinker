@@ -41,23 +41,16 @@ export class SearchTabComponent implements OnInit, OnDestroy {
     if (this.sub) {
       this.sub.unsubscribe();
     }
-
     this.sub = this.stateService.searchProjects(of($event), of(this.filterTermSave)).pipe(
       map(value => this.projects$.next(value))).subscribe();
-
   }
 
   addFilterTerm($event: string): void {
-
     this.filterTermSave = $event;
     if (this.sub) {
       this.sub.unsubscribe();
     }
     this.sub = this.stateService.searchProjects(of(this.searchTermSave), of($event)).pipe(
       map(value => this.projects$.next(value))).subscribe();
-  }
-
-  toggleFilter(): void {
-    this.showFilter = !this.showFilter;
   }
 }

@@ -1,9 +1,7 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {Resource} from '../../../../models/resource';
 import {StateService} from '../../../../services/state.service';
-import {ActivatedRoute} from '@angular/router';
-import {map, take} from 'rxjs/operators';
 import {ResourceLocation} from '../../../../models/resourceLocation';
 import {Observable} from 'rxjs';
 import {NewResourceAddComponent} from '../../../new-resource-tab/new-resource-add/new-resource-add.component';
@@ -23,36 +21,27 @@ import {TypeService} from '../../../../services/type.service';
 export class ResourceManipulateDialogComponent implements OnInit {
   resourceLocations$: Observable<ResourceLocation[]>;
   dataBackup: Resource;
+  @ViewChild('newResourceForm') newResourceForm: any; // Initialize the ref of input element
   constructor(
     public dialogRef: MatDialogRef<NewResourceAddComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Resource,
     public stateService: StateService,
-    public typeService: TypeService,
-    private activatedRoute: ActivatedRoute) {
+    public typeService: TypeService) {
     this.dataBackup = JSON.parse(JSON.stringify(data));
   }
 
   ngOnInit() {
     this.resourceLocations$ = this.typeService.getResourceLocations();
-    if (!this.data.path) {this.data.path = new ResourcePath(); }
-    this.activatedRoute.queryParamMap.pipe( take(1), map(
-      // creates an object from aromatically selecting a location
-      _ => {
-        if (_.get('path')) {
-          this.data.location = new ResourceLocation(_.get('location'));
-          this.data.path.updateFromViewValue(_.get('path'), this.data.location);
-        }
-      })).subscribe();
+    if (!this.data.path) {
+      this.data.path = new ResourcePath();
+    }
   }
-
-// creates an object from manually selecting a location
 
   setSelectedLocation(): void {
     this.data.path = new ResourcePath();
-    // if (!this.data.location.value) {
     this.data.location = new ResourceLocation(this.data.location.value);
-    // }
-    console.warn(JSON.stringify(this.data.location));
+    this.data.path.value = this.data.location.pathDefault;
+    this.data.path.viewValue = this.data.location.pathDefault;
   }
 
   changedResourcePath(event: any): void {
@@ -61,6 +50,13 @@ export class ResourceManipulateDialogComponent implements OnInit {
       this.data.path.updateFromViewValue(event.value, this.data.location);
     } else {
       this.data.path.updateFromViewValue(event.target.value, this.data.location);
+    }
+  }
+
+  onClose(data: { resource: Resource; send: boolean }) {
+    this.newResourceForm.form.markAllAsTouched();
+    if (this.newResourceForm.form.status === 'VALID' || !data.send) {
+      this.dialogRef.close(data);
     }
   }
 }

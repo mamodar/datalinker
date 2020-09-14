@@ -4,10 +4,14 @@ import {PublicationDTO} from '../../../models/publicationDTO';
 import {HttpEventType, HttpResponse} from '@angular/common/http';
 import {PublishProjectDialogComponent} from '../publish-project-dialog/publish-project-dialog.component';
 import {StateService} from '../../../services/state.service';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {Project} from '../../../models/project';
 import {Value} from '../../../models/value';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {PublishProjectCheckDialogComponent} from '../publish-project-dialog/publish-project-check-dialog.component';
+import {Resource} from '../../../models/resource';
+import {ResourceLocation} from '../../../models/resourceLocation';
+import {ResourcePath} from '../../../models/resourcePath';
 
 @Component({
   selector: 'app-publish-procedure',
@@ -25,6 +29,7 @@ export class PublishProcedureComponent implements OnInit {
   private selectedProject$: BehaviorSubject<Project>;
   private selectedValues$: BehaviorSubject<Value[]>;
   public progress: number;
+  private publishedResource: PublicationDTO;
 
 
   constructor(private stateService: StateService, private matDialog: MatDialog, private snackBar: MatSnackBar) {
@@ -45,18 +50,28 @@ export class PublishProcedureComponent implements OnInit {
 
   openExportDialog(): void {
     this.progressBarType = 'hidden';
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.minWidth = '70%';
-    dialogConfig.maxWidth = '100%';
-    dialogConfig.minHeight = '70%';
-    dialogConfig.maxHeight = '100%';
-    const publicationDTO = new PublicationDTO().fromProject(this.selectedProject$.getValue(), this.selectedValues$.getValue());
-    dialogConfig.data = publicationDTO;
-    const modalDialog = this.matDialog.open(PublishProjectDialogComponent, dialogConfig);
-    modalDialog.afterClosed().subscribe(_ => {
-      if (_.send) {
-        this.sendToPublishInExternal(publicationDTO);
+    const warnDialogConfig = new MatDialogConfig();
+    warnDialogConfig.disableClose = true;
+    warnDialogConfig.minWidth = '50rem';
+    warnDialogConfig.maxWidth = '50rem';
+    const checkDialog = this.matDialog.open(PublishProjectCheckDialogComponent, warnDialogConfig);
+    checkDialog.afterClosed().subscribe(check => {
+      if (check) {
+        const exportDialogConfig = new MatDialogConfig();
+        exportDialogConfig.disableClose = true;
+        exportDialogConfig.minWidth = '70%';
+        exportDialogConfig.maxWidth = '100%';
+        exportDialogConfig.minHeight = '70%';
+        exportDialogConfig.maxHeight = '100%';
+        const publicationDTO = new PublicationDTO().fromProject(this.selectedProject$.getValue(), this.selectedValues$.getValue());
+        exportDialogConfig.data = publicationDTO;
+        const modalDialog = this.matDialog.open(PublishProjectDialogComponent, exportDialogConfig);
+        modalDialog.afterClosed().subscribe(data => {
+          this.publishedResource = data.resource;
+          if (data.send) {
+            this.sendToPublishInExternal(publicationDTO);
+          }
+        });
       }
     });
   }
@@ -93,11 +108,13 @@ export class PublishProcedureComponent implements OnInit {
 
   private reactToFinishedUpload(event: HttpResponse<any>) {
     this.progressBarType = 'finished';
-    console.log(event.status);
-    console.warn(event.body);
     if ((event.status >= 200) && (event.status < 300)) {
       this.openSnackBar('Ihre Veröffentlichung war erfolgreich!');
-      window.open(event.body.url, '_blank');
+      this.createNewResourceFromPublication(event.body).subscribe(_ => {
+        window.open(event.body.url, '_blank');
+        this.stateService.getResources();
+      });
+
     } else {
       this.openSnackBar('Fehler! Veröffentlichung abgebrochen.');
     }
@@ -109,5 +126,20 @@ export class PublishProcedureComponent implements OnInit {
       horizontalPosition: 'center',
       verticalPosition: 'top',
     });
+  }
+
+  private createNewResourceFromPublication(body: any): Observable<Resource> {
+    const resource: Resource = new Resource();
+    if (body.doi) {
+      resource.location = new ResourceLocation('DOI');
+      resource.path = new ResourcePath().updateFromValue(body.doi, resource.location);
+    } else {
+      resource.location = new ResourceLocation('URL');
+      resource.path = new ResourcePath().updateFromValue(body.url, resource.location);
+    }
+    resource.type = 'Datensatz';
+    resource.license = this.publishedResource.license;
+    resource.description = 'Publikation durch DataLinker: ' + this.publishedResource.keywords.join(';');
+    return this.stateService.createResource(resource);
   }
 }

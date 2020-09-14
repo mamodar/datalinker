@@ -70,7 +70,7 @@ export class PublicationDTO {
     this.tmpAuthorNames.forEach(value => this.authors.push(new Author(value, 'Robert Koch-Institut')));
 
     if (!this.license) {
-      this.license = '(CC BY 3.0 DE) Namensnennung';
+      this.license = '';
     }
     return this;
   }

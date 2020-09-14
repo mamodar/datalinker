@@ -21,6 +21,8 @@
            target="_blank">{{resource.path.viewValue}}</a>
         <a *ngSwitchCase="'SAN_DATA'" href="file://{{resource.path.value}}"
            target="_blank">{{resource.path.viewValue}}</a>
+        <a *ngSwitchCase="'DOI'" href="https://doi.org/{{resource.path.value}}"
+           target="_blank">{{resource.path.viewValue}}</a>
         <div *ngSwitchDefault> {{resource.path.viewValue}}</div>
 
       </td>

@@ -58,6 +58,7 @@ export class TypeService {
     this.resourceTypeTypes.push('Datensatz');
     this.resourceTypeTypes.push('Bild');
     this.resourceTypeTypes.push('Video/Audio');
+    this.resourceTypeTypes.push('Software/Code');
     this.resourceTypeTypes.push('Lektion');
 
   }

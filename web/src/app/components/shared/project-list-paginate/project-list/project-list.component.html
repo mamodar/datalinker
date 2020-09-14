@@ -15,16 +15,16 @@
 
       <ng-template matExpansionPanelContent>
         <mat-list dense>
-          <mat-list-item class="mat-list-item-description">
-            <span style="font-weight: bold">Beschreibung:&nbsp;</span>
-            {{project.description}}
+          <mat-list-item>
+            <span class="enum-front">Beschreibung:</span>
+            <span class="enum-back">{{project.description}}</span>
           </mat-list-item>
           <mat-list-item
             *ngFor="let values of shownValues$  | async">
-            <span style="font-weight: bold">{{values.questionText}}:&nbsp;</span>
-            {{values.answerText}}
+            <span class="enum-front">{{values.questionText}}:&nbsp;</span>
+            <span class="enum-back">{{values.answerText}}</span>
           </mat-list-item>
-          <mat-list-item style="font-weight: bold">Projektdatensätze:</mat-list-item>
+          <mat-list-item class="enum-front">Projektdatensätze:</mat-list-item>
         </mat-list>
         <app-resource-list [data$]=this.shownResources$></app-resource-list>
         <br>

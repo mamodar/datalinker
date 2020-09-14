@@ -11,6 +11,7 @@ import de.rki.datalinker.dto.RdmoOptionDTO;
 import de.rki.datalinker.dto.RdmoProjectDTO;
 import de.rki.datalinker.dto.RdmoQuestionDTO;
 import de.rki.datalinker.dto.RdmoValueDTO;
+import de.rki.datalinker.external.rdmo.database.RdmoDataLinkerConnectionRepository;
 import de.rki.datalinker.external.rdmo.database.RdmoOption;
 import de.rki.datalinker.external.rdmo.database.RdmoOptionRepository;
 import de.rki.datalinker.external.rdmo.database.RdmoQuestion;
@@ -42,28 +43,17 @@ public class RdmoConverter {
   private UserRepository userRepository;
   private ResourceRepository resourceRepository;
   private HaystackRepository haystackRepository;
+  private RdmoDataLinkerConnectionRepository rdmoDataLinkerConnectionRepository;
   /**
    * A list of all attribute ids of rdmo which should be included in the value table of the datalinker
    */
-  private final ArrayList<Long> ALLOWED_RDMO_ATTRIBUTES = new ArrayList<>(
-      Arrays.asList(
-          9L, // Principal investigator
-          12L, // Organizational unit
-          138L, // License/ Terms of use
-          152L, // Storage location
-          173L, // Funding partner
-          221L, // Cooperation partner (internal)
-          250L, // Keyword
-          269L, // Acronym
-          270L,// Project type
-          274L,// Cooperation partner (external)
-          292L, // contact person
-          311L));// Title
+  private List<Long> ALLOWED_RDMO_ATTRIBUTES;
 
   private RdmoConverter(
       RdmoOptionRepository rdmoOptionRepository,
       RdmoQuestionRepository rdmoQuestionRepository,
       RdmoValueRepository rdmoValueRepository,
+      RdmoDataLinkerConnectionRepository rdmoDataLinkerConnectionRepository,
       ProjectRepository projectRepository,
       UserRepository userRepository,
       ValueRepository valueRepository,
@@ -77,6 +67,11 @@ public class RdmoConverter {
     this.valueRepository = valueRepository;
     this.resourceRepository = resourceRepository;
     this.haystackRepository = haystackRepository;
+    this.rdmoDataLinkerConnectionRepository = rdmoDataLinkerConnectionRepository;
+    this.ALLOWED_RDMO_ATTRIBUTES = rdmoDataLinkerConnectionRepository.findAll().stream()
+        .map(rdmoDataLinkerConnection -> rdmoDataLinkerConnection.getAttribute()).collect(
+            Collectors.toList());
+    ;
   }
 
   /**
