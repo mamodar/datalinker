@@ -63,3 +63,235 @@ cn: yahosseinik
 sn: Alex
 uid: yahosseinik
 userPassword: k
+
+
+dn: uid=andruscha,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: andruscha
+sn: Alex
+uid: andruscha
+userPassword: a
+
+dn: uid=duckeb,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: duckeb
+sn: Alex
+uid: duckeb
+userPassword: b
+
+dn: uid=fuchss,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: fuchss
+sn: Alex
+uid: fuchss
+userPassword: s
+
+dn: uid=grabenhenrichl,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: grabenhenrichl
+sn: Alex
+uid: grabenhenrichl
+userPassword: l
+
+dn: uid=marutschkec,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: marutschkec
+sn: Alex
+uid: marutschkec
+userPassword: c
+
+dn: uid=maol,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: maol
+sn: Alex
+uid: maol
+userPassword: l
+
+dn: uid=masa,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: masa
+sn: Alex
+uid: masa
+userPassword: a
+
+dn: uid=pollya,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: pollya
+sn: Alex
+uid: pollya
+userPassword: a
+
+dn: uid=dabrowskip,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: dabrowskip
+sn: Alex
+uid: dabrowskip
+userPassword: p
+
+dn: uid=reinertk,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: reinertk
+sn: Alex
+uid: reinertk
+userPassword: k
+
+dn: uid=riebschlaegerf,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: riebschlaegerf
+sn: Alex
+uid: riebschlaegerf
+userPassword: f
+
+dn: uid=seeberf,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: seeberf
+sn: Alex
+uid: seeberf
+userPassword: f
+
+dn: uid=sensth,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: sensth
+sn: Alex
+uid: sensth
+userPassword: h
+
+dn: uid=thelenj,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: thelenj
+sn: Alex
+uid: thelenj
+userPassword: j
+
+dn: uid=watsonj,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: watsonj
+sn: Alex
+uid: watsonj
+userPassword: j
+
+dn: uid=gaeberta,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: gaeberta
+sn: Alex
+uid: gaeberta
+userPassword: a
+
+dn: uid=fischerc,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: fischerc
+sn: Alex
+uid: fischerc
+userPassword: c
+
+dn: uid=mutht,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: mutht
+sn: Alex
+uid: mutht
+userPassword: t
+
+dn: uid=renardb,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: renardb
+sn: Alex
+uid: renardb
+userPassword: b
+
+dn: uid=neurothh,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: neurothh
+sn: Alex
+uid: neurothh
+userPassword: h
+
+
+dn: uid=guest1,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: guest1
+sn: Alex
+uid: guest1
+userPassword: 1
+
+dn: uid=guest2,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: guest2
+sn: Alex
+uid: guest2
+userPassword: 2
+
+dn: uid=guest3,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: guest3
+sn: Alex
+uid: guest3
+userPassword: 3

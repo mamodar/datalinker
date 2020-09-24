@@ -130,16 +130,17 @@ export class PublishProcedureComponent implements OnInit {
 
   private createNewResourceFromPublication(body: any): Observable<Resource> {
     const resource: Resource = new Resource();
-    if (body.doi) {
-      resource.location = new ResourceLocation('DOI');
-      resource.path = new ResourcePath().updateFromValue(body.doi, resource.location);
-    } else {
-      resource.location = new ResourceLocation('URL');
-      resource.path = new ResourcePath().updateFromValue(body.url, resource.location);
-    }
+    // TODO remove after workshop
+    // if (body.doi) {
+    //  resource.location = new ResourceLocation('DOI');
+    //  resource.path = new ResourcePath().updateFromValue(body.url + ';' + body.doi, resource.location);
+    // } else {
+    resource.location = new ResourceLocation('URL');
+    resource.path = new ResourcePath().updateFromValue(body.url, resource.location);
+    // }
     resource.type = 'Datensatz';
     resource.license = this.publishedResource.license;
-    resource.description = 'Publikation durch DataLinker: ' + this.publishedResource.keywords.join(';');
+    resource.description = 'Publikation durch DataLinker; DOI: ' + body.doi ? body.doi : 'NA' + '; ' + this.publishedResource.keywords.join(',');
     return this.stateService.createResource(resource);
   }
 }
