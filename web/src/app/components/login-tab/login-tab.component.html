@@ -15,15 +15,15 @@
         </mat-form-field>
       </mat-list-item>
       <mat-list-item>
-        <p class="mat-error" *ngIf="!passwordCorrect"> Passwort oder Benutzername nicht korrekt!</p>
-        <br>
-        <p>
-          <button mat-raised-button color="primary"
-                  (click)="loginClick()"
-                  [disabled]="!password?.length||!login?.length">Einloggen
-          </button>
-        </p>
+        <button mat-raised-button color="primary"
+                (click)="loginClick()"
+                [disabled]="!password?.length||!login?.length">Login
+        </button>
       </mat-list-item>
+      <mat-list-item>
+        <p class="mat-error" *ngIf="!passwordCorrect"> Login nicht korrekt!</p>
+      </mat-list-item>
+
     </mat-list>
   </div>
   <app-login-description class="descriptionText"></app-login-description>
@@ -31,6 +31,7 @@
 <div
   *ngIf="(stateService.getLoggedInUser().getValue()!==null) && (stateService.getLoggedInUser().getValue().userName !== null)"
   class="grid2">
+  <div class="login"></div>
   <mat-list class="succLogin">
     <mat-list-item>Benutzername: {{stateService.getLoggedInUser().getValue().userName}}  </mat-list-item>
     <mat-list-item>

@@ -26,7 +26,6 @@ export class PublishTabComponent implements OnInit {
   }
 
   emitSelectedRepo() {
-    console.log(this.selectedRepo);
     this.selectedRepoEmitter.emit(this.selectedRepo);
   }
 }

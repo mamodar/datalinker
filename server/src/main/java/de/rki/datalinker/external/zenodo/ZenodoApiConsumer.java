@@ -165,4 +165,17 @@ public class ZenodoApiConsumer {
     matcher.find();
     return Long.parseLong(matcher.group(1));
   }
+
+  /**
+   * Gets the doi for an api response of an publication.
+   *
+   * @param response the response
+   * @return the doi
+   */
+  public String getDoi(ResponseEntity<String> response) {
+    Pattern pattern = Pattern.compile("\"doi\":\"(\\d+\\.\\d+\\/zenodo\\.\\d+)\"");
+    Matcher matcher = pattern.matcher(response.getBody());
+    matcher.find();
+    return matcher.group(1);
+  }
 }

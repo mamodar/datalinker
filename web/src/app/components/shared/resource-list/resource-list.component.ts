@@ -41,9 +41,9 @@ export class ResourceListComponent implements OnDestroy, OnInit {
           JSON.stringify(data).trim().toLocaleLowerCase().includes(filter.trim().toLocaleLowerCase());
       });
     if (this.router.url === '/projects') {
-      this.displayedColumns = ['path', 'location', 'description', 'type', 'license', 'action'];
+      this.displayedColumns = ['description', 'location', 'path', 'type', 'license', 'action'];
     } else {
-      this.displayedColumns = ['path', 'location', 'description', 'type', 'license'];
+      this.displayedColumns = ['description', 'location', 'path', 'type', 'license'];
     }
   }
 

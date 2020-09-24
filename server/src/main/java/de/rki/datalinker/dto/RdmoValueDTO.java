@@ -23,6 +23,9 @@ public class RdmoValueDTO {
   //pseudo question id
   private Long attribute;
 
+  //snapshot id
+  private Long snapshot;
+
   /**
    * Gets rdmo id.
    *
@@ -188,5 +191,9 @@ public class RdmoValueDTO {
    */
   public void setProject(Long project) {
     this.project = project;
+  }
+
+  public Long getSnapshot() {
+    return snapshot;
   }
 }

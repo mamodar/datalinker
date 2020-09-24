@@ -11,6 +11,18 @@
       <th mat-header-cell *matHeaderCellDef> Standort</th>
       <td mat-cell *matCellDef="let resource" [ngSwitch]="resource.location.value">
         <a *ngSwitchCase="'GIT'" href="{{resource.path.value}}" target="_blank">{{resource.path.viewValue}}</a>
+        <a *ngSwitchCase="'URL'" href="{{resource.path.value}}" target="_blank">{{resource.path.viewValue}}</a>
+        <a *ngSwitchCase="'DMS'"
+           href="https://dms-vbs.rki.local/fsc/fscasp/content/bin/fscvext.dll?{{resource.path.value}}"
+           target="_blank">{{resource.path.viewValue}}</a>
+        <a *ngSwitchCase="'SAN_OU'" href="file://{{resource.path.value}}"
+           target="_blank">{{resource.path.viewValue}}</a>
+        <a *ngSwitchCase="'SAN_PROJECT'" href="file://{{resource.path.value}}"
+           target="_blank">{{resource.path.viewValue}}</a>
+        <a *ngSwitchCase="'SAN_DATA'" href="file://{{resource.path.value}}"
+           target="_blank">{{resource.path.viewValue}}</a>
+        <a *ngSwitchCase="'DOI'" href="https://doi.org/{{resource.path.value}}"
+           target="_blank">{{resource.path.viewValue}}</a>
         <div *ngSwitchDefault> {{resource.path.viewValue}}</div>
 
       </td>
@@ -26,7 +38,7 @@
       </td>
     </ng-container>
     <ng-container matColumnDef="license">
-      <th mat-header-cell *matHeaderCellDef> Lizenz</th>
+      <th mat-header-cell *matHeaderCellDef> Lizenz / Nutzungsbedingung</th>
       <td mat-cell *matCellDef="let resource"> {{resource.license}}
       </td>
     </ng-container>
@@ -43,5 +55,5 @@
   <tr mat-row *matRowDef="let project; columns: displayedColumns;" ></tr>
 
 </table>
-<mat-paginator [length] = 100 [pageSize]="5" [pageSizeOptions]="[1,5, 10, 50]"></mat-paginator>
+  <mat-paginator [length]=100 [pageSize]="10" [pageSizeOptions]="[1,5, 10, 50]"></mat-paginator>
 </div>

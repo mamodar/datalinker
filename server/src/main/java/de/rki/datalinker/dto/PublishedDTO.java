@@ -13,6 +13,7 @@ public class PublishedDTO {
   private String baseUrl;
   private String url;
   private String id;
+  private String doi;
 
   /**
    * Instantiates a new Published dto.
@@ -33,6 +34,19 @@ public class PublishedDTO {
     this.baseUrl = baseUrl;
     this.id = id;
     this.url = this.baseUrl + this.id;
+  }
+
+  /**
+   * Instantiates a new Published dto.
+   *
+   * @param baseUrl the base url
+   * @param id      the id
+   */
+  public PublishedDTO(String baseUrl, String id, String doi) {
+    this.baseUrl = baseUrl;
+    this.id = id;
+    this.url = this.baseUrl + this.id;
+    this.doi = doi;
   }
 
   /**
@@ -60,6 +74,14 @@ public class PublishedDTO {
    */
   public String getId() {
     return id;
+  }
+
+  public String getDoi() {
+    return doi;
+  }
+
+  public void setDoi(String doi) {
+    this.doi = doi;
   }
 
   /**

@@ -15,18 +15,19 @@ export class PublicationDTO {
   license: string;
   keywords: string[] = [];
   files: File[] = [];
-
+  private tmpAuthorNames: string[] = [];
   public fromProject(project: Project, values: Value[]): PublicationDTO {
     for (const value of values) {
+      console.log('fromProject:' + value.answerText);
       switch (value.questionText.toLocaleLowerCase()) {
         case 'titel':
           this.title = value.answerText;
           break;
         case 'kontaktperson':
-          value.answerText.split(',').forEach(value1 => this.authors.push(new Author(value1, 'Robert-Koch-Institut')));
+          value.answerText.split(';').forEach(value1 => this.tmpAuthorNames.push(value1));
           break;
         case 'projektleiter\*in':
-          value.answerText.split(',').forEach(value1 => this.authors.push(new Author(value1, 'Robert-Koch-Institut')));
+          value.answerText.split(';').forEach(value1 => this.tmpAuthorNames.push(value1));
           break;
         case 'beschreibung':
           this.description = value.answerText;
@@ -39,7 +40,7 @@ export class PublicationDTO {
           this.license = value.answerText;
           break;
         case 'schlagwort':
-          value.answerText.split(',').forEach(value1 => this.keywords.push(value1));
+          value.answerText.split(';').forEach(value1 => this.keywords.push(value1));
           break;
       }
     }
@@ -53,8 +54,8 @@ export class PublicationDTO {
     if (!this.abstract) {
       this.description = project.description;
     }
-    if (this.authors.length === 0) {
-      project.owner.forEach(value => this.authors.push(new Author(value, 'Robert Koch-Institut')));
+    if (this.tmpAuthorNames.length === 0) {
+      project.owner.forEach(value => this.tmpAuthorNames.push(value));
     }
     if (!this.issueDate) {
       const date = new Date();
@@ -64,10 +65,12 @@ export class PublicationDTO {
     if (this.keywords.length === 0) {
       this.keywords.push(this.title);
     }
-
+    // delete duplication
+    this.tmpAuthorNames = [...new Set(this.tmpAuthorNames)];
+    this.tmpAuthorNames.forEach(value => this.authors.push(new Author(value, 'Robert Koch-Institut')));
 
     if (!this.license) {
-      this.license = '(CC BY 3.0 DE) Namensnennung';
+      this.license = '';
     }
     return this;
   }
