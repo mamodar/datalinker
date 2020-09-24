@@ -1,4 +1,4 @@
-import {ResourceLocation} from './resourceLocation';
+import {ResourceType} from './resourceType';
 
 /**
  * This class represents the a resource path.
@@ -9,7 +9,7 @@ export class ResourcePath {
   value: string;
   viewValue: string;
 
-  public updateFromViewValue(viewValue: string, resourceType: ResourceLocation): ResourcePath {
+  public updateFromViewValue(viewValue: string, resourceType: ResourceType): ResourcePath {
     switch (resourceType.value.split('_')[0]) {
       case 'SAN':
         this.viewValue = viewValue;
@@ -23,7 +23,7 @@ export class ResourcePath {
     }
   }
 
-  public updateFromValue(value: string, resourceType: ResourceLocation): ResourcePath {
+  public updateFromValue(value: string, resourceType: ResourceType): ResourcePath {
     switch (resourceType.value.split('_')[0]) {
       case 'SAN':
         this.value = value;

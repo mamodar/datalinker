@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {filter, map, take} from 'rxjs/operators';
 import {StateService} from '../../../services/state.service';
@@ -6,8 +6,7 @@ import {Resource} from '../../../models/resource';
 import {ActivatedRoute, Router} from '@angular/router';
 // tslint:disable-next-line:max-line-length
 import {ResourceManipulateDialogComponent} from '../../shared/resource-list/resource-manipulate-dialog/resource-manipulate-dialog.component';
-import {ResourceLocation} from '../../../models/resourceLocation';
-import {Subscription} from 'rxjs';
+import {ResourceType} from '../../../models/resourceType';
 
 /**
  * This components contains the create new resource logic.
@@ -19,23 +18,16 @@ import {Subscription} from 'rxjs';
   templateUrl: './new-resource-add.component.html',
   styleUrls: ['./new-resource-add.component.css']
 })
-export class NewResourceAddComponent implements OnInit, OnDestroy {
+export class NewResourceAddComponent implements OnInit {
 
   constructor(public matDialog: MatDialog, private stateService: StateService,
               private activatedRoute: ActivatedRoute, private router: Router) {
   }
 
   newResource: Resource;
-  sub: Subscription;
 
   ngOnInit() {
     this.activatedRoute.queryParamMap.pipe(take(1), map(_ => _.has('path') ? this.openAddNew() : null)).subscribe();
-  }
-
-  ngOnDestroy() {
-    if (this.sub) {
-      this.sub.unsubscribe();
-    }
   }
 
   projectSelected(): boolean {
@@ -44,7 +36,9 @@ export class NewResourceAddComponent implements OnInit, OnDestroy {
 
   openAddNew(): void {
     this.newResource = new Resource();
-    this.newResource.location = new ResourceLocation(null);
+    this.newResource.location = new ResourceType(null);
+    this.newResource.license = 'Namensnennung 3.0 (CC BY 3.0)';
+    this.newResource.type = 'Ordner';
     const dialogConfig = new MatDialogConfig();
     dialogConfig.minWidth = '50%';
     dialogConfig.maxWidth = '50%';
@@ -53,15 +47,10 @@ export class NewResourceAddComponent implements OnInit, OnDestroy {
     // https://material.angular.io/components/dialog/overview
     const modalDialog = this.matDialog.open(ResourceManipulateDialogComponent, dialogConfig);
     modalDialog.afterClosed().pipe(filter(_ => !!_)).subscribe(
-      data => {
-        if (data.send) {
-          if (this.sub) {
-            this.sub.unsubscribe();
-          }
-          this.sub = this.stateService.createResource(data.resource).subscribe(_ => {
-            this.router.navigate([], {queryParams: null});
-            this.stateService.getResources();
-          });
+      _ => {
+        if (_.send) {
+          this.stateService.addNewResource(_.resource);
+          this.router.navigate([], {queryParams: null});
         }
       });
   }

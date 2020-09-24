@@ -5,7 +5,7 @@ import {Project} from '../models/project';
 import {ProjectService} from './project.service';
 import {concatMap, debounceTime, distinctUntilChanged, flatMap, map} from 'rxjs/operators';
 import {ResourceService} from './resource.service';
-import {ResourceLocation} from '../models/resourceLocation';
+import {ResourceType} from '../models/resourceType';
 import {AuthUser} from '../models/authUser';
 import {ApiService} from './api.service';
 import {ResourcePath} from '../models/resourcePath';
@@ -37,7 +37,7 @@ export class StateService {
       userName: sessionStorage.getItem('currentUser'),
       password: sessionStorage.getItem('currentPassword')
     });
-
+    this.initializeTypes();
   }
 
 
@@ -47,13 +47,16 @@ export class StateService {
   private selectedProject = new BehaviorSubject<Project>(undefined);
   private filterResourcesByProject = new BehaviorSubject<Project>(undefined);
   private currentUser = new BehaviorSubject<AuthUser>(null);
+  private newResources = new Array<Resource>();
+  private shownNewResources = new BehaviorSubject<Resource[]>([]);
+  private resourceTypes: ResourceType[];
 
   public getResources(): BehaviorSubject<Resource[]> {
     if (this.filterResourcesByProject.getValue()) {
       this.projectService.getResourcesOfProject(this.filterResourcesByProject.getValue())
       .subscribe(resources => {
         // @ts-ignore comes in as a string
-        resources.map(resource => resource.location = new ResourceLocation(resource.location));
+        resources.map(resource => resource.location = new ResourceType(resource.location));
         // @ts-ignore comes in as a string
         resources.map(resource => resource.path = new ResourcePath().updateFromValue(resource.path, resource.location));
         this.shownResources.next(resources);
@@ -110,10 +113,36 @@ export class StateService {
     return this.resourceService.createResource(resource, this.getSelectedProject().getValue());
   }
 
-  public deleteResource(resource: Resource): void {
-      this.resourceService.deleteResource(resource.id).subscribe(_ => this.getResources());
+  public addNewResource(resource: Resource): void {
+    this.newResources.push(resource);
+    this.shownNewResources.next(this.newResources);
   }
 
+  public getNewShownResources(): BehaviorSubject<Resource[]> {
+    return this.shownNewResources;
+  }
+
+
+  public resetNewResources(): void {
+    this.newResources.length = 0;
+    this.shownNewResources.next(this.newResources);
+    this.getResources();
+  }
+
+  public deleteResource(resource: Resource): void {
+    if (!resource.id) {
+      this.newResources = this.newResources.filter(_ => _ !== resource);
+      this.shownNewResources.next(this.newResources);
+    } else {
+      this.resourceService.deleteResource(resource.id).subscribe(_ => this.getResources());
+
+    }
+  }
+
+  public getResourceTypes(): BehaviorSubject<ResourceType[]> {
+    const resourceTypes: BehaviorSubject<ResourceType[]> = new BehaviorSubject<ResourceType[]>(this.resourceTypes);
+    return (resourceTypes);
+  }
 
   public updateResource(resource: Resource): Observable<Resource> {
     return this.resourceService.updateResource(resource);
@@ -162,12 +191,23 @@ export class StateService {
     }
   }
 
+  private initializeTypes(): void {
+    this.resourceTypes = [];
+    this.resourceTypes.push(new ResourceType('SAN_OU'));
+    this.resourceTypes.push(new ResourceType('SAN_PROJECT'));
+    this.resourceTypes.push(new ResourceType('SAN_DATA'));
+    this.resourceTypes.push(new ResourceType('OPENBIS'));
+    this.resourceTypes.push(new ResourceType('GIT'));
+    this.resourceTypes.push(new ResourceType('DOI'));
+    this.resourceTypes.push(new ResourceType('DMS'));
+  }
+
   private reduceValueCollections(values: Value[]): Value[] {
     const reducedValues: Value[] = [];
     values.forEach(
       value => {
         if (reducedValues.find(reducedValue => value.questionText === reducedValue.questionText)) {
-          reducedValues.find(reducedValue => value.questionText === reducedValue.questionText).appendAnswerText('; ' + value.answerText);
+          reducedValues.find(reducedValue => value.questionText === reducedValue.questionText).appendAnswerText(', ' + value.answerText);
         } else {
           reducedValues.push(value);
         }

@@ -9,9 +9,8 @@
 }
 
 .mat-list-item {
-  overflow: auto;
-  height: auto !important;
-  margin-bottom: 0.5rem;
+  margin-top: -1rem;
+  margin-bottom: -1rem;
 }
 
 .email {
@@ -20,20 +19,9 @@
 }
 
 mat-panel-description.title {
-  flex: 0 1 60%;
+  flex: 0 1 60% !important;
 }
 
 mat-panel-description.description {
-  flex: 0 1 40%;
-}
-
-
-.mat-checkbox {
-  display: none
-}
-
-
-.enum-front {
-  font-weight: bold;
-  min-width: 20rem;
+  flex: 0 1 40% !important;
 }

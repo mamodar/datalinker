@@ -2,7 +2,6 @@ package de.rki.datalinker.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import de.rki.datalinker.DataLinkerApplication;
-import de.rki.datalinker.database.ResourceRepository;
 import de.rki.datalinker.dto.PublishedDTO;
 import de.rki.datalinker.external.dspace.DspaceApiConsumer;
 import de.rki.datalinker.external.dspace.MetadataDTO;
@@ -52,11 +51,8 @@ public class PublicationController {
    *
    * @param env the env
    */
-  ResourceRepository resourceRepository;
-
-  public PublicationController(Environment env, ResourceRepository resourceRepository) {
+  public PublicationController(Environment env) {
     this.env = env;
-    this.resourceRepository = resourceRepository;
   }
 
   /**
@@ -97,7 +93,7 @@ public class PublicationController {
    */
   @PostMapping(value = "publications/bitstreams/dspace",
       consumes = {"multipart/form-data"})
-  ResponseEntity<String> createDspaceBitstream(
+  ResponseEntity<String> createPublication(
       @RequestParam(value = "item") String handle,
       @RequestPart(value = "file") MultipartFile[] files) throws IOException {
     log.info("dspace/publications/bitstreams");
@@ -154,9 +150,9 @@ public class PublicationController {
     try {
       String uuid = zenodoApiConsumer.getBucketUuid(this.zenodoApiConsumer.getItem(Long.parseLong(itemId)));
       this.zenodoApiConsumer.addFiles(uuid, files);
-      String doi = this.zenodoApiConsumer.getDoi(this.zenodoApiConsumer.publishItem(Long.parseLong(itemId)));
+      this.zenodoApiConsumer.publishItem(Long.parseLong(itemId));
       return new ResponseEntity<>(
-          new PublishedDTO(env.getProperty("zenodo.baseurl") + "/record/", itemId, doi).toJsonString(),
+          new PublishedDTO(env.getProperty("zenodo.baseurl") + "/record/", itemId).toJsonString(),
           HttpStatus.OK);
     } catch (HttpStatusCodeException e) {
       log.warn("zenodo error " + e.getStatusCode() + " " + e.getResponseBodyAsString() + " " + e.getResponseHeaders()

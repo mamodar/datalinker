@@ -11,7 +11,6 @@ const routes: Routes = [
   {path: 'projects', component: NewResourceTabComponent, canActivate: [AuthGuardService]},
   {path: 'search', component: SearchTabComponent, canActivate: [AuthGuardService]},
   {path: 'publish', component: PublishTabComponent, canActivate: [AuthGuardService]},
-  {path: 'user', component: LoginTabComponent, canActivate: [AuthGuardService]},
   {path: 'login', component: LoginTabComponent},
   {path: 'contact', component: ContactTabComponent},
   {path: '**', redirectTo: '/login', pathMatch: 'full'}
