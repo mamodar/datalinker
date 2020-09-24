@@ -12,6 +12,10 @@ import {ProjectListComponent} from './components/shared/project-list-paginate/pr
 
 import {ResourceListComponent} from './components/shared/resource-list/resource-list.component';
 
+
+import {NewResourceListComponent} from './components/new-resource-tab/new-resource-list/new-resource-list.component';
+import {NewResourceAttachComponent} from './components/new-resource-tab/new-resource-attach/new-resource-attach.component';
+
 import {ResourceDeleteButtonComponent} from './components/shared/resource-list/resource-delete-button/resource-delete-button.component';
 
 import {MatToolbarModule} from '@angular/material/toolbar';
@@ -62,7 +66,6 @@ import {FooterComponent} from './components/misc/footer/footer.component';
 import {HeaderComponent} from './components/misc/header/header.component';
 import {ContactTabComponent} from './components/contact-tab/contact-tab.component';
 import {LoginDescriptionComponent} from './components/login-tab/login-description/login-description.component';
-import {PublishProjectCheckDialogComponent} from './components/publish-tab/publish-project-dialog/publish-project-check-dialog.component';
 
 @NgModule({
   declarations: [
@@ -71,6 +74,8 @@ import {PublishProjectCheckDialogComponent} from './components/publish-tab/publi
     ProjectListComponent,
     ResourceListComponent,
     NewResourceAddComponent,
+    NewResourceListComponent,
+    NewResourceAttachComponent,
     ResourceDeleteButtonComponent,
     NewResourceTabComponent,
     SearchTabComponent,
@@ -90,8 +95,7 @@ import {PublishProjectCheckDialogComponent} from './components/publish-tab/publi
     FooterComponent,
     HeaderComponent,
     ContactTabComponent,
-    LoginDescriptionComponent,
-    PublishProjectCheckDialogComponent
+    LoginDescriptionComponent
   ],
   imports: [
     BrowserModule,

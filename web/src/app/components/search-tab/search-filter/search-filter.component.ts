@@ -14,7 +14,7 @@ import {map} from 'rxjs/operators';
  */
 export class SearchFilterComponent implements OnInit {
   filterValues: string[] = ['', '', '', ''];
-  filterKeys: string[] = ['Organisationseinheit', 'Drittmittelprojekt', 'Förderer', 'Kooperationspartner (extern)'];
+  filterKeys: string[] = ['Organisationseinheit', 'Projektart', 'Förderer', 'Kooperationspartner (extern)'];
   allValues: Value[] = [];
   @Output() filterString: EventEmitter<string> = new EventEmitter<string>();
 
@@ -29,13 +29,7 @@ export class SearchFilterComponent implements OnInit {
     let stringBuilder = '';
     this.filterValues.forEach((value, index) => {
       if (value !== '') {
-        if (value === 'ja') {
-          stringBuilder = stringBuilder + this.filterKeys[index] + ':' + 1 + ',';
-        } else if (value === 'nein') {
-          stringBuilder = stringBuilder + this.filterKeys[index] + ':' + 0 + ',';
-        } else {
-          stringBuilder = stringBuilder + this.filterKeys[index] + ':' + value + ',';
-        }
+        stringBuilder = stringBuilder + this.filterKeys[index] + ':' + value + ',';
       }
     });
     this.filterString.emit(stringBuilder);

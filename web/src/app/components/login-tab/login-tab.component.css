@@ -1,15 +1,13 @@
 .grid2 {
   display: grid;
-  grid-template-columns: auto auto 1fr;
+  grid-template-columns: 15% 1fr 25%;
   grid-template-areas:
      "loginSection textSection .";
 }
 
 .login {
   grid-area: loginSection;
-  width: 100%;
-  min-width: 15vmax;
-  margin: 1rem;
+  margin-top: 1rem;
   align-self: center;
 
 }
@@ -17,7 +15,6 @@
   margin-top: 1rem;
   grid-area: textSection;
   text-align: justify-all;
-  max-width: 80rem;
 }
 .succLogin {
   grid-area: textSection;

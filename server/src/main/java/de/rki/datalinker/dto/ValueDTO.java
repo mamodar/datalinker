@@ -36,21 +36,16 @@ public class ValueDTO {
     this.questionText = value.getQuestionText();
     this.isFilter = value.getFilter();
     this.answerText = "";
-    // check if a free text answer was given
     if (!value.getAnswer().isBlank()) {
       this.answerText = value.getAnswer();
     }
-    //check if the question was a multiple choice one
     if (value.getOptionText() != null) {
-      // and no additional free text answer was given
       if (this.answerText.equals("")) {
         this.answerText = value.getOptionText();
-        // additional free text answer was given, combine both
       } else {
-        this.answerText = value.getOptionText().concat(": ".concat(this.answerText));
+        this.answerText = this.answerText.concat(": ".concat(value.getQuestionText()));
       }
     }
-    // check if the question has a unit (i.e. kg, h, ...)
     if (value.getUnit() != null) {
       this.answerText = this.answerText.concat(value.getUnit());
     }

@@ -26,8 +26,8 @@ export class ResourceManipulateButtonComponent implements OnInit {
 
   makeResourceEditable($event: MouseEvent): void {
     const dialogConfig = new MatDialogConfig();
-    dialogConfig.minWidth = '80%';
-    dialogConfig.maxWidth = '80%';
+    dialogConfig.minWidth = '50%';
+    dialogConfig.maxWidth = '50%';
     dialogConfig.disableClose = true;
 
     dialogConfig.data = this.parent;

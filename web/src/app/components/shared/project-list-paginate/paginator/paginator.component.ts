@@ -17,7 +17,7 @@ import {map} from 'rxjs/operators';
 export class PaginatorComponent implements OnInit {
   @Input() projects$: BehaviorSubject<Project[]>;
   @Output() projectEmitter: EventEmitter<Observable<Project[]>> = new EventEmitter<Observable<Project[]>>();
-  pageSize = 20;
+  pageSize = 10;
 
   constructor() {
   }

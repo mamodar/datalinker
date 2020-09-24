@@ -1,7 +1,7 @@
 .grid {
   display: grid;
   grid-template-columns: 20vmax 1fr;
-  grid-template-rows: 5vmin 8px 1fr;
+  grid-template-rows: 5vmin .5rem 1fr;
   grid-template-areas:
     "interactionPermanentSection interactionPermanentSection"
     "dividerSection dividerSection"
@@ -22,8 +22,6 @@
 }
 
 .divider {
-  margin-top: .5rem;
-  margin-bottom: .5rem;
   grid-area: dividerSection;
 }
 
@@ -31,7 +29,6 @@
   grid-area: mainSection;
 
   margin-top: 1rem;
-  margin-right: 1rem;
 }
 
 .icon {
