@@ -135,8 +135,8 @@ CREATE TABLE "project_resource"
     "project_id"  BIGINT NOT NULL,
     "resource_id" BIGINT NOT NULL,
     PRIMARY KEY ("project_id", "resource_id"),
-    CONSTRAINT "fkgvyjy4pwnuerf1ojtk71e4edo" FOREIGN KEY ("project_id") REFERENCES "public"."project" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION,
-    CONSTRAINT "fkqloe28wnxlwb5plj7msbnf2j3" FOREIGN KEY ("resource_id") REFERENCES "public"."resource" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+    CONSTRAINT "fkgvyjy4pwnuerf1ojtk71e4edo" FOREIGN KEY ("project_id") REFERENCES "public"."project" ("id") ON UPDATE NO ACTION ON DELETE CASCADE,
+    CONSTRAINT "fkqloe28wnxlwb5plj7msbnf2j3" FOREIGN KEY ("resource_id") REFERENCES "public"."resource" ("id") ON UPDATE NO ACTION ON DELETE CASCADE
 )
 ;
 
@@ -157,20 +157,21 @@ CREATE TABLE "rdmo_datalinker_connection"
     "is_collection" BOOLEAN,
     PRIMARY KEY ("attribute")
 );
-
+TRUNCATE TABLE rdmo_datalinker_connection;
 INSERT INTO rdmo_datalinker_connection
-VALUES (311, 1, FALSE, NULL),
-       (9, 2, FALSE, NULL),
-       (12, 3, TRUE, NULL),
-       (292, 4, FALSE, NULL),
-       (269, 5, FALSE, NULL),
-       (250, 6, FALSE, NULL),
-       (270, 7, TRUE, NULL),
-       (173, 8, TRUE, NULL),
-       (221, 9, FALSE, NULL),
-       (274, 10, TRUE, NULL),
-       (152, 11, FALSE, NULL),
-       (138, 12, FALSE, NULL);
+VALUES (311, 1, FALSE, NULL),  -- contact person
+       (9, 2, FALSE, NULL),    -- principal investigator
+       (12, 3, TRUE, NULL),    -- Organizational units
+       (292, 4, FALSE, NULL),  -- Titles
+       (269, 5, FALSE, NULL),  -- Acronyms
+       (250, 6, FALSE, NULL),  --Keywords
+       (181, 7, TRUE, NULL),   -- Third-party funded project
+       (173, 8, TRUE, NULL),   -- Funders
+       (221, 9, FALSE, NULL),  --  Cooperation partners (internal)
+       (274, 10, TRUE, NULL),  -- Cooperation partners (external)
+       (152, 11, FALSE, NULL), --Storage locations
+       (138, 12, TRUE, NULL);
+-- Planned Licenses / Terms of use
 
 
 -- Create RDMO question answer pairs

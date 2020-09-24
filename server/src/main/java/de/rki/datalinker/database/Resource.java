@@ -101,6 +101,7 @@ public class Resource {
 
   }
 
+
   /**
    * Update a new Resource from a {@link ResourceDTO}.
    *

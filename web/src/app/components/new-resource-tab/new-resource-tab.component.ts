@@ -20,7 +20,11 @@ export class NewResourceTabComponent implements OnInit {
   }
 
   ngOnInit(): void {
-  this.projects$ = this.stateService.getProjects();
+    this.projects$ = this.stateService.getProjects();
   }
 
+
+  gotoRdmo(): void {
+    window.open('http://rdmo.h2888668.stratoserver.net/projects/create/', '_blank');
+  }
 }

@@ -11,3 +11,15 @@
   width: 23%;
   margin-left: .5rem;
 }
+
+.affiliation {
+  margin-left: 40px;
+}
+
+.error {
+  color: red;
+}
+
+.small {
+  font-size: smaller;
+}

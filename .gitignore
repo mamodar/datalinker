@@ -2,6 +2,7 @@
 # Created by https://www.gitignore.io/api/java,gradle,windows,angular,intellij,visualstudiocode
 # Edit at https://www.gitignore.io/?templates=java,gradle,windows,angular,intellij,visualstudiocode
 
+DO_NOT_COMMIT/*
 ### Angular ###
 ## Angular ##
 # compiled output

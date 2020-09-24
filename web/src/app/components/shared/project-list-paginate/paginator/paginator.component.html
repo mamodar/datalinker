@@ -1,2 +1,3 @@
-<mat-paginator *ngIf="this.projects$.getValue()" [length]=this.projects$.getValue().length [pageSize]="this.pageSize"
+<mat-paginator *ngIf="this.projects$.getValue().length>0" [length]=this.projects$.getValue().length
+               [pageSize]="this.pageSize"
                [pageSizeOptions]="[10,20,50]" (page)="updateProjects($event)"></mat-paginator>
